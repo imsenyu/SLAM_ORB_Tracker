@@ -20,7 +20,8 @@
 
 
 // Boost Lib
-#include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
+using boost::shared_ptr;
 
 
 
@@ -37,4 +38,4 @@
 // User-Defined Lib
 #include "Constant.hpp"
 #include "Config.hpp"
-#include "InputBuffer.hpp"
+

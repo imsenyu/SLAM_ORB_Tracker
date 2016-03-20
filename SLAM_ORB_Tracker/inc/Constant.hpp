@@ -1,7 +1,7 @@
 #ifndef CONSTANT_H_INCLUDED
 #define CONSTANT_H_INCLUDED
 
-#include <opencv2/opencv.hpp>
+#include "stdafx.hpp"
 /**
  *	\namespace Const
  *	\brief 常用矩阵单位常量定义

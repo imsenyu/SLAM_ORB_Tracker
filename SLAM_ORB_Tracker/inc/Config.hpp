@@ -9,10 +9,9 @@
 #ifndef Config_hpp
 #define Config_hpp
 
-#include "opencv2/opencv.hpp"
-#include "boost/program_options.hpp" 
-#include <iostream>
-#include <string>
+#include "stdafx.hpp"
+#include <boost/program_options.hpp>
+
 
 namespace Config {
 

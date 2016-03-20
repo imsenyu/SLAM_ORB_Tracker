@@ -55,7 +55,10 @@ int Config::loadConfig(std::string cfgPath) {
     // 根据默认配置 和 配置文件自定义设置更新 参数
     sPathImageLoad			= getDefault<std::string>("/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/00/image_0/%06d.png", fs["sPathImageLoad"]);
     iImageLoadBegin			= getDefault<int>(0, fs["iImageBeginIdx"]);
-    iImageLoadEnd			= getDefault<int>(4540, fs["iImageEndIdx"]);
+    iImageLoadEnd			= getDefault<int>(1, fs["iImageEndIdx"]);
+    
+    fs.release();
+    fs.open(cfgPath, cv::FileStorage::WRITE);
     
     fs << "sPathImageLoad"			<< sPathImageLoad;
     fs << "iImageBeginIdx"			<< iImageLoadBegin;

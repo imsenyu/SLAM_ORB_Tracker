@@ -10,21 +10,27 @@
 #define InputBuffer_hpp
 
 #include "stdafx.hpp"
+#include "FrameBuffer.hpp"
+#include "ConcurrentQueue.hpp"
 
 class InputBuffer {
 private:
     std::string mLoadFormat;
     std::string mWindowName;
-    int mBeginIdx, mEndIdx;
-    
+    int mBeginIdx;
+    int mEndIdx;
+    int mCurIdx;
     int threadRun();
     
-public:
-    InputBuffer(std::string _loadFormat, int _beginIdx, int _endIdx):
-        mLoadFormat(_loadFormat), mBeginIdx(_beginIdx), mEndIdx(_endIdx) {}
+    ConcurrentQueue<shared_ptr<FrameBuffer> > mBuffer;
+    void put(shared_ptr<FrameBuffer> ptr);
 
-    void setWindows(std::string _windowName);
+public:
+    InputBuffer(std::string _loadFormat, int _beginIdx, int _endIdx);
     int run();
+    
+    shared_ptr<FrameBuffer> get();
+    
 };
 
 #endif /* InputBuffer_hpp */

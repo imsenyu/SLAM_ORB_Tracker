@@ -87,14 +87,15 @@
 		EBFE5CFF1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CED1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib */; };
 		EBFE5D001C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CEE1C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib */; };
 		EBFE5E901C9E830100E6DA0B /* Constant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */; };
+		EBFE5E951C9E93E700E6DA0B /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5E931C9E93E700E6DA0B /* FrameBuffer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		EBFE5B611C9D9FD300E6DA0B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 8;
+			dstPath = usr/share/man/man1;
+			dstSubfolderSpec = 7;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
@@ -102,6 +103,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConcurrentQueue.hpp; sourceTree = "<group>"; };
 		EBFE5B631C9D9FD300E6DA0B /* SLAM_ORB_Tracker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SLAM_ORB_Tracker; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainProgram.cpp; sourceTree = "<group>"; };
 		EBFE5B751C9DA1F100E6DA0B /* stdafx.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = stdafx.hpp; sourceTree = "<group>"; };
@@ -188,6 +190,8 @@
 		EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constant.cpp; sourceTree = "<group>"; };
 		EBFE5E911C9E830D00E6DA0B /* Constant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Constant.hpp; sourceTree = "<group>"; };
 		EBFE5E921C9E886B00E6DA0B /* vslam_config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = vslam_config.xml; path = SLAM_ORB_Tracker/vslam_config.xml; sourceTree = "<group>"; };
+		EBFE5E931C9E93E700E6DA0B /* FrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameBuffer.cpp; sourceTree = "<group>"; };
+		EBFE5E961C9E943200E6DA0B /* FrameBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameBuffer.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -311,6 +315,7 @@
 				EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */,
 				EBFE5CDA1C9DB16700E6DA0B /* Config.cpp */,
 				EBFE5CD71C9DB09100E6DA0B /* InputBuffer.cpp */,
+				EBFE5E931C9E93E700E6DA0B /* FrameBuffer.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -318,6 +323,8 @@
 		EBFE5B741C9DA1F100E6DA0B /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */,
+				EBFE5E961C9E943200E6DA0B /* FrameBuffer.hpp */,
 				EBFE5E911C9E830D00E6DA0B /* Constant.hpp */,
 				EBFE5CDB1C9DB16700E6DA0B /* Config.hpp */,
 				EBFE5CD81C9DB09100E6DA0B /* InputBuffer.hpp */,
@@ -484,6 +491,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBFE5E951C9E93E700E6DA0B /* FrameBuffer.cpp in Sources */,
 				EBFE5CDC1C9DB16700E6DA0B /* Config.cpp in Sources */,
 				EBFE5CD91C9DB09100E6DA0B /* InputBuffer.cpp in Sources */,
 				EBFE5B761C9DA1F100E6DA0B /* MainProgram.cpp in Sources */,
@@ -618,6 +626,7 @@
 				EBFE5B6C1C9D9FD300E6DA0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

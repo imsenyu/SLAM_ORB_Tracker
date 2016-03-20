@@ -7,6 +7,7 @@
 //
 
 #include "stdafx.hpp"
+#include <boost/thread.hpp>
 #include "Config.hpp"
 #include "InputBuffer.hpp"
 
@@ -18,13 +19,14 @@ int main(int argc, char * argv[]) {
     
     // initialize InputBuffer for image read
     InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
-    inputBuffer.setWindows("buffer");
     boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
     
     
     while(1) {
-        std::cout<<"wait"<<std::endl;
-        cv::waitKey(100);
+        
+        shared_ptr<FrameBuffer> ptrFrame = inputBuffer.get();
+        cv::imshow("inputBuffer", ptrFrame->mImage);
+        cv::waitKey(1000);
     }
     
     // wait for quit
