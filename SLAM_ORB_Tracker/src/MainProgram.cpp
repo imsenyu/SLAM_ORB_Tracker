@@ -25,12 +25,16 @@ int main(int argc, char * argv[]) {
     InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
     boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
     
-    std::cout<< "isVocLoaded 1" <<std::endl;
+
     Vocabulary vocabulary;
     Config::time("voc");
-    bool isVocLoaded = vocabulary.loadFromTextFile("/tmp/voc.txt");
+    bool isVocLoaded = vocabulary.loadFromTextFile(Config::sPathVocabulary);
     Config::timeEnd("voc");
-    std::cout<< "isVocLoaded" << isVocLoaded<<std::endl;
+    
+    if ( !isVocLoaded ) {
+        std::cerr << "vocabulary not loaded" << std::endl;
+        exit(1);
+    }
     
     while(1) {
         

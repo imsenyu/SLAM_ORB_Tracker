@@ -14,7 +14,8 @@ std::string Config::sPathConfigFile = "./slam_config.xml";
 std::string Config::sPathImageLoad = "";
 int Config::iImageLoadBegin = 0;
 int Config::iImageLoadEnd = 0;
-std::map<std::string, double> Config::mTimer;
+std::string Config::sPathVocabulary = "";
+
 
 int Config::parse(int argc, char * argv[]) {
     namespace po = boost::program_options;
@@ -56,17 +57,20 @@ int Config::loadConfig(std::string cfgPath) {
     sPathImageLoad			= getDefault<std::string>("/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/00/image_0/%06d.png", fs["sPathImageLoad"]);
     iImageLoadBegin			= getDefault<int>(0, fs["iImageBeginIdx"]);
     iImageLoadEnd			= getDefault<int>(1, fs["iImageEndIdx"]);
-    
+    sPathVocabulary         = getDefault<std::string>("/tmp/voc.txt", fs["sPathVocabulary"]);
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
     
     fs << "sPathImageLoad"			<< sPathImageLoad;
     fs << "iImageBeginIdx"			<< iImageLoadBegin;
     fs << "iImageEndIdx"			<< iImageLoadEnd;
+    fs << "sPathVocabulary"         << sPathVocabulary;
     fs.release();
     
     return !opened;
 }
+
+std::map<std::string, double> Config::mTimer;
 
 void Config::time(std::string str) {
     std::cout << "-----------Time_Begin[" << str << "]:" << std::endl;
