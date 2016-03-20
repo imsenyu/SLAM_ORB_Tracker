@@ -1,17 +1,17 @@
 //
-//  FrameBuffer.hpp
+//  FrameState.hpp
 //  SLAM_ORB_Tracker
 //
 //  Created by Sen Yu on 3/20/16.
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
 
-#ifndef FrameBuffer_hpp
-#define FrameBuffer_hpp
+#ifndef FrameState_hpp
+#define FrameState_hpp
 
 #include "stdafx.hpp"
 
-class FrameBuffer {
+class FrameState {
 private:
     bool loadImage(int _id);
     
@@ -20,7 +20,7 @@ public:
     bool mLoaded;
     cv::Mat mImage;
     
-    FrameBuffer(int _id);
+    FrameState(int _id);
 };
 
-#endif /* FrameBuffer_hpp */
+#endif /* FrameState_hpp */

@@ -6,13 +6,13 @@
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
 
-#include "FrameBuffer.hpp"
+#include "FrameState.hpp"
 
-FrameBuffer::FrameBuffer(int _id): mId(_id), mLoaded(false) {
+FrameState::FrameState(int _id): mId(_id), mLoaded(false) {
     loadImage(mId);
 }
 
-bool FrameBuffer::loadImage(int _id) {
+bool FrameState::loadImage(int _id) {
     if (_id < 0) return false;
     mId = _id;
     std::string imgPath = cv::format(Config::sPathImageLoad.c_str(), mId);
