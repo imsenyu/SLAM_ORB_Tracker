@@ -28,3 +28,7 @@ bool FrameState::loadImage(int _id) {
     mLoaded = true;
     return mLoaded;
 }
+
+FrameState::~FrameState() {
+    mImage.release();
+}

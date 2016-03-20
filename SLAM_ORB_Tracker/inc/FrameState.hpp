@@ -21,6 +21,7 @@ public:
     cv::Mat mImage;
     
     FrameState(int _id);
+    ~FrameState();
 };
 
 #endif /* FrameState_hpp */
