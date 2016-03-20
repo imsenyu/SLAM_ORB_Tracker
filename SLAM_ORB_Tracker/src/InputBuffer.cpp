@@ -22,7 +22,7 @@ int InputBuffer::threadRun() {
     cv::Mat matImage;
     for(mCurIdx = mBeginIdx; mCurIdx < mEndIdx; mCurIdx+=1 ) {
 
-        shared_ptr<FrameBuffer> ptrFrame(new FrameBuffer(mCurIdx));
+        boost::shared_ptr<FrameState> ptrFrame(new FrameState(mCurIdx));
         put(ptrFrame);
     }
     return 0;
@@ -34,13 +34,13 @@ int InputBuffer::run() {
     return threadRun();
 }
 
-void InputBuffer::put(shared_ptr<FrameBuffer> ptr) {
+void InputBuffer::put(boost::shared_ptr<FrameState> ptr) {
     
     mBuffer.put(ptr);
     //std::cout<< "put " << ptr->mId << std::endl;
 }
 
-shared_ptr<FrameBuffer> InputBuffer::get() {
+boost::shared_ptr<FrameState> InputBuffer::get() {
     auto ret = mBuffer.get();
     //std::cout<< "get " << ret->mId << std::endl;
     return ret;

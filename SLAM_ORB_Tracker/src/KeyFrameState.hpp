@@ -9,6 +9,14 @@
 #ifndef KeyFrameState_hpp
 #define KeyFrameState_hpp
 
-#include <stdio.h>
+#include "stdafx.hpp"
+#include "FrameState.hpp"
+
+class KeyFrameState {
+private:
+    
+public:
+    KeyFrameState(FrameState* _pFrame);
+};
 
 #endif /* KeyFrameState_hpp */

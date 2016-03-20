@@ -35,6 +35,12 @@ namespace Config {
     extern std::string sPathImageLoad; /** \var string:数据集图像序列读取路径 {idx:%06d} */
     extern int iImageLoadBegin; /** \var int:读取图像起始标号 */
     extern int iImageLoadEnd; /** \var int:读取图像结束标号 */
+    
+    extern std::map<std::string, double> mTimer;
+    
+    
+    void time(std::string str);
+    void timeEnd(std::string str);
 };
 
 

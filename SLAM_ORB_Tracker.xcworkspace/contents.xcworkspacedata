@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:SLAM_ORB_Tracker/third/DBoW2/DBoW2.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "container:SLAM_ORB_Tracker.xcodeproj">
+   </FileRef>
+</Workspace>

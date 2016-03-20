@@ -14,7 +14,7 @@ std::string Config::sPathConfigFile = "./slam_config.xml";
 std::string Config::sPathImageLoad = "";
 int Config::iImageLoadBegin = 0;
 int Config::iImageLoadEnd = 0;
-
+std::map<std::string, double> Config::mTimer;
 
 int Config::parse(int argc, char * argv[]) {
     namespace po = boost::program_options;
@@ -66,4 +66,30 @@ int Config::loadConfig(std::string cfgPath) {
     fs.release();
     
     return !opened;
+}
+
+void Config::time(std::string str) {
+    std::cout << "-----------Time_Begin[" << str << "]:" << std::endl;
+    if (mTimer.find(str) == mTimer.end())
+        mTimer.insert(make_pair(str, clock()));
+    else
+        mTimer.find(str)->second = clock();
+}
+
+void Config::timeEnd(std::string str) {
+#undef OUTPUTTIMESCALE
+#if defined(WIN32) || defined(_WIN32)
+#define OUTPUTTIMESCALE 1.0
+#else
+#define OUTPUTTIMESCALE 0.001
+#endif
+    
+    if (mTimer.find(str) == mTimer.end())\
+        std::cout << "-----------Time_End[" << str << "] ERROR" << std::endl;
+    else
+        std::cout << "-----------Time_End[" << str << "]:(" <<
+        (clock() - mTimer.find(str)->second)*OUTPUTTIMESCALE <<
+        ")ms" << std::endl;
+
+    
 }

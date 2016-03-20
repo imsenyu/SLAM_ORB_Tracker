@@ -1,14 +1,14 @@
 //
-//  LocalMapper.hpp
+//  LoopCloser.hpp
 //  SLAM_ORB_Tracker
 //
 //  Created by Sen Yu on 3/20/16.
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
 
-#ifndef LocalMapper_hpp
-#define LocalMapper_hpp
+#ifndef LoopCloser_hpp
+#define LoopCloser_hpp
 
-#include <stdio.h>
+#include "stdafx.hpp"
 
-#endif /* LocalMapper_hpp */
+#endif /* LoopCloser_hpp */

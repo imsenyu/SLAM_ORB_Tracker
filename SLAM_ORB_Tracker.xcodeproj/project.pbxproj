@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB361E221C9EC1C000883F14 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E201C9EC1C000883F14 /* Tracker.cpp */; };
+		EB361E251C9EC1EB00883F14 /* LocalMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E231C9EC1EB00883F14 /* LocalMapper.cpp */; };
+		EB361E281C9EC1F500883F14 /* LoopCloser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E261C9EC1F500883F14 /* LoopCloser.cpp */; };
+		EB361E2E1C9EC56200883F14 /* Vocabulary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E2C1C9EC56200883F14 /* Vocabulary.cpp */; };
+		EB361E921C9EE69E00883F14 /* KeyFrameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */; };
+		EB361F6C1C9EEDFB00883F14 /* libDBoW2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB361F6B1C9EEDFB00883F14 /* libDBoW2.dylib */; };
 		EBFE5B761C9DA1F100E6DA0B /* MainProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */; };
 		EBFE5B791C9DA68600E6DA0B /* libboost_thread-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5B771C9DA68600E6DA0B /* libboost_thread-mt.dylib */; };
 		EBFE5BF21C9DA6F400E6DA0B /* libboost_atomic-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5B7D1C9DA6F400E6DA0B /* libboost_atomic-mt.dylib */; };
@@ -87,7 +93,7 @@
 		EBFE5CFF1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CED1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib */; };
 		EBFE5D001C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CEE1C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib */; };
 		EBFE5E901C9E830100E6DA0B /* Constant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */; };
-		EBFE5E951C9E93E700E6DA0B /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5E931C9E93E700E6DA0B /* FrameBuffer.cpp */; };
+		EBFE5E951C9E93E700E6DA0B /* FrameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5E931C9E93E700E6DA0B /* FrameState.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -104,6 +110,19 @@
 
 /* Begin PBXFileReference section */
 		EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConcurrentQueue.hpp; sourceTree = "<group>"; };
+		EB361E201C9EC1C000883F14 /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tracker.cpp; sourceTree = "<group>"; };
+		EB361E231C9EC1EB00883F14 /* LocalMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalMapper.cpp; sourceTree = "<group>"; };
+		EB361E261C9EC1F500883F14 /* LoopCloser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoopCloser.cpp; sourceTree = "<group>"; };
+		EB361E291C9EC21700883F14 /* LocalMapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LocalMapper.hpp; sourceTree = "<group>"; };
+		EB361E2A1C9EC21800883F14 /* LoopCloser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LoopCloser.hpp; sourceTree = "<group>"; };
+		EB361E2B1C9EC21800883F14 /* Tracker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Tracker.hpp; sourceTree = "<group>"; };
+		EB361E2C1C9EC56200883F14 /* Vocabulary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vocabulary.cpp; sourceTree = "<group>"; };
+		EB361E2F1C9EC58600883F14 /* Vocabulary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vocabulary.hpp; sourceTree = "<group>"; };
+		EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrameState.cpp; sourceTree = "<group>"; };
+		EB361E911C9EE69E00883F14 /* KeyFrameState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KeyFrameState.hpp; sourceTree = "<group>"; };
+		EB361F6B1C9EEDFB00883F14 /* libDBoW2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDBoW2.dylib; path = "../../../Library/Developer/Xcode/DerivedData/SLAM_ORB_Tracker-dwkscwtidfjkxdggobyagrolwzft/Build/Products/Debug/libDBoW2.dylib"; sourceTree = "<group>"; };
+		EB361F6E1C9EEE9E00883F14 /* FORB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FORB.h; path = third/DBoW2/DBoW2/FORB.h; sourceTree = "<group>"; };
+		EB361F6F1C9EEE9E00883F14 /* TemplatedVocabulary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemplatedVocabulary.h; path = third/DBoW2/DBoW2/TemplatedVocabulary.h; sourceTree = "<group>"; };
 		EBFE5B631C9D9FD300E6DA0B /* SLAM_ORB_Tracker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SLAM_ORB_Tracker; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainProgram.cpp; sourceTree = "<group>"; };
 		EBFE5B751C9DA1F100E6DA0B /* stdafx.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = stdafx.hpp; sourceTree = "<group>"; };
@@ -190,8 +209,8 @@
 		EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constant.cpp; sourceTree = "<group>"; };
 		EBFE5E911C9E830D00E6DA0B /* Constant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Constant.hpp; sourceTree = "<group>"; };
 		EBFE5E921C9E886B00E6DA0B /* vslam_config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = vslam_config.xml; path = SLAM_ORB_Tracker/vslam_config.xml; sourceTree = "<group>"; };
-		EBFE5E931C9E93E700E6DA0B /* FrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameBuffer.cpp; sourceTree = "<group>"; };
-		EBFE5E961C9E943200E6DA0B /* FrameBuffer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameBuffer.hpp; sourceTree = "<group>"; };
+		EBFE5E931C9E93E700E6DA0B /* FrameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameState.cpp; sourceTree = "<group>"; };
+		EBFE5E961C9E943200E6DA0B /* FrameState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameState.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB361F6C1C9EEDFB00883F14 /* libDBoW2.dylib in Frameworks */,
 				EBFE5CF71C9E4DC600E6DA0B /* libopencv_legacy.2.4.11.dylib in Frameworks */,
 				EBFE5C461C9DA6F400E6DA0B /* libboost_serialization-mt.dylib in Frameworks */,
 				EBFE5C2A1C9DA6F400E6DA0B /* libboost_math_tr1-mt.dylib in Frameworks */,
@@ -268,11 +288,11 @@
 				EBFE5C4A1C9DA6F400E6DA0B /* libboost_signals-mt.dylib in Frameworks */,
 				EBFE5C3E1C9DA6F400E6DA0B /* libboost_random-mt.dylib in Frameworks */,
 				EBFE5BFE1C9DA6F400E6DA0B /* libboost_coroutine-mt.dylib in Frameworks */,
+				EBFE5C041C9DA6F400E6DA0B /* libboost_date_time.dylib in Frameworks */,
 				EBFE5CF31C9E4DC600E6DA0B /* libopencv_flann.2.4.11.dylib in Frameworks */,
 				EBFE5C441C9DA6F400E6DA0B /* libboost_regex.dylib in Frameworks */,
 				EBFE5CF81C9E4DC600E6DA0B /* libopencv_ml.2.4.11.dylib in Frameworks */,
 				EBFE5BF81C9DA6F400E6DA0B /* libboost_container-mt.dylib in Frameworks */,
-				EBFE5C041C9DA6F400E6DA0B /* libboost_date_time.dylib in Frameworks */,
 				EBFE5C021C9DA6F400E6DA0B /* libboost_date_time-mt.dylib in Frameworks */,
 				EBFE5C241C9DA6F400E6DA0B /* libboost_math_c99f.dylib in Frameworks */,
 			);
@@ -281,6 +301,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EB361E791C9EE35400883F14 /* third */ = {
+			isa = PBXGroup;
+			children = (
+				EB361E7A1C9EE35A00883F14 /* DBoW2 */,
+			);
+			name = third;
+			sourceTree = "<group>";
+		};
+		EB361E7A1C9EE35A00883F14 /* DBoW2 */ = {
+			isa = PBXGroup;
+			children = (
+				EB361F6E1C9EEE9E00883F14 /* FORB.h */,
+				EB361F6F1C9EEE9E00883F14 /* TemplatedVocabulary.h */,
+			);
+			name = DBoW2;
+			sourceTree = "<group>";
+		};
+		EB361F701C9EEEAF00883F14 /* DBoW2 */ = {
+			isa = PBXGroup;
+			children = (
+				EB361F6B1C9EEDFB00883F14 /* libDBoW2.dylib */,
+			);
+			name = DBoW2;
+			sourceTree = "<group>";
+		};
 		EBFE5B5A1C9D9FD300E6DA0B = {
 			isa = PBXGroup;
 			children = (
@@ -302,6 +347,7 @@
 		EBFE5B651C9D9FD300E6DA0B /* SLAM_ORB_Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				EB361E791C9EE35400883F14 /* third */,
 				EBFE5B721C9DA1F100E6DA0B /* src */,
 				EBFE5B741C9DA1F100E6DA0B /* inc */,
 			);
@@ -314,8 +360,14 @@
 				EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */,
 				EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */,
 				EBFE5CDA1C9DB16700E6DA0B /* Config.cpp */,
+				EB361E201C9EC1C000883F14 /* Tracker.cpp */,
+				EB361E2C1C9EC56200883F14 /* Vocabulary.cpp */,
+				EB361E231C9EC1EB00883F14 /* LocalMapper.cpp */,
+				EB361E261C9EC1F500883F14 /* LoopCloser.cpp */,
 				EBFE5CD71C9DB09100E6DA0B /* InputBuffer.cpp */,
-				EBFE5E931C9E93E700E6DA0B /* FrameBuffer.cpp */,
+				EBFE5E931C9E93E700E6DA0B /* FrameState.cpp */,
+				EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */,
+				EB361E911C9EE69E00883F14 /* KeyFrameState.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -323,8 +375,12 @@
 		EBFE5B741C9DA1F100E6DA0B /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				EB361E2F1C9EC58600883F14 /* Vocabulary.hpp */,
+				EB361E291C9EC21700883F14 /* LocalMapper.hpp */,
+				EB361E2A1C9EC21800883F14 /* LoopCloser.hpp */,
+				EB361E2B1C9EC21800883F14 /* Tracker.hpp */,
 				EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */,
-				EBFE5E961C9E943200E6DA0B /* FrameBuffer.hpp */,
+				EBFE5E961C9E943200E6DA0B /* FrameState.hpp */,
 				EBFE5E911C9E830D00E6DA0B /* Constant.hpp */,
 				EBFE5CDB1C9DB16700E6DA0B /* Config.hpp */,
 				EBFE5CD81C9DB09100E6DA0B /* InputBuffer.hpp */,
@@ -336,6 +392,7 @@
 		EBFE5B7B1C9DA68D00E6DA0B /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				EB361F701C9EEEAF00883F14 /* DBoW2 */,
 				EBFE5C671C9DA76900E6DA0B /* opencv */,
 				EBFE5C661C9DA75800E6DA0B /* boost */,
 			);
@@ -491,11 +548,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBFE5E951C9E93E700E6DA0B /* FrameBuffer.cpp in Sources */,
+				EBFE5E951C9E93E700E6DA0B /* FrameState.cpp in Sources */,
+				EB361E2E1C9EC56200883F14 /* Vocabulary.cpp in Sources */,
+				EB361E281C9EC1F500883F14 /* LoopCloser.cpp in Sources */,
 				EBFE5CDC1C9DB16700E6DA0B /* Config.cpp in Sources */,
+				EB361E221C9EC1C000883F14 /* Tracker.cpp in Sources */,
+				EB361E921C9EE69E00883F14 /* KeyFrameState.cpp in Sources */,
 				EBFE5CD91C9DB09100E6DA0B /* InputBuffer.cpp in Sources */,
 				EBFE5B761C9DA1F100E6DA0B /* MainProgram.cpp in Sources */,
 				EBFE5E901C9E830100E6DA0B /* Constant.cpp in Sources */,
+				EB361E251C9EC1EB00883F14 /* LocalMapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,10 +646,15 @@
 		EBFE5B6B1C9D9FD300E6DA0B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include/;
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/usr/local/Cellar/boost/1.60.0/lib,
+				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -597,10 +664,15 @@
 		EBFE5B6C1C9D9FD300E6DA0B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
 				HEADER_SEARCH_PATHS = /usr/local/include/;
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/usr/local/Cellar/boost/1.60.0/lib,
+				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

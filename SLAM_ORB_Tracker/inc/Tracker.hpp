@@ -1,14 +1,14 @@
 //
-//  Vocabulary.hpp
+//  Tracker.hpp
 //  SLAM_ORB_Tracker
 //
 //  Created by Sen Yu on 3/20/16.
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
 
-#ifndef Vocabulary_hpp
-#define Vocabulary_hpp
+#ifndef Tracker_hpp
+#define Tracker_hpp
 
-#include <stdio.h>
+#include "stdafx.hpp"
 
-#endif /* Vocabulary_hpp */
+#endif /* Tracker_hpp */
