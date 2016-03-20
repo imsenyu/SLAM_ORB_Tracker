@@ -1,5 +1,5 @@
 //
-//  inc/stdafx.h
+//  stdafx.h
 //  SLAM_ORB_Tracker
 //
 //  Created by Sen Yu on 3/19/16.
@@ -10,6 +10,14 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <vector>
+#include <map>
+#include <set>
+#include <queue>
+#include <deque>
+#include <functional>
+#include <fstream>
+
 
 // Boost Lib
 #include <boost/thread.hpp>
@@ -27,4 +35,5 @@
 
 
 // User-Defined Lib
-
+#include "Config.hpp"
+#include "InputBuffer.hpp"
