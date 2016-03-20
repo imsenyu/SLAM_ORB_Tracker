@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/00/image_0/%06d.png</sPathImageLoad>
+<sPathCacheFeature>/Volumes/Windows/TempWorkspace/Features/00/features_%d_%d.xml</sPathCacheFeature>
+<sPathPoseGroutTruth>/Volumes/HFS/Users/senyu/Workspace/Git/SLAMTracker/OpenCV_SLAMTracker/Poses/00.txt</sPathPoseGroutTruth>
+<sModeExecute>track</sModeExecute>
+<bIsIgnoreDrawAxisY>1</bIsIgnoreDrawAxisY>
+<iImageBeginIdx>0</iImageBeginIdx>
+<iImageEndIdx>4540</iImageEndIdx>
+<bIsCacheFeature>0</bIsCacheFeature>
+<bIsUseCacheFeature>0</bIsUseCacheFeature>
+<iMaxFeatures>1500</iMaxFeatures>
+<dDrawFrameStep>1.</dDrawFrameStep>
+<dScaleRatioLimitBottom>1.2000000000000000e+00</dScaleRatioLimitBottom>
+<dScaleRatioLimitTop>50.</dScaleRatioLimitTop>
+<dScaleRatioErrorDefault>5.0000000000000003e-02</dScaleRatioErrorDefault>
+<dRotationDiffLimit>7.</dRotationDiffLimit>
+<bIsLimitRotationDiff>1</bIsLimitRotationDiff>
+<bIsUseGroundTruthDistance>1</bIsUseGroundTruthDistance>
+<dScaleInvIncreaseDiffLimit>1.0000000000000002e-01</dScaleInvIncreaseDiffLimit>
+<mCameraParameter type_id="opencv-matrix">
+  <rows>3</rows>
+  <cols>3</cols>
+  <dt>d</dt>
+  <data>
+    7.1885599999999999e+02 0. 6.0719280000000003e+02 0.
+    7.1885599999999999e+02 1.8521570000000000e+02 0. 0. 1.</data></mCameraParameter>
+<iDequeFrameNumber>1</iDequeFrameNumber>
+<dOpticalFlowThreshold>1.</dOpticalFlowThreshold>
+<bIsLogGlobal>1</bIsLogGlobal>
+<iPreAverageFilter>2</iPreAverageFilter>
+<sDataName>"00"</sDataName>
+</opencv_storage>

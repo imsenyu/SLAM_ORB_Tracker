@@ -13,11 +13,14 @@
 int main(int argc, char * argv[]) {
   
     // initialize Config for config load
-    
+    Config::parse(argc, argv);
+    Config::loadConfig(Config::sPathConfigFile);
     
     // initialize InputBuffer for image read
-    InputBuffer inputBuffer("/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/00/image_0/%06d.png", 1, 1000);
-    inputBuffer.run();
+    InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
+    inputBuffer.setWindows("buffer");
+    boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
+    
     
     while(1) {
         std::cout<<"wait"<<std::endl;

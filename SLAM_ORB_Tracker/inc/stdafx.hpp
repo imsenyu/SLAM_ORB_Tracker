@@ -35,5 +35,6 @@
 
 
 // User-Defined Lib
+#include "Constant.hpp"
 #include "Config.hpp"
 #include "InputBuffer.hpp"

@@ -9,30 +9,26 @@
 #include "InputBuffer.hpp"
 
 
-void InputBuffer::threadRun() {
+int InputBuffer::threadRun() {
     cv::Mat matImage;
     for(int idx = mBeginIdx; idx < mEndIdx; idx+=10 ) {
         cv::waitKey(100);
         std::string imgPath = cv::format(mLoadFormat.c_str(), idx);
         matImage = cv::imread(imgPath);
-        cv::imshow("test", matImage);
+        cv::imshow(mWindowName, matImage);
         cv::waitKey(100);
 
         std::cout<< "show "<< imgPath <<std::endl;
-        //for(int j=0;j<1e9;j++);
     }
-    
+    return 0;
 }
     
-    
 
+void InputBuffer::setWindows(std::string _windowName) {
+    mWindowName = _windowName;
+}
     
-void InputBuffer::run() {
-    cv::namedWindow("test");
-    boost::thread thread( boost::bind(&InputBuffer::threadRun, this) );
-    //thread.join();
-    
-    //threadRun();
-    return;
-    
+int InputBuffer::run() {
+   
+    return threadRun();
 }

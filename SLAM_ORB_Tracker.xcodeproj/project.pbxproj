@@ -86,6 +86,7 @@
 		EBFE5CFE1C9E4DC600E6DA0B /* libopencv_superres.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CEC1C9E4DC600E6DA0B /* libopencv_superres.2.4.11.dylib */; };
 		EBFE5CFF1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CED1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib */; };
 		EBFE5D001C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBFE5CEE1C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib */; };
+		EBFE5E901C9E830100E6DA0B /* Constant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -184,6 +185,9 @@
 		EBFE5CEC1C9E4DC600E6DA0B /* libopencv_superres.2.4.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_superres.2.4.11.dylib; path = ../../../../../../../usr/local/lib/libopencv_superres.2.4.11.dylib; sourceTree = "<group>"; };
 		EBFE5CED1C9E4DC600E6DA0B /* libopencv_video.2.4.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_video.2.4.11.dylib; path = ../../../../../../../usr/local/lib/libopencv_video.2.4.11.dylib; sourceTree = "<group>"; };
 		EBFE5CEE1C9E4DC600E6DA0B /* libopencv_videostab.2.4.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videostab.2.4.11.dylib; path = ../../../../../../../usr/local/lib/libopencv_videostab.2.4.11.dylib; sourceTree = "<group>"; };
+		EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constant.cpp; sourceTree = "<group>"; };
+		EBFE5E911C9E830D00E6DA0B /* Constant.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Constant.hpp; sourceTree = "<group>"; };
+		EBFE5E921C9E886B00E6DA0B /* vslam_config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = vslam_config.xml; path = SLAM_ORB_Tracker/vslam_config.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +280,7 @@
 		EBFE5B5A1C9D9FD300E6DA0B = {
 			isa = PBXGroup;
 			children = (
+				EBFE5E921C9E886B00E6DA0B /* vslam_config.xml */,
 				EBFE5B7B1C9DA68D00E6DA0B /* lib */,
 				EBFE5B651C9D9FD300E6DA0B /* SLAM_ORB_Tracker */,
 				EBFE5B641C9D9FD300E6DA0B /* Products */,
@@ -302,6 +307,7 @@
 		EBFE5B721C9DA1F100E6DA0B /* src */ = {
 			isa = PBXGroup;
 			children = (
+				EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */,
 				EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */,
 				EBFE5CDA1C9DB16700E6DA0B /* Config.cpp */,
 				EBFE5CD71C9DB09100E6DA0B /* InputBuffer.cpp */,
@@ -312,6 +318,7 @@
 		EBFE5B741C9DA1F100E6DA0B /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				EBFE5E911C9E830D00E6DA0B /* Constant.hpp */,
 				EBFE5CDB1C9DB16700E6DA0B /* Config.hpp */,
 				EBFE5CD81C9DB09100E6DA0B /* InputBuffer.hpp */,
 				EBFE5B751C9DA1F100E6DA0B /* stdafx.hpp */,
@@ -480,6 +487,7 @@
 				EBFE5CDC1C9DB16700E6DA0B /* Config.cpp in Sources */,
 				EBFE5CD91C9DB09100E6DA0B /* InputBuffer.cpp in Sources */,
 				EBFE5B761C9DA1F100E6DA0B /* MainProgram.cpp in Sources */,
+				EBFE5E901C9E830100E6DA0B /* Constant.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

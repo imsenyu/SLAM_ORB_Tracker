@@ -14,16 +14,17 @@
 class InputBuffer {
 private:
     std::string mLoadFormat;
+    std::string mWindowName;
     int mBeginIdx, mEndIdx;
     
-    void threadRun();
+    int threadRun();
     
 public:
     InputBuffer(std::string _loadFormat, int _beginIdx, int _endIdx):
         mLoadFormat(_loadFormat), mBeginIdx(_beginIdx), mEndIdx(_endIdx) {}
 
-    
-    void run();
+    void setWindows(std::string _windowName);
+    int run();
 };
 
 #endif /* InputBuffer_hpp */
