@@ -1,0 +1,3 @@
+[submodule "SLAM_ORB_Tracker/third/g2o"]
+	path = SLAM_ORB_Tracker/third/g2o
+	url = https://github.com/RainerKuemmerle/g2o.git
