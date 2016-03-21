@@ -43,13 +43,10 @@ PoseState PoseState::move(MotionState& _motion) {
     
     PoseState retPose( vMotionId[1] );
     
-    std::cout<< "mPos" << mPos << std::endl;
-    std::cout<< "mDir" << mDir << std::endl;
+
     //cv::Point3转cv::Mat(3,1)
     cv::Mat matLocalPos = Utils::convert(mPos);
     cv::Mat matLocalDir = Utils::convert(mDir);
-    std::cout<< "matLocalPos" << matLocalPos << std::endl;
-    std::cout<< "matLocalDir" << matLocalDir << std::endl;
 
     
     cv::Mat matTmpRotate;
@@ -78,14 +75,10 @@ PoseState PoseState::move(MotionState& _motion) {
         
         Utils::getRodriguesRotation(matRC, matRC);
         
-        std::cout<< "matLocalDir -0 " << matLocalDir << std::endl;
         matLocalDir = matRC * matLocalDir;
-        std::cout<< "matLocalDir -1 " << matLocalDir << std::endl;
         matLocalDir.at<double>(1, 0) = 0.0f;
-        std::cout<< "matLocalDir -2 " << matLocalDir << std::endl;
         matLocalDir = matLocalDir / cv::norm(matLocalDir);
-        std::cout<< "matLocalDir -3 " << matLocalDir << std::endl;
-        
+    
         mDir3 = mDir3 * matRC;
         matRC = mDir3 * Const::mat31_001;
         matRC.at<double>(1, 0) = 0.0f;
@@ -98,10 +91,7 @@ PoseState PoseState::move(MotionState& _motion) {
         matLocalDir = _motion.mMatR * matLocalDir;
         mDir3 = mDir3 * _motion.mMatR ;
     }
-    
-    std::cout<< "matLocalPos2 " << matLocalPos << std::endl;
-    std::cout<< "matLocalDir2 " << matLocalDir << std::endl;
-    
+
     retPose.mId = vMotionId[1];
     retPose.mDir = Utils::convert(matLocalDir);
     retPose.mPos = Utils::convert(matLocalPos);

@@ -21,6 +21,8 @@ public:
     
     std::vector<int> mvIds;
     cv::Mat mMatR, mMatT; /** \var 旋转和位移矩阵 */
+    
+    friend std::ostream& operator<<(std::ostream& out, const MotionState& ms);
 };
 
 #endif /* MotionState_hpp */

@@ -24,3 +24,10 @@ MotionState::MotionState(const MotionState* _pMS) {
     mMatR = _pMS->mMatR.clone();
     mMatT = _pMS->mMatT.clone();
 }
+
+std::ostream& operator<<(std::ostream& out, const MotionState& ms) {
+    out << "MotionState[" << ms.mvIds[0] << "-" << ms.mvIds[1] << "]" << std::endl;
+    out << "matR: " << ms.mMatR << std::endl;
+    out << "matT: " << ms.mMatT << std::endl;
+    return out;
+}
