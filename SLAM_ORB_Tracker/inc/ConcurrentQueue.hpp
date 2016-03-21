@@ -16,9 +16,9 @@ template <class _Ele>
 class ConcurrentQueue {
     typedef boost::interprocess::interprocess_semaphore semaphore;
     
-    semaphore _semFull;
-    semaphore _semEmpty;
-    semaphore _semMutex;
+    semaphore mSemFull;
+    semaphore mSemEmpty;
+    semaphore mSemMutex;
     int capacity;
     std::queue<_Ele> mContainer;
     
@@ -26,7 +26,7 @@ class ConcurrentQueue {
 public:
     
     ConcurrentQueue(int _capacity = 100):
-    capacity(_capacity), _semMutex(1), _semFull(0), _semEmpty(_capacity)  {
+    capacity(_capacity), mSemMutex(1), mSemFull(0), mSemEmpty(_capacity)  {
         
     }
     int getCapacity() {
@@ -34,27 +34,35 @@ public:
     }
 
     void put(_Ele ptrEle) {
-        _semEmpty.wait();
-        _semMutex.wait();
+        mSemEmpty.wait();
+        mSemMutex.wait();
         
         mContainer.push(ptrEle);
         
-        _semMutex.post();
-        _semFull.post();
+        mSemMutex.post();
+        mSemFull.post();
     }
 
     _Ele get() {
-        _semFull.wait();
-        _semMutex.wait();
+        mSemFull.wait();
+        mSemMutex.wait();
         
         _Ele ret = mContainer.front();
         mContainer.pop();
         
-        _semMutex.post();
-        _semEmpty.post();
+        mSemMutex.post();
+        mSemEmpty.post();
         
         return ret;
         
-    }};
+    }
 
+    bool hasNext() {
+        bool ret;
+        mSemMutex.wait();
+        ret = mContainer.size();
+        mSemMutex.post();
+        return ret;
+    }
+};
 #endif /* ConcurrentQueue_hpp */
