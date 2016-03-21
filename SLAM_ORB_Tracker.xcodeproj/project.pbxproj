@@ -32,6 +32,11 @@
 		EB301C4D1C9F94AB00F685EE /* libg2o_types_slam2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C341C9F94AB00F685EE /* libg2o_types_slam2d.dylib */; };
 		EB301C4E1C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C351C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib */; };
 		EB301C4F1C9F94AB00F685EE /* libg2o_types_slam3d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C361C9F94AB00F685EE /* libg2o_types_slam3d.dylib */; };
+		EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C501C9FF0E600F685EE /* FrameDrawer.cpp */; };
+		EB301C551C9FF0F500F685EE /* MapDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C531C9FF0F500F685EE /* MapDrawer.cpp */; };
+		EB301C5B1CA0006400F685EE /* PoseState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C591CA0006400F685EE /* PoseState.cpp */; };
+		EB301C5E1CA0006E00F685EE /* MotionState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C5C1CA0006E00F685EE /* MotionState.cpp */; };
+		EB301C631CA0208300F685EE /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C611CA0208300F685EE /* Utils.cpp */; };
 		EB361E221C9EC1C000883F14 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E201C9EC1C000883F14 /* Tracker.cpp */; };
 		EB361E251C9EC1EB00883F14 /* LocalMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E231C9EC1EB00883F14 /* LocalMapper.cpp */; };
 		EB361E281C9EC1F500883F14 /* LoopCloser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB361E261C9EC1F500883F14 /* LoopCloser.cpp */; };
@@ -159,6 +164,17 @@
 		EB301C341C9F94AB00F685EE /* libg2o_types_slam2d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam2d.dylib; path = /usr/local/lib/libg2o_types_slam2d.dylib; sourceTree = "<absolute>"; };
 		EB301C351C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam3d_addons.dylib; path = /usr/local/lib/libg2o_types_slam3d_addons.dylib; sourceTree = "<absolute>"; };
 		EB301C361C9F94AB00F685EE /* libg2o_types_slam3d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam3d.dylib; path = /usr/local/lib/libg2o_types_slam3d.dylib; sourceTree = "<absolute>"; };
+		EB301C501C9FF0E600F685EE /* FrameDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameDrawer.cpp; sourceTree = "<group>"; };
+		EB301C531C9FF0F500F685EE /* MapDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapDrawer.cpp; sourceTree = "<group>"; };
+		EB301C561C9FF13700F685EE /* FrameDrawer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameDrawer.hpp; sourceTree = "<group>"; };
+		EB301C571C9FF13700F685EE /* KeyFrameState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KeyFrameState.hpp; sourceTree = "<group>"; };
+		EB301C581C9FF13700F685EE /* MapDrawer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapDrawer.hpp; sourceTree = "<group>"; };
+		EB301C591CA0006400F685EE /* PoseState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PoseState.cpp; sourceTree = "<group>"; };
+		EB301C5C1CA0006E00F685EE /* MotionState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MotionState.cpp; sourceTree = "<group>"; };
+		EB301C5F1CA0008A00F685EE /* MotionState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MotionState.hpp; sourceTree = "<group>"; };
+		EB301C601CA0008A00F685EE /* PoseState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PoseState.hpp; sourceTree = "<group>"; };
+		EB301C611CA0208300F685EE /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
+		EB301C641CA021E900F685EE /* Utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Utils.hpp; sourceTree = "<group>"; };
 		EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConcurrentQueue.hpp; sourceTree = "<group>"; };
 		EB361E201C9EC1C000883F14 /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tracker.cpp; sourceTree = "<group>"; };
 		EB361E231C9EC1EB00883F14 /* LocalMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalMapper.cpp; sourceTree = "<group>"; };
@@ -169,7 +185,6 @@
 		EB361E2C1C9EC56200883F14 /* Vocabulary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vocabulary.cpp; sourceTree = "<group>"; };
 		EB361E2F1C9EC58600883F14 /* Vocabulary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vocabulary.hpp; sourceTree = "<group>"; };
 		EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrameState.cpp; sourceTree = "<group>"; };
-		EB361E911C9EE69E00883F14 /* KeyFrameState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = KeyFrameState.hpp; sourceTree = "<group>"; };
 		EB361F6B1C9EEDFB00883F14 /* libDBoW2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDBoW2.dylib; path = "../../../Library/Developer/Xcode/DerivedData/SLAM_ORB_Tracker-dwkscwtidfjkxdggobyagrolwzft/Build/Products/Debug/libDBoW2.dylib"; sourceTree = "<group>"; };
 		EB361F6E1C9EEE9E00883F14 /* FORB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FORB.h; path = third/DBoW2/DBoW2/FORB.h; sourceTree = "<group>"; };
 		EB361F6F1C9EEE9E00883F14 /* TemplatedVocabulary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemplatedVocabulary.h; path = third/DBoW2/DBoW2/TemplatedVocabulary.h; sourceTree = "<group>"; };
@@ -466,6 +481,8 @@
 			children = (
 				EBFE5E8F1C9E830100E6DA0B /* Constant.cpp */,
 				EBFE5B731C9DA1F100E6DA0B /* MainProgram.cpp */,
+				EB301C501C9FF0E600F685EE /* FrameDrawer.cpp */,
+				EB301C531C9FF0F500F685EE /* MapDrawer.cpp */,
 				EBFE5CDA1C9DB16700E6DA0B /* Config.cpp */,
 				EB361E201C9EC1C000883F14 /* Tracker.cpp */,
 				EB361E2C1C9EC56200883F14 /* Vocabulary.cpp */,
@@ -473,8 +490,10 @@
 				EB361E261C9EC1F500883F14 /* LoopCloser.cpp */,
 				EBFE5CD71C9DB09100E6DA0B /* InputBuffer.cpp */,
 				EBFE5E931C9E93E700E6DA0B /* FrameState.cpp */,
+				EB301C5C1CA0006E00F685EE /* MotionState.cpp */,
+				EB301C591CA0006400F685EE /* PoseState.cpp */,
+				EB301C611CA0208300F685EE /* Utils.cpp */,
 				EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */,
-				EB361E911C9EE69E00883F14 /* KeyFrameState.hpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -482,6 +501,12 @@
 		EBFE5B741C9DA1F100E6DA0B /* inc */ = {
 			isa = PBXGroup;
 			children = (
+				EB301C641CA021E900F685EE /* Utils.hpp */,
+				EB301C5F1CA0008A00F685EE /* MotionState.hpp */,
+				EB301C601CA0008A00F685EE /* PoseState.hpp */,
+				EB301C561C9FF13700F685EE /* FrameDrawer.hpp */,
+				EB301C571C9FF13700F685EE /* KeyFrameState.hpp */,
+				EB301C581C9FF13700F685EE /* MapDrawer.hpp */,
 				EB361E2F1C9EC58600883F14 /* Vocabulary.hpp */,
 				EB361E291C9EC21700883F14 /* LocalMapper.hpp */,
 				EB361E2A1C9EC21800883F14 /* LoopCloser.hpp */,
@@ -657,15 +682,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBFE5E951C9E93E700E6DA0B /* FrameState.cpp in Sources */,
+				EB301C551C9FF0F500F685EE /* MapDrawer.cpp in Sources */,
 				EB361E2E1C9EC56200883F14 /* Vocabulary.cpp in Sources */,
 				EB361E281C9EC1F500883F14 /* LoopCloser.cpp in Sources */,
+				EB301C5B1CA0006400F685EE /* PoseState.cpp in Sources */,
 				EBFE5CDC1C9DB16700E6DA0B /* Config.cpp in Sources */,
 				EB361E221C9EC1C000883F14 /* Tracker.cpp in Sources */,
 				EB361E921C9EE69E00883F14 /* KeyFrameState.cpp in Sources */,
 				EBFE5CD91C9DB09100E6DA0B /* InputBuffer.cpp in Sources */,
+				EB301C5E1CA0006E00F685EE /* MotionState.cpp in Sources */,
 				EBFE5B761C9DA1F100E6DA0B /* MainProgram.cpp in Sources */,
 				EBFE5E901C9E830100E6DA0B /* Constant.cpp in Sources */,
 				EB361E251C9EC1EB00883F14 /* LocalMapper.cpp in Sources */,
+				EB301C631CA0208300F685EE /* Utils.cpp in Sources */,
+				EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,7 +13,8 @@
 #include "InputBuffer.hpp"
 #include "Vocabulary.hpp"
 #include "Tracker.hpp"
-
+#include "FrameDrawer.hpp"
+#include "MapDrawer.hpp"
 
 int main(int argc, char * argv[]) {
   
@@ -32,20 +33,23 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
     
+    
+    
     // initialize InputBuffer for image read
     InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
     boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
     
     // initialize Tracker for localization
-    Tracker tracker(&inputBuffer);
+    FrameDrawer frameDrawer;
+    MapDrawer mapDrawer;
+    Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer);
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
     
     
     
     while(1) {
-        if ( tracker.hasNext() ) {
-            tracker.showFrame();
-        }
+        frameDrawer.show();
+        mapDrawer.show();
     }
     
     // wait for quit

@@ -10,11 +10,11 @@
 
 InputBuffer::InputBuffer(std::string _loadFormat, int _beginIdx, int _endIdx):
 mLoadFormat(_loadFormat), mBeginIdx(_beginIdx), mEndIdx(_endIdx),
-mBuffer(100) {
+mBuffer(200) {
     
     mCurIdx = mBeginIdx;
     mWindowName = "InputBuffer";
-    std::cout<< mBuffer.getCapacity() << std::endl;
+    std::cout<< "inputBuffer Capacity: " << mBuffer.getCapacity() << std::endl;
 
 }
 

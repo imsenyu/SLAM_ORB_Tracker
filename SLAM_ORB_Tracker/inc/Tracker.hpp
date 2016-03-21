@@ -10,30 +10,55 @@
 #define Tracker_hpp
 
 #include "stdafx.hpp"
+#include "FrameState.hpp"
 #include "InputBuffer.hpp"
-#include "ConcurrentQueue.hpp"
+#include "Vocabulary.hpp"
+#include "FrameDrawer.hpp"
+#include "MapDrawer.hpp"
+#include "PoseState.hpp"
+#include "MotionState.hpp"
 
 class Tracker {
 private:
-    int threadRun();
-    InputBuffer* mpInputBuffer;
     
+    typedef enum {
+        Start,
+        Fail,
+        InitStep0,
+        InitStep1,
+        Normal,
+    } WorkMode;
+    
+    typedef enum {
+        Good,
+        Bad
+    } TrackResult;
+    
+    WorkMode meMode;
+    WorkMode meLastMode;
+    
+    int threadRun();
+    
+    InputBuffer* mpInputBuffer;
     shared_ptr<FrameState> mpPreFrame;
     shared_ptr<FrameState> mpCurFrame;
     
-    ConcurrentQueue<shared_ptr<FrameState>> mBuffer;
-//    void put(shared_ptr<FrameState> _pFS);
-//    bool hasNext();
-//    shared_ptr<FrameState> get();
+    PoseState mCurPose;
+    void initPose();
+    
+    
+    FrameDrawer* mpFrameDrawer;
+    MapDrawer* mpMapDrawer;
+    void updateDrawer();
     
 public:
-    Tracker(InputBuffer* _pIB);
+    Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD);
     ~Tracker();
     
     int run();
     
     bool hasNext();
-    void showFrame();
+    
     
 };
 
