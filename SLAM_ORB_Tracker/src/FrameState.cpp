@@ -18,7 +18,7 @@ bool FrameState::loadImage(int _id) {
     std::string imgPath = cv::format(Config::sPathImageLoad.c_str(), mId);
     mImage = cv::imread(imgPath);
     
-    // 如果读取图像失败
+    // image load error
     if (mImage.rows == 0 || mImage.cols == 0) {
         std::string error = "Image Load Error: " + imgPath;
         std::cout<<error <<std::endl;
@@ -31,4 +31,38 @@ bool FrameState::loadImage(int _id) {
 
 FrameState::~FrameState() {
     mImage.release();
+}
+
+int FrameState::extract() {
+    
+    switch ( 1 ) {
+        case 1: {
+            cv::ORB orbDetector(Config::iFeatureNum, 1.2f, 8);
+            orbDetector.detect(mImage, mvKeyPoint);
+            orbDetector.compute(mImage, mvKeyPoint, mDescriptor);
+        } break;
+        case 2: {
+            cv::SiftFeatureDetector siftDetector(Config::iFeatureNum);
+            siftDetector.detect(mImage, mvKeyPoint);
+            cv::SiftDescriptorExtractor siftExtractor(Config::iFeatureNum);
+            siftExtractor.compute(mImage, mvKeyPoint, mDescriptor);
+        } break;
+    }
+
+    int nKP = mvKeyPoint.size();
+    if ( nKP == 0 ) return 0;
+    
+    
+    return nKP;
+}
+
+void FrameState::drawKeyPoint() {
+    
+    mImagePointed = mImage.clone();
+    
+    for(int i=0;i<mvKeyPoint.size();i++) {
+        cv::rectangle(mImagePointed, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(255,0,0));
+        
+    }
+    
 }

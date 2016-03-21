@@ -15,6 +15,7 @@ std::string Config::sPathImageLoad = "";
 int Config::iImageLoadBegin = 0;
 int Config::iImageLoadEnd = 0;
 std::string Config::sPathVocabulary = "";
+int Config::iFeatureNum = 0;
 
 
 int Config::parse(int argc, char * argv[]) {
@@ -58,6 +59,8 @@ int Config::loadConfig(std::string cfgPath) {
     iImageLoadBegin			= getDefault<int>(0, fs["iImageBeginIdx"]);
     iImageLoadEnd			= getDefault<int>(1, fs["iImageEndIdx"]);
     sPathVocabulary         = getDefault<std::string>("/tmp/voc.txt", fs["sPathVocabulary"]);
+    iFeatureNum             = getDefault<int>(1000, fs["iFeatureNum"]);
+    
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
     
@@ -65,6 +68,7 @@ int Config::loadConfig(std::string cfgPath) {
     fs << "iImageBeginIdx"			<< iImageLoadBegin;
     fs << "iImageEndIdx"			<< iImageLoadEnd;
     fs << "sPathVocabulary"         << sPathVocabulary;
+    fs << "iFeatureNum"             << iFeatureNum;
     fs.release();
     
     return !opened;

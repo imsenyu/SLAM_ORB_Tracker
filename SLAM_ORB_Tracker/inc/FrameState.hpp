@@ -19,9 +19,18 @@ public:
     int mId;
     bool mLoaded;
     cv::Mat mImage;
+    cv::Mat mImagePointed;
+    
+    std::vector<cv::KeyPoint> mvKeyPoint;
+    cv::Mat mDescriptor;
     
     FrameState(int _id);
     ~FrameState();
+    
+    
+    
+    int extract();
+    void drawKeyPoint();
 };
 
 #endif /* FrameState_hpp */
