@@ -17,6 +17,7 @@ int Config::iImageLoadEnd = 0;
 std::string Config::sPathVocabulary = "";
 int Config::iFeatureNum = 0;
 double Config::dDrawFrameStep = 0.0f;
+cv::Mat Config::mCameraParameter;
 
 int Config::parse(int argc, char * argv[]) {
     namespace po = boost::program_options;
@@ -61,7 +62,7 @@ int Config::loadConfig(std::string cfgPath) {
     sPathVocabulary         = getDefault<std::string>("/tmp/voc.txt", fs["sPathVocabulary"]);
     iFeatureNum             = getDefault<int>(1000, fs["iFeatureNum"]);
     dDrawFrameStep          = getDefault<double>(1.0, fs["dDrawFrameStep"]);
-    
+    mCameraParameter        = getDefault<cv::Mat>(Const::mat33_111, fs["mCameraParameter"]);
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
     
@@ -71,6 +72,7 @@ int Config::loadConfig(std::string cfgPath) {
     fs << "sPathVocabulary"         << sPathVocabulary;
     fs << "iFeatureNum"             << iFeatureNum;
     fs << "dDrawFrameStep"          << dDrawFrameStep;
+    fs << "mCameraParameter"        << mCameraParameter;
     fs.release();
     
     return !opened;

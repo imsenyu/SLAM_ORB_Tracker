@@ -50,7 +50,7 @@ FrameState::~FrameState() {
 
 int FrameState::extract() {
     
-    switch ( 1 ) {
+    switch ( 2 ) {
         case 1: {
             cv::ORB orbDetector(Config::iFeatureNum, 1.2f, 8);
             orbDetector.detect(mImage, mvKeyPoint);

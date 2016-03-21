@@ -43,6 +43,7 @@ namespace Config {
     extern std::string sPathVocabulary; /** \var string:词典*/
     extern int iFeatureNum;
     extern double dDrawFrameStep;
+    extern cv::Mat mCameraParameter;
 
 };
 

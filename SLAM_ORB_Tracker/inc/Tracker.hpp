@@ -51,6 +51,10 @@ private:
     MapDrawer* mpMapDrawer;
     void updateDrawer();
     
+    std::vector<cv::Point2f> mvPair[2];
+    int match(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPreFrame);
+    bool computeMotion(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPreFrame, MotionState& motion);
+    
 public:
     Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD);
     ~Tracker();
