@@ -12,7 +12,6 @@
 #include "stdafx.hpp"
 #include "FrameState.hpp"
 #include "ConcurrentQueue.hpp"
-#include <boost/shared_ptr.hpp>
 
 
 class InputBuffer {
@@ -24,14 +23,14 @@ private:
     int mCurIdx;
     int threadRun();
     
-    ConcurrentQueue<boost::shared_ptr<FrameState> > mBuffer;
-    void put(boost::shared_ptr<FrameState> ptr);
+    ConcurrentQueue<shared_ptr<FrameState>> mBuffer;
+    void put(shared_ptr<FrameState> ptr);
 
 public:
     InputBuffer(std::string _loadFormat, int _beginIdx, int _endIdx);
     int run();
     
-    boost::shared_ptr<FrameState> get();
+    shared_ptr<FrameState> get();
     
 };
 

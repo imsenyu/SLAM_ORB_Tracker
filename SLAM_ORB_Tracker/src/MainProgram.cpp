@@ -8,11 +8,11 @@
 
 #include "stdafx.hpp"
 #include <boost/thread.hpp>
-#include <boost/shared_ptr.hpp>
+
 #include "Config.hpp"
 #include "InputBuffer.hpp"
 #include "Vocabulary.hpp"
-
+#include "Tracker.hpp"
 
 
 int main(int argc, char * argv[]) {
@@ -21,14 +21,10 @@ int main(int argc, char * argv[]) {
     Config::parse(argc, argv);
     Config::loadConfig(Config::sPathConfigFile);
     
-    // initialize InputBuffer for image read
-    InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
-    boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
-    
-
+    // vocabulary initialize
     Vocabulary vocabulary;
     Config::time("voc");
-    bool isVocLoaded = vocabulary.loadFromTextFile(Config::sPathVocabulary);
+    bool isVocLoaded = true || vocabulary.loadFromTextFile(Config::sPathVocabulary);
     Config::timeEnd("voc");
     
     if ( !isVocLoaded ) {
@@ -36,11 +32,20 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
     
+    // initialize InputBuffer for image read
+    InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
+    boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
+    
+    // initialize Tracker for localization
+    Tracker tracker(&inputBuffer);
+    boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
+    
+    
+    
     while(1) {
-        
-        boost::shared_ptr<FrameState> ptrFrame = inputBuffer.get();
-        cv::imshow("inputBuffer", ptrFrame->mImage);
-        cv::waitKey(1000);
+        if ( tracker.hasNext() ) {
+            tracker.showFrame();
+        }
     }
     
     // wait for quit
