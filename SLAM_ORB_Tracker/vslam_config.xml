@@ -5,4 +5,5 @@
 <iImageEndIdx>4540</iImageEndIdx>
 <sPathVocabulary>/tmp/voc.txt</sPathVocabulary>
 <iFeatureNum>1000</iFeatureNum>
+<dDrawFrameStep>1.</dDrawFrameStep>
 </opencv_storage>

@@ -42,6 +42,7 @@ namespace Config {
     extern int iImageLoadEnd; /** \var int:读取图像结束标号 */
     extern std::string sPathVocabulary; /** \var string:词典*/
     extern int iFeatureNum;
+    extern double dDrawFrameStep;
 
 };
 
