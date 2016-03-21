@@ -12,6 +12,22 @@ FrameState::FrameState(int _id): mId(_id), mLoaded(false) {
     loadImage(mId);
 }
 
+FrameState::FrameState(const FrameState& _FS) {
+    mId = _FS.mId;
+    mLoaded = _FS.mLoaded;
+    mImage = _FS.mImage.clone();
+    mvKeyPoint = _FS.mvKeyPoint;
+    mDescriptor = _FS.mDescriptor.clone();
+}
+
+FrameState::FrameState(const FrameState* _pFS) {
+    mId = _pFS->mId;
+    mLoaded = _pFS->mLoaded;
+    mImage = _pFS->mImage.clone();
+    mvKeyPoint = _pFS->mvKeyPoint;
+    mDescriptor = _pFS->mDescriptor;
+}
+
 bool FrameState::loadImage(int _id) {
     if (_id < 0) return false;
     mId = _id;
@@ -30,7 +46,6 @@ bool FrameState::loadImage(int _id) {
 }
 
 FrameState::~FrameState() {
-    mImage.release();
 }
 
 int FrameState::extract() {
@@ -54,15 +69,4 @@ int FrameState::extract() {
     
     
     return nKP;
-}
-
-void FrameState::drawKeyPoint() {
-    
-    mImagePointed = mImage.clone();
-    
-    for(int i=0;i<mvKeyPoint.size();i++) {
-        cv::rectangle(mImagePointed, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(255,0,0));
-        
-    }
-    
 }

@@ -16,18 +16,18 @@
 
 typedef DBoW2::TemplatedVocabulary<DBoW2::FORB::TDescriptor, DBoW2::FORB> Vocabulary;
 
-class Database {
-private:
-    const Vocabulary* mpVoc;
-
-public:
-    Database(const Vocabulary &_pVoc): mpVoc(&_pVoc) {}
-    
-    void insert(KeyFrameState* _pKeyFrame);
-    
-    void remove(KeyFrameState* _pKeyFrame);
-    
-
-};
+//class KeyFrameDatabase {
+//private:
+//    const Vocabulary* mpVoc;
+//
+//public:
+//    KeyFrameDatabase(const Vocabulary &_pVoc);
+//    
+//    void insert(KeyFrameState* _pKeyFrame);
+//    
+//    void remove(KeyFrameState* _pKeyFrame);
+//    
+//
+//};
 
 #endif /* Vocabulary_hpp */
