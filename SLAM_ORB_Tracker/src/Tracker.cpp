@@ -19,28 +19,34 @@ Tracker::~Tracker() {
 }
 
 int Tracker::run() {
-    return threadRun();
+    while(true) threadRun();
+
+    return 0;
 }
 
 int Tracker::threadRun() {
-    while ( true ) {
-        meLastMode = meMode;
 
-        // this get method is sync.
-        mpCurFrame = mpInputBuffer->get();
-        mpCurFrame->extract();
-        
-        
-        
-        if ( meMode == WorkMode::InitStep0 ) {
-            // init first keyFrame
-            // init first camera pose
-            initPose();
-            meMode = WorkMode::Normal;
-        }
-        else if ( meMode == WorkMode::InitStep1 ) {
-            // obtain second keyframe to build
-            
+    if ( meMode == WorkMode::Fail ) {
+        return -1;
+    }
+
+    meLastMode = meMode;
+
+    // this get method is sync.
+    mpCurFrame = mpInputBuffer->get();
+    mpCurFrame->extract();
+
+
+
+    if ( meMode == WorkMode::InitStep0 ) {
+        // init first keyFrame
+        // init first camera pose
+        initPose();
+        meMode = WorkMode::Normal;
+    }
+    else if ( meMode == WorkMode::InitStep1 ) {
+        // obtain second keyframe to build
+
 //            MotionState motion;
 //            motion.mvIds[0] = mpPreFrame->mId;
 //            motion.mvIds[1] = mpCurFrame->mId;
@@ -49,53 +55,57 @@ int Tracker::threadRun() {
 //            
 //            mCurPose = mCurPose.move(motion);
 //            meMode = WorkMode::Normal;
-        }
-        // inited
-        else {
-            bool bStatus = true;
-            MotionState motion;
-            
-            // 1. get camera pose
-            if ( meMode == WorkMode::Normal ) {
-                // tracking
-                
-                int nmatches = match( mpCurFrame, mpPreFrame );
-                std::cout<< "match: " <<nmatches << std::endl;
-                bStatus = computeMotion(mpCurFrame, mpPreFrame, motion);
-                std::cout<< "motion " << bStatus << " "<<motion << std::endl;
-                
-                
-            }
-            else {
-                // relocalise
-            }
-            
-            // 2. build map track and map point
-            
-            
-            // 3. insert keyframe
-            
-            
-            // 4. if any failed
-            if ( bStatus == false ) {
-            //    meMode = WorkMode::Fail;
-                continue;
-            }
-            
-            std::cout << mCurPose << std::endl;
-            mCurPose = mCurPose.move(motion);
-            std::cout << mCurPose << std::endl;
+    }
+    // inited
+    else {
+        bool bStatus = true;
+        MotionState motion;
+
+        // 1. get camera pose
+        if ( meMode == WorkMode::Normal ) {
+            // tracking
+
+            int nmatches = match(mpPreFrame, mpCurFrame, mvPair);
+            std::cout<< "match: " <<nmatches << std::endl;
+            //nmatches = filerByOpticalFlow(mpPreFrame, mpCurFrame, mvPair);
+            //std::cout<< "match: " <<nmatches << std::endl;
+            bStatus = computeMotion(mpPreFrame, mpCurFrame, motion);
+            std::cout<< "motion " << bStatus << " "<<motion << std::endl;
+
+            drawFilter(mpCurFrame, mvPair[1]);
 
         }
-        
-        
-        
-        updateDrawer();
-        
-        // clone current to previous
-        mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
-        //meLastMode = meMode;
+        else {
+            // relocalise
+        }
+
+        // 2. build map track and map point
+
+
+        // 3. insert keyframe
+
+
+        // 4. if any failed
+        if ( bStatus == false ) {
+            //meMode = WorkMode::Fail;
+            //updateDrawer();
+            return -1;
+        }
+
+        std::cout << mCurPose << std::endl;
+        mCurPose = mCurPose.move(motion);
+        std::cout << mCurPose << std::endl;
+
     }
+
+
+
+    updateDrawer();
+
+    // clone current to previous
+    mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
+    //meLastMode = meMode;
+    return 0;
 }
 
 
@@ -112,7 +122,7 @@ void Tracker::initPose() {
 }
 
 
-int Tracker::match(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPreFrame) {
+int Tracker::match(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *mvPair) {
 
     cv::BruteForceMatcher<cv::L2<float>> BFMatcher;
     std::vector<cv::DMatch> vBFMatches;
@@ -133,7 +143,7 @@ int Tracker::match(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPre
 }
 
 
-bool Tracker::computeMotion(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPreFrame, MotionState& motion) {
+bool Tracker::computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, MotionState& motion) {
 
     //是否能够解基础矩阵(满足匹配点数大于minFundamentMatches)
     bool _isUseFundamentalMatrix = mvPair[0].size() >= 10;
@@ -150,7 +160,7 @@ bool Tracker::computeMotion(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameSt
     //如果可以解基础矩阵
     if (_isUseFundamentalMatrix) {
         
-        matFundamental = cv::findFundamentalMat(mvPair[0], mvPair[1], matFundStatus, CV_FM_LMEDS);
+        matFundamental = cv::findFundamentalMat(mvPair[0], mvPair[1], matFundStatus, CV_FM_RANSAC);
         
         //本质矩阵计算
         cv::Mat matE(3, 3, CV_64FC1);
@@ -281,4 +291,75 @@ bool Tracker::computeMotion(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameSt
     
 
     return retStatus;
+}
+
+
+int Tracker::filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *mvPair) {
+    double threshold = 100.0f;
+
+    // 光流运算匹配
+    std::vector<cv::Point2f> vOpticalFound;
+    std::vector<uchar> vOpticalStatus;
+    std::vector<float> vOpticalErr;
+
+    printf("%d %d %d %d\n", pPreFrame->mImage.rows,
+        pCurFrame->mImage.rows,
+        mvPair[0].size(), mvPair[1].size());
+
+    cv::calcOpticalFlowPyrLK(
+            pPreFrame->mImage, pCurFrame->mImage,
+            mvPair[0], vOpticalFound,
+            vOpticalStatus, vOpticalErr);
+
+    //根据阈值筛点
+/*    for (int nStatus = 0; nStatus < vOpticalStatus.size(); nStatus++) {
+        if (true == vOpticalStatus[nStatus]) {
+            cv::Point2f
+                    &p_Pre = mvPair[0][nStatus],
+                    &p_BF = mvPair[1][nStatus],
+                    &p_OF = vOpticalFound[nStatus];
+            double dx = abs(p_BF.x - p_OF.x),
+                    dy = abs(p_BF.y - p_OF.y);
+            if (dx*dx + dy*dy > threshold) {
+                vOpticalStatus[nStatus] = false;
+            }
+        }
+    }*/
+
+    std::vector<cv::Point2f>::iterator iterPoint[2] = { mvPair[0].begin(), mvPair[1].begin() };
+    for(int nStatus = 0 ;
+        nStatus!=vOpticalStatus.size() &&
+        iterPoint[0] != mvPair[0].end() &&
+        iterPoint[1] != mvPair[1].end();
+        nStatus++)
+    {
+
+        cv::Point2f
+            &ptPre = *iterPoint[0],
+            &ptCur = *iterPoint[1];
+
+        double dx = abs(ptPre.x - ptCur.x),
+                dy = abs(ptPre.y - ptCur.y);
+
+        if ( dx*dx+dy*dy > threshold || false == vOpticalStatus[nStatus]) {
+            iterPoint[0] = mvPair[0].erase(iterPoint[0]);
+            iterPoint[1] = mvPair[1].erase(iterPoint[1]);
+        }
+        else {
+            iterPoint[0]++;
+            iterPoint[1]++;
+        }
+
+    }
+
+
+    return mvPair[0].size();
+}
+
+void Tracker::drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f> &mvPoint) {
+
+    for(int i=0;i<mvPoint.size();i++) {
+        cv::rectangle(pFrame->mImage, mvPoint[i] - cv::Point2f(0.5,0.5), mvPoint[i] + cv::Point2f(0.5,0.5), cv::Scalar(0,0,255));
+    }
+
 }

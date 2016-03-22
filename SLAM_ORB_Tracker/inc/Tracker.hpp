@@ -52,17 +52,17 @@ private:
     void updateDrawer();
     
     std::vector<cv::Point2f> mvPair[2];
-    int match(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPreFrame);
-    bool computeMotion(shared_ptr<FrameState> pCurFrame, shared_ptr<FrameState> pPreFrame, MotionState& motion);
+    int match(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *mvPair);
+    int filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> mvPair[2]);
+    bool computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, MotionState& motion);
+    void drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f>& mvPoint);
     
 public:
     Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD);
     ~Tracker();
     
     int run();
-    
-    bool hasNext();
-    
+
     
 };
 
