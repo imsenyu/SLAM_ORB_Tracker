@@ -67,8 +67,8 @@ int Tracker::threadRun() {
 
             int nmatches = match(mpPreFrame, mpCurFrame, mvPair);
             std::cout<< "match: " <<nmatches << std::endl;
-            //nmatches = filerByOpticalFlow(mpPreFrame, mpCurFrame, mvPair);
-            //std::cout<< "match: " <<nmatches << std::endl;
+            nmatches = filerByOpticalFlow(mpPreFrame, mpCurFrame, mvPair);
+            std::cout<< "match: " <<nmatches << std::endl;
             bStatus = computeMotion(mpPreFrame, mpCurFrame, motion);
             std::cout<< "motion " << bStatus << " "<<motion << std::endl;
 
@@ -295,12 +295,12 @@ bool Tracker::computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameSt
 
 
 int Tracker::filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *mvPair) {
-    double threshold = 100.0f;
+    double threshold = Config::dOpticalFlowThreshold;
 
     // 光流运算匹配
-    std::vector<cv::Point2f> vOpticalFound;
-    std::vector<uchar> vOpticalStatus;
-    std::vector<float> vOpticalErr;
+    std::vector<cv::Point2f> vFound;
+    std::vector<uchar> vStatus;
+    std::vector<float> vErr;
 
     printf("%d %d %d %d\n", pPreFrame->mImage.rows,
         pCurFrame->mImage.rows,
@@ -308,27 +308,27 @@ int Tracker::filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<Fra
 
     cv::calcOpticalFlowPyrLK(
             pPreFrame->mImage, pCurFrame->mImage,
-            mvPair[0], vOpticalFound,
-            vOpticalStatus, vOpticalErr);
+            mvPair[0], vFound,
+            vStatus, vErr);
 
     //根据阈值筛点
-/*    for (int nStatus = 0; nStatus < vOpticalStatus.size(); nStatus++) {
-        if (true == vOpticalStatus[nStatus]) {
+/*    for (int nStatus = 0; nStatus < vStatus.size(); nStatus++) {
+        if (true == vStatus[nStatus]) {
             cv::Point2f
                     &p_Pre = mvPair[0][nStatus],
                     &p_BF = mvPair[1][nStatus],
-                    &p_OF = vOpticalFound[nStatus];
+                    &p_OF = vFound[nStatus];
             double dx = abs(p_BF.x - p_OF.x),
                     dy = abs(p_BF.y - p_OF.y);
             if (dx*dx + dy*dy > threshold) {
-                vOpticalStatus[nStatus] = false;
+                vStatus[nStatus] = false;
             }
         }
     }*/
 
     std::vector<cv::Point2f>::iterator iterPoint[2] = { mvPair[0].begin(), mvPair[1].begin() };
     for(int nStatus = 0 ;
-        nStatus!=vOpticalStatus.size() &&
+        nStatus!= vStatus.size() &&
         iterPoint[0] != mvPair[0].end() &&
         iterPoint[1] != mvPair[1].end();
         nStatus++)
@@ -336,12 +336,13 @@ int Tracker::filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<Fra
 
         cv::Point2f
             &ptPre = *iterPoint[0],
-            &ptCur = *iterPoint[1];
+            &ptCur = *iterPoint[1],
+            &ptFound = vFound[nStatus];
 
-        double dx = abs(ptPre.x - ptCur.x),
-                dy = abs(ptPre.y - ptCur.y);
+        double dx = fabs(ptCur.x - ptFound.x),
+                dy = fabs(ptCur.y - ptFound.y);
 
-        if ( dx*dx+dy*dy > threshold || false == vOpticalStatus[nStatus]) {
+        if ( dx*dx+dy*dy > threshold || false == vStatus[nStatus]) {
             iterPoint[0] = mvPair[0].erase(iterPoint[0]);
             iterPoint[1] = mvPair[1].erase(iterPoint[1]);
         }

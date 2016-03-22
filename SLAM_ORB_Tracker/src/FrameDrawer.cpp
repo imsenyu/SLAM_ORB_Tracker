@@ -22,7 +22,7 @@ void FrameDrawer::drawFeaturePoint() {
         mImageDraw = mImage.clone();
     
     for(int i=0;i<mvKeyPoint.size();i++) {
-        cv::rectangle(mImageDraw, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(255,0,0));
+        cv::rectangle(mImageDraw, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(255,0,0,128));
     }
 }
 

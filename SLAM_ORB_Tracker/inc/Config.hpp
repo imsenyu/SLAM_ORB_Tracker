@@ -44,6 +44,7 @@ namespace Config {
     extern int iFeatureNum;
     extern double dDrawFrameStep;
     extern cv::Mat mCameraParameter;
+    extern double dOpticalFlowThreshold;
 
 };
 
