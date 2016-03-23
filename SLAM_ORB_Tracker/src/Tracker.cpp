@@ -43,6 +43,8 @@ int Tracker::threadRun() {
         // init first camera pose
         initPose();
         meMode = WorkMode::Normal;
+
+        //initStepFirstKeyFrame();
     }
     else if ( meMode == WorkMode::InitStep1 ) {
         // obtain second keyframe to build
@@ -55,6 +57,8 @@ int Tracker::threadRun() {
 //            
 //            mCurPose = mCurPose.move(motion);
 //            meMode = WorkMode::Normal;
+        //initStepSecondKeyFrmae();
+
     }
     // inited
     else {
@@ -362,5 +366,19 @@ void Tracker::drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f>
     for(int i=0;i<mvPoint.size();i++) {
         cv::rectangle(pFrame->mImage, mvPoint[i] - cv::Point2f(0.5,0.5), mvPoint[i] + cv::Point2f(0.5,0.5), cv::Scalar(0,0,255));
     }
+
+}
+
+void Tracker::initStepFirstKeyFrame() {
+    if ( mpCurFrame->mvKeyPoint.size() < 100 ) return;
+
+    if ( mpMapIniter ) delete mpMapIniter;
+
+    mpMapIniter = new MapInitializer(mpCurFrame);
+    meMode = WorkMode::InitStep1;
+
+}
+
+void Tracker::initStepSecondKeyFrmae() {
 
 }

@@ -17,6 +17,7 @@
 #include "MapDrawer.hpp"
 #include "PoseState.hpp"
 #include "MotionState.hpp"
+#include "MapInitializer.hpp"
 
 class Tracker {
 private:
@@ -36,7 +37,9 @@ private:
     
     WorkMode meMode;
     WorkMode meLastMode;
-    
+
+
+private:
     int threadRun();
     
     InputBuffer* mpInputBuffer;
@@ -56,7 +59,11 @@ private:
     int filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> mvPair[2]);
     bool computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, MotionState& motion);
     void drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f>& mvPoint);
-    
+
+    MapInitializer* mpMapIniter;
+    void initStepFirstKeyFrame();
+    void initStepSecondKeyFrmae();
+
 public:
     Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD);
     ~Tracker();
