@@ -64,7 +64,11 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--config vslam_config.xml"
+            argument = "--config"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "vslam_config.xml"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

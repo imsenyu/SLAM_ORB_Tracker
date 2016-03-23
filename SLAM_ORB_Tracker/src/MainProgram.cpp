@@ -16,12 +16,17 @@
 #include "FrameDrawer.hpp"
 #include "MapDrawer.hpp"
 
+#include <opencv2/viz/vizcore.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+
 int main(int argc, char * argv[]) {
-  
+
+
+
     // initialize Config for config load
     Config::parse(argc, argv);
     Config::loadConfig(Config::sPathConfigFile);
-    
+
     // vocabulary initialize
     Vocabulary vocabulary;
     Config::time("voc");
