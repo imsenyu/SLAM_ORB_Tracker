@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EB361ED41C9EED0300883F14"
-               BuildableName = "libDBoW2.dylib"
+               BlueprintIdentifier = "EB2CCF341CA24D5B00170EEE"
+               BuildableName = "libDBoW2.a"
                BlueprintName = "DBoW2"
                ReferencedContainer = "container:SLAM_ORB_Tracker/third/DBoW2/DBoW2.xcodeproj">
             </BuildableReference>
@@ -45,8 +45,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EB361ED41C9EED0300883F14"
-            BuildableName = "libDBoW2.dylib"
+            BlueprintIdentifier = "EB2CCF341CA24D5B00170EEE"
+            BuildableName = "libDBoW2.a"
             BlueprintName = "DBoW2"
             ReferencedContainer = "container:SLAM_ORB_Tracker/third/DBoW2/DBoW2.xcodeproj">
          </BuildableReference>
@@ -63,8 +63,8 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EB361ED41C9EED0300883F14"
-            BuildableName = "libDBoW2.dylib"
+            BlueprintIdentifier = "EB2CCF341CA24D5B00170EEE"
+            BuildableName = "libDBoW2.a"
             BlueprintName = "DBoW2"
             ReferencedContainer = "container:SLAM_ORB_Tracker/third/DBoW2/DBoW2.xcodeproj">
          </BuildableReference>
