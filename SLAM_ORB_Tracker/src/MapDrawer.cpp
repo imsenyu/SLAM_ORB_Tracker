@@ -21,35 +21,33 @@ void MapDrawer::update(PoseState& _poseState) {
 }
 
 void MapDrawer::show() {
-    
-    get();
-    if ( false == inited ) {
-        std::cout<< mCurPose << std::endl;
-        mPrePose = mCurPose;
-        inited = true;
+
+    if ( mBuffer.hasNext() ) {
+        take();
+        if (false == inited) {
+            std::cout << "firstshow"<<mCurPose << std::endl;
+            mPrePose = mCurPose;
+            inited = true;
+        }
+        else {
+            std::cout << "show" <<mCurPose << std::endl;
+            drawCanvas();
+            drawViz();
+            cv::imshow("Map", mPathCanvasWithDir);
+
+            //更新 gPose到新的坐标
+            mPrePose = mCurPose;
+        }
     }
-    else {
-        std::cout<< mCurPose << std::endl;
-        drawCanvas();
-        
-        cv::imshow("Map", mPathCanvasWithDir);
-        cv::waitKey(10);
 
-
-        drawViz();
-        if ( mpVizWin != NULL )
-            mpVizWin->spinOnce(10, true);
-
-
-
-        //更新 gPose到新的坐标
-        mPrePose = mCurPose;
-    }
+    cv::waitKey(10);
+    if ( mpVizWin != NULL )
+        mpVizWin->spinOnce(10, true);
     
 }
 
-void MapDrawer::get() {
-    mCurPose = mBuffer.get();
+void MapDrawer::take() {
+    mCurPose = mBuffer.take();
 }
 
 void MapDrawer::initCanvas() {

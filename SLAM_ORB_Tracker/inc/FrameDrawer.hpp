@@ -11,7 +11,7 @@
 
 #include "stdafx.hpp"
 #include "FrameState.hpp"
-#include "ConcurrentQueue.hpp"
+#include "BlockingQueue.hpp"
 
 class FrameDrawer {
 private:
@@ -19,16 +19,17 @@ private:
     cv::Mat mImage;
     cv::Mat mImageDraw;
     std::vector<cv::KeyPoint> mvKeyPoint;
-    ConcurrentQueue<shared_ptr<FrameState>> mBuffer;
+    BlockingQueue<shared_ptr<FrameState>> mBuffer;
     
     
     void drawFeaturePoint();
     void drawText();
-    void get();
+    void take();
 public:
     FrameDrawer();
     void update(shared_ptr<FrameState> _pFS );
     void show();
+
 };
 
 #endif /* FrameDrawer_hpp */

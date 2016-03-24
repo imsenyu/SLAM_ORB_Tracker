@@ -6,14 +6,14 @@
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
 
-#ifndef ConcurrentQueue_hpp
-#define ConcurrentQueue_hpp
+#ifndef BlockingQueue_hpp
+#define BlockingQueue_hpp
 
 #include "stdafx.hpp"
 #include <boost/interprocess/sync/interprocess_semaphore.hpp>
 
 template <class _Ele>
-class ConcurrentQueue {
+class BlockingQueue {
     typedef boost::interprocess::interprocess_semaphore semaphore;
     
     semaphore mSemFull;
@@ -25,7 +25,7 @@ class ConcurrentQueue {
     
 public:
     
-    ConcurrentQueue(int _capacity = 100):
+    BlockingQueue(int _capacity = 100):
     capacity(_capacity), mSemMutex(1), mSemFull(0), mSemEmpty(_capacity)  {
         
     }
@@ -43,7 +43,7 @@ public:
         mSemFull.post();
     }
 
-    _Ele get() {
+    _Ele take() {
         mSemFull.wait();
         mSemMutex.wait();
         

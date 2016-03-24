@@ -57,7 +57,8 @@ PoseState PoseState::move(MotionState& _motion) {
     if (true) {
         cv::Mat tT = _motion.mMatT.clone();
         tT.at<double>(1, 0) = 0.0f;
-        tT *= 1.0f / cv::norm(tT);
+
+        if(fabs(tT.at<double>(0, 0))+fabs(tT.at<double>(2, 0))>0.0f) tT *= 1.0f / cv::norm(tT);
         matLocalPos = matLocalPos + mDir3 * tT;// *  1.65f / motion.getScale();
     }
     else {

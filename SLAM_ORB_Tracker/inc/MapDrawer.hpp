@@ -12,7 +12,7 @@
 #include "stdafx.hpp"
 #include "PoseState.hpp"
 #include "MotionState.hpp"
-#include "ConcurrentQueue.hpp"
+#include "BlockingQueue.hpp"
 #include <opencv2/viz/viz3d.hpp>
 #include <opencv2/viz/vizcore.hpp>
 
@@ -34,14 +34,15 @@ private:
     cv::Mat mPathCanvas;
     cv::Mat mPathCanvasWithDir;
     
-    ConcurrentQueue<PoseState> mBuffer;
-    void get();
+    BlockingQueue<PoseState> mBuffer;
+    void take();
     bool inited;
 public:
     MapDrawer();
     
     void update(PoseState& _poseState);
     void show();
+
 };
 
 #endif /* MapDrawer_hpp */

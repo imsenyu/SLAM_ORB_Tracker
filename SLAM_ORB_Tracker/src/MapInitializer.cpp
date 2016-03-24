@@ -7,5 +7,14 @@
 
 MapInitializer::MapInitializer(shared_ptr<FrameState> _pFS):
     mpInitFrame(_pFS) {
+    //get All KeyPoint from initFrame
+}
 
+bool MapInitializer::init(shared_ptr<FrameState> _pFS, std::vector<int> vMatchPair12) {
+
+
+
+
+
+ return false;
 }

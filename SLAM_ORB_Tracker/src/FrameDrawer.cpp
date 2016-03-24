@@ -35,8 +35,8 @@ void FrameDrawer::drawText() {
 
 }
 
-void FrameDrawer::get() {
-    shared_ptr<FrameState> top = mBuffer.get();
+void FrameDrawer::take() {
+    shared_ptr<FrameState> top = mBuffer.take();
     mImage = top->mImage;
     mvKeyPoint = top->mvKeyPoint;
     mId = top->mId;
@@ -44,15 +44,19 @@ void FrameDrawer::get() {
 
 void FrameDrawer::show() {
 
-    get();   
-    
-    drawFeaturePoint();
-    drawText();
-    
-    cv::imshow("FeaturedFrame", mImageDraw);
-    cv::waitKey(10);
+    if ( mBuffer.hasNext() ) {
+        take();
 
-    mImageDraw = cv::Mat();
+        drawFeaturePoint();
+        drawText();
+
+        cv::imshow("FeaturedFrame", mImageDraw);
+
+        mImageDraw = cv::Mat();
+    }
+
+
+    cv::waitKey(10);
     
 }
 

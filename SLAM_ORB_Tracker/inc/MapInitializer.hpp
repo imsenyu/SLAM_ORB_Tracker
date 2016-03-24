@@ -17,7 +17,7 @@ private:
 
 public:
     MapInitializer(shared_ptr<FrameState> _pFS);
-
+    bool init(shared_ptr<FrameState> _pFS, std::vector<int> vMatchPair12);
 };
 
 

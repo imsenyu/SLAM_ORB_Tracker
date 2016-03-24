@@ -11,7 +11,7 @@
 
 #include "stdafx.hpp"
 #include "FrameState.hpp"
-#include "ConcurrentQueue.hpp"
+#include "BlockingQueue.hpp"
 
 
 class InputBuffer {
@@ -23,7 +23,7 @@ private:
     int mCurIdx;
     int threadRun();
     
-    ConcurrentQueue<shared_ptr<FrameState>> mBuffer;
+    BlockingQueue<shared_ptr<FrameState>> mBuffer;
     void put(shared_ptr<FrameState> ptr);
 
 public:

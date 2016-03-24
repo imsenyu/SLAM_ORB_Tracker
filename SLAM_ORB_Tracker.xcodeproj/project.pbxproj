@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6842405E4B73F91D4B553B4F /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424BCBCC9C77B25984FCC0 /* Map.cpp */; };
 		684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684248FBF32618DB250B4B50 /* MapInitializer.cpp */; };
+		68424567E98D51CFA9EA8EC1 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 68424C0A731E1805A75FB237 /* Initializer.cc */; };
 		EB2CCF701CA24E0300170EEE /* libDBoW2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */; };
 		EB301C371C9F94AB00F685EE /* libg2o_cli.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */; };
 		EB301C381C9F94AB00F685EE /* libg2o_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */; };
@@ -142,10 +143,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		68424189E6A92C803627ED07 /* BowVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BowVector.h; path = third/DBoW2/DBoW2/BowVector.h; sourceTree = "<group>"; };
+		68424331FB87CB271CDE3B03 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
+		6842444402A24606AC45445A /* FClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FClass.h; path = third/DBoW2/DBoW2/FClass.h; sourceTree = "<group>"; };
+		684244793E8A9700F5D5AFF7 /* ScoringObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoringObject.h; path = third/DBoW2/DBoW2/ScoringObject.h; sourceTree = "<group>"; };
+		6842448257EE4BDC2325F11C /* Timestamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timestamp.h; sourceTree = "<group>"; };
+		68424689FB97E22674F6EADC /* FeatureVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureVector.h; path = third/DBoW2/DBoW2/FeatureVector.h; sourceTree = "<group>"; };
 		6842470832A1DC42A57812C7 /* MapInitializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapInitializer.hpp; sourceTree = "<group>"; };
+		684247A2112D274416D90446 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer.h; path = third/ORB/Initializer.h; sourceTree = "<group>"; };
 		684248FBF32618DB250B4B50 /* MapInitializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapInitializer.cpp; sourceTree = "<group>"; };
 		68424AD6B666DAA47A38A761 /* Map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Map.hpp; sourceTree = "<group>"; };
 		68424BCBCC9C77B25984FCC0 /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
+		68424C0A731E1805A75FB237 /* Initializer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Initializer.cc; path = third/ORB/Initializer.cc; sourceTree = "<group>"; };
 		EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDBoW2.a; path = "../../../Library/Developer/Xcode/DerivedData/SLAM_ORB_Tracker-dwkscwtidfjkxdggobyagrolwzft/Build/Products/Debug/libDBoW2.a"; sourceTree = "<group>"; };
 		EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_cli.dylib; path = /usr/local/lib/libg2o_cli.dylib; sourceTree = "<absolute>"; };
 		EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_core.dylib; path = /usr/local/lib/libg2o_core.dylib; sourceTree = "<absolute>"; };
@@ -183,7 +192,7 @@
 		EB301C601CA0008A00F685EE /* PoseState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PoseState.hpp; sourceTree = "<group>"; };
 		EB301C611CA0208300F685EE /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 		EB301C641CA021E900F685EE /* Utils.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Utils.hpp; sourceTree = "<group>"; };
-		EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConcurrentQueue.hpp; sourceTree = "<group>"; };
+		EB361E1F1C9EAD8400883F14 /* BlockingQueue.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlockingQueue.hpp; sourceTree = "<group>"; };
 		EB361E201C9EC1C000883F14 /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tracker.cpp; sourceTree = "<group>"; };
 		EB361E231C9EC1EB00883F14 /* LocalMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalMapper.cpp; sourceTree = "<group>"; };
 		EB361E261C9EC1F500883F14 /* LoopCloser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoopCloser.cpp; sourceTree = "<group>"; };
@@ -400,6 +409,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		684241534BE018B5B4A6C48A /* ORB */ = {
+			isa = PBXGroup;
+			children = (
+				68424C0A731E1805A75FB237 /* Initializer.cc */,
+				684247A2112D274416D90446 /* Initializer.h */,
+			);
+			name = ORB;
+			sourceTree = "<group>";
+		};
+		68424C151452BA54174B1071 /* DUtils */ = {
+			isa = PBXGroup;
+			children = (
+				68424331FB87CB271CDE3B03 /* Random.h */,
+				6842448257EE4BDC2325F11C /* Timestamp.h */,
+			);
+			name = DUtils;
+			path = third/DBoW2/DUtils;
+			sourceTree = "<group>";
+		};
 		EB301C1D1C9F946B00F685EE /* g2o */ = {
 			isa = PBXGroup;
 			children = (
@@ -436,6 +464,8 @@
 			isa = PBXGroup;
 			children = (
 				EB361E7A1C9EE35A00883F14 /* DBoW2 */,
+				684241534BE018B5B4A6C48A /* ORB */,
+				68424C151452BA54174B1071 /* DUtils */,
 			);
 			name = third;
 			sourceTree = "<group>";
@@ -445,6 +475,10 @@
 			children = (
 				EB361F6E1C9EEE9E00883F14 /* FORB.h */,
 				EB361F6F1C9EEE9E00883F14 /* TemplatedVocabulary.h */,
+				68424189E6A92C803627ED07 /* BowVector.h */,
+				68424689FB97E22674F6EADC /* FeatureVector.h */,
+				6842444402A24606AC45445A /* FClass.h */,
+				684244793E8A9700F5D5AFF7 /* ScoringObject.h */,
 			);
 			name = DBoW2;
 			sourceTree = "<group>";
@@ -522,7 +556,7 @@
 				EB361E291C9EC21700883F14 /* LocalMapper.hpp */,
 				EB361E2A1C9EC21800883F14 /* LoopCloser.hpp */,
 				EB361E2B1C9EC21800883F14 /* Tracker.hpp */,
-				EB361E1F1C9EAD8400883F14 /* ConcurrentQueue.hpp */,
+				EB361E1F1C9EAD8400883F14 /* BlockingQueue.hpp */,
 				EBFE5E961C9E943200E6DA0B /* FrameState.hpp */,
 				EBFE5E911C9E830D00E6DA0B /* Constant.hpp */,
 				EBFE5CDB1C9DB16700E6DA0B /* Config.hpp */,
@@ -712,6 +746,7 @@
 				EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */,
 				6842405E4B73F91D4B553B4F /* Map.cpp in Sources */,
 				684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */,
+				68424567E98D51CFA9EA8EC1 /* Initializer.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

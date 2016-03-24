@@ -41,7 +41,7 @@ void InputBuffer::put(shared_ptr<FrameState> ptr) {
 }
 
 shared_ptr<FrameState> InputBuffer::get() {
-    auto ret = mBuffer.get();
+    auto ret = mBuffer.take();
     //std::cout<< "get " << ret->mId << std::endl;
     return ret;
 }

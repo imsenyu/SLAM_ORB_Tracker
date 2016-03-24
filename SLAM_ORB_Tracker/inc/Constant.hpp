@@ -12,7 +12,8 @@ namespace Const{
 	extern double arr31_001000[];
 	/** \var Matrix(3,3)矩阵初始化数组 */
 	extern double arr33[];
-	
+	extern double arr44[];
+
 	/** \var Matrix(3,1)[0,0,1]^T */
 	extern const cv::Mat mat31_001;
 	/** \var Matrix(3,1)[0,1,0]^T */
@@ -30,6 +31,8 @@ namespace Const{
 	extern const cv::Mat mat33_111;
 	/** \var Matrix(3,3) [-1,0,0;0,1,0;0,0,-1] */
 	extern const cv::Mat mat33_rot180;
+	/** \var Matrix(4,4) [eye] */
+	extern const cv::Mat mat44_1111;
 
 	/** \var Point3 [0,0,0]^T */
 	extern const cv::Point3d pnt3d_000;

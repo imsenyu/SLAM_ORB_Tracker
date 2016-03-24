@@ -19,7 +19,7 @@ public:
     int mId;
     bool mLoaded;
     cv::Mat mImage;
-    
+    cv::Mat mT; // the 4x4 matrix transform one point from startposition's coord to this cameraposition's coord
     std::vector<cv::KeyPoint> mvKeyPoint;
     cv::Mat mDescriptor;
     

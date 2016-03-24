@@ -18,6 +18,7 @@
 #include "PoseState.hpp"
 #include "MotionState.hpp"
 #include "MapInitializer.hpp"
+#include "Initializer.h"
 
 class Tracker {
 private:
@@ -45,6 +46,7 @@ private:
     InputBuffer* mpInputBuffer;
     shared_ptr<FrameState> mpPreFrame;
     shared_ptr<FrameState> mpCurFrame;
+    shared_ptr<FrameState> mpIniFrame;
     
     PoseState mCurPose;
     void initPose();
@@ -54,15 +56,21 @@ private:
     MapDrawer* mpMapDrawer;
     void updateDrawer();
     
-    std::vector<cv::Point2f> mvPair[2];
-    int match(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *mvPair);
-    int filerByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> mvPair[2]);
-    bool computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, MotionState& motion);
-    void drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f>& mvPoint);
+    std::vector<int> mvMatchPair12;
+    std::vector<uchar> mvMatchMask12;
+    std::vector<cv::Point2f> mvMatchPoint[2];
+    int match(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<int>& vMatchPair12, std::vector<uchar>& vMatchMask12, std::vector<cv::Point2f> vMatchPoint[2]);
+    int filterByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<int>& vMatchPair12, std::vector<uchar>& vMatchMask12, std::vector<cv::Point2f> vMatchPoint[2]);
+    //bool computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *vMatchPoint, MotionState &motion, std::vector<uchar> &vMatchMask);
+    //void triangulateDLT(cv::Point2f &xl,cv::Point2f &xr,cv::Mat &Pl,cv::Mat &Pr, cv::Mat &point3d);
+    //int checkRT(cv::Mat matR, cv::Mat matT, std::vector<cv::Point2f> *vMatchPoint, std::vector<uchar> &vMatchMask);
+    //void drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f>& mvPoint);
 
-    MapInitializer* mpMapIniter;
+    ORB_SLAM::Initializer* mpIniter;
     void initStepFirstKeyFrame();
-    void initStepSecondKeyFrmae();
+    MotionState mMotion;
+    bool initStepSecondKeyFrame();
+    bool initStepBuildMap(MotionState initMotion);
 
 public:
     Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD);
