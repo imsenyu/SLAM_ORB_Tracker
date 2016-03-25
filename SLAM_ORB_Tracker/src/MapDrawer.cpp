@@ -9,7 +9,7 @@
 
 #include "MapDrawer.hpp"
 
-MapDrawer::MapDrawer() : inited(false), mpVizWin(NULL) {
+MapDrawer::MapDrawer(Map *_pMap) : inited(false), mpVizWin(NULL), mpMap(_pMap) {
     initCanvas();
     initViz();
 }
@@ -122,4 +122,13 @@ void MapDrawer::drawViz() {
     mCamPose = cv::viz::makeCameraPose(cam_pos, cam_focal_point, cam_y_dir);
 
     mpVizWin->setViewerPose(mCamPose);
+
+    std::set<shared_ptr<MapPoint>> spMapPoint = mpMap->mspMapPoint;
+    auto iter = spMapPoint.begin();
+    for(; iter!=spMapPoint.end(); iter++) {
+        shared_ptr<MapPoint> pMP = *iter;
+
+        cv::viz::WSphere curPoint(Utils::convert(pMP->mPos),0.05f, 10, cv::viz::Color::black());
+        mpVizWin->showWidget( cv::format("mp-%d", pMP->getUID()), curPoint );
+    }
 }

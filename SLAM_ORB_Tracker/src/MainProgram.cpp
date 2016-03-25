@@ -15,6 +15,7 @@
 #include "Tracker.hpp"
 #include "FrameDrawer.hpp"
 #include "MapDrawer.hpp"
+#include "Map.hpp"
 
 #include <opencv2/viz/vizcore.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
@@ -38,7 +39,7 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
     
-    
+    Map map;
     
     // initialize InputBuffer for image read
     InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
@@ -46,8 +47,8 @@ int main(int argc, char * argv[]) {
     
     // initialize Tracker for localization
     FrameDrawer frameDrawer;
-    MapDrawer mapDrawer;
-    Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer);
+    MapDrawer mapDrawer(&map);
+    Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer, &vocabulary, &map);
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
     
     

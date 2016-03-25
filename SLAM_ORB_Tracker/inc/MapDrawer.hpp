@@ -13,6 +13,8 @@
 #include "PoseState.hpp"
 #include "MotionState.hpp"
 #include "BlockingQueue.hpp"
+#include "Map.hpp"
+
 #include <opencv2/viz/viz3d.hpp>
 #include <opencv2/viz/vizcore.hpp>
 
@@ -23,6 +25,7 @@ private:
 
     cv::viz::Viz3d* mpVizWin;
     cv::Affine3f mCamPose;
+    Map* mpMap;
 
     void initViz();
     void drawViz();
@@ -38,7 +41,7 @@ private:
     void take();
     bool inited;
 public:
-    MapDrawer();
+    MapDrawer(Map *_pMap);
     
     void update(PoseState& _poseState);
     void show();

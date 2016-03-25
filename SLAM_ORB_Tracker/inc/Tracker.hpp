@@ -18,7 +18,12 @@
 #include "PoseState.hpp"
 #include "MotionState.hpp"
 #include "MapInitializer.hpp"
+#include "KeyFrameState.hpp"
+#include "Map.hpp"
+#include "MapPoint.hpp"
+//ORB
 #include "Initializer.h"
+
 
 class Tracker {
 private:
@@ -67,13 +72,15 @@ private:
     //void drawFilter(shared_ptr<FrameState> pFrame, std::vector<cv::Point2f>& mvPoint);
 
     ORB_SLAM::Initializer* mpIniter;
+    Vocabulary* mpVocabulary;
+    Map* mpMap;
     void initStepFirstKeyFrame();
     MotionState mMotion;
     bool initStepSecondKeyFrame();
-    bool initStepBuildMap(MotionState initMotion);
+    bool initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D);
 
 public:
-    Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD);
+    Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap);
     ~Tracker();
     
     int run();

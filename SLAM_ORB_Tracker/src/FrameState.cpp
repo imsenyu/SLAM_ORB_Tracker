@@ -65,8 +65,11 @@ int FrameState::extract() {
     }
 
     int nKP = mvKeyPoint.size();
+    mvpMapPoint = std::vector<shared_ptr<MapPoint>>( nKP, shared_ptr<MapPoint>(NULL) );
+    mvMatchMask = std::vector<uchar>( nKP, false );
     if ( nKP == 0 ) return 0;
-    
-    
+
     return nKP;
 }
+
+

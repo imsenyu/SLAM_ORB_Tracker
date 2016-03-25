@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6842405E4B73F91D4B553B4F /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424BCBCC9C77B25984FCC0 /* Map.cpp */; };
+		6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */; };
 		684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684248FBF32618DB250B4B50 /* MapInitializer.cpp */; };
 		68424567E98D51CFA9EA8EC1 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 68424C0A731E1805A75FB237 /* Initializer.cc */; };
 		EB2CCF701CA24E0300170EEE /* libDBoW2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */; };
@@ -149,6 +150,8 @@
 		684244793E8A9700F5D5AFF7 /* ScoringObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoringObject.h; path = third/DBoW2/DBoW2/ScoringObject.h; sourceTree = "<group>"; };
 		6842448257EE4BDC2325F11C /* Timestamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timestamp.h; sourceTree = "<group>"; };
 		68424689FB97E22674F6EADC /* FeatureVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureVector.h; path = third/DBoW2/DBoW2/FeatureVector.h; sourceTree = "<group>"; };
+		684246AC35F9293964205A49 /* MapPoint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapPoint.hpp; sourceTree = "<group>"; };
+		684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapPoint.cpp; sourceTree = "<group>"; };
 		6842470832A1DC42A57812C7 /* MapInitializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapInitializer.hpp; sourceTree = "<group>"; };
 		684247A2112D274416D90446 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer.h; path = third/ORB/Initializer.h; sourceTree = "<group>"; };
 		684248FBF32618DB250B4B50 /* MapInitializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapInitializer.cpp; sourceTree = "<group>"; };
@@ -539,6 +542,7 @@
 				EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */,
 				68424BCBCC9C77B25984FCC0 /* Map.cpp */,
 				684248FBF32618DB250B4B50 /* MapInitializer.cpp */,
+				684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -564,6 +568,7 @@
 				EBFE5B751C9DA1F100E6DA0B /* stdafx.hpp */,
 				68424AD6B666DAA47A38A761 /* Map.hpp */,
 				6842470832A1DC42A57812C7 /* MapInitializer.hpp */,
+				684246AC35F9293964205A49 /* MapPoint.hpp */,
 			);
 			path = inc;
 			sourceTree = "<group>";
@@ -747,6 +752,7 @@
 				6842405E4B73F91D4B553B4F /* Map.cpp in Sources */,
 				684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */,
 				68424567E98D51CFA9EA8EC1 /* Initializer.cc in Sources */,
+				6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

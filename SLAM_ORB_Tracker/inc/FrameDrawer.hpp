@@ -20,7 +20,7 @@ private:
     cv::Mat mImageDraw;
     std::vector<cv::KeyPoint> mvKeyPoint;
     BlockingQueue<shared_ptr<FrameState>> mBuffer;
-    
+    std::vector<uchar> mvMatchMask;
     
     void drawFeaturePoint();
     void drawText();

@@ -22,7 +22,8 @@ void FrameDrawer::drawFeaturePoint() {
         mImageDraw = mImage.clone();
     
     for(int i=0;i<mvKeyPoint.size();i++) {
-        cv::rectangle(mImageDraw, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(255,0,0,128));
+        if ( mvMatchMask[i] == false ) continue;
+        cv::rectangle(mImageDraw, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(0,0,255,128));
     }
 }
 
@@ -40,6 +41,7 @@ void FrameDrawer::take() {
     mImage = top->mImage;
     mvKeyPoint = top->mvKeyPoint;
     mId = top->mId;
+    mvMatchMask = top->mvMatchMask;
 }
 
 void FrameDrawer::show() {

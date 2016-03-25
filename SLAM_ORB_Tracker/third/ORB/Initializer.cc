@@ -485,7 +485,7 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
     // Recover the 4 motion hypotheses
     DecomposeE(E21,R1,R2,t);  
 
-
+    // this is float Matrix not double
     cv::Mat t1=t;
     cv::Mat t2=-t;
 

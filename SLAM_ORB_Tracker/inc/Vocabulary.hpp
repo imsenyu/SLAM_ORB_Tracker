@@ -12,7 +12,7 @@
 #include "stdafx.hpp"
 #include "FORB.h"
 #include "TemplatedVocabulary.h"
-#include "KeyFrameState.hpp"
+
 
 typedef DBoW2::TemplatedVocabulary<DBoW2::FORB::TDescriptor, DBoW2::FORB> Vocabulary;
 

@@ -8,10 +8,10 @@
 
 #include "Tracker.hpp"
 #include "Initializer.h"
-Tracker::Tracker(InputBuffer* _pIB, FrameDrawer* _pFD, MapDrawer* _pMD):
+Tracker::Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap) :
     mpInputBuffer(_pIB), mpFrameDrawer(_pFD), mpMapDrawer(_pMD),
     meMode(Tracker::WorkMode::InitStep0), meLastMode(Tracker::WorkMode::Start),
-    mpIniter(NULL) {
+    mpIniter(NULL),mpVocabulary(_pVocabulary), mpMap(_pMap) {
     
 }
 
@@ -44,15 +44,14 @@ int Tracker::threadRun() {
         initPose();
 
         initStepFirstKeyFrame();
-
+        updateDrawer();
     }
     else if ( meMode == WorkMode::InitStep1 ) {
         // obtain second keyframe to build
 
         bool st = initStepSecondKeyFrame();
-        if ( st ) {
-            mCurPose = mCurPose.move(mMotion);
-        }
+
+        updateDrawer();
     }
     // inited
     else {
@@ -90,15 +89,11 @@ int Tracker::threadRun() {
             return -1;
         }
 
-//        std::cout << mCurPose << std::endl;
-//
-//        std::cout << mCurPose << std::endl;
-
     }
 
 
 
-    updateDrawer();
+
 
     // clone current to previous
     //mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
@@ -572,6 +567,7 @@ bool Tracker::initStepSecondKeyFrame() {
         return false;
     }
 
+    //不修改 KeyPoint的数量, 只修改是否可用
     numMatch = filterByOpticalFlow(mpIniFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
 
     std::cout<<"init1 flow "<<numMatch<<std::endl;
@@ -591,32 +587,42 @@ bool Tracker::initStepSecondKeyFrame() {
             if(mvMatchPair12[i]>=0 && !vbTriangulated[i])
             {
                 mvMatchPair12[i]=-1;
+                mvMatchMask12[i]=false;
+
                 numMatch--;
+            }
+
+            if ( mvMatchMask12[i] ) {
+                mpCurFrame->mvMatchMask[  mvMatchPair12[i] ] = true;
             }
         }
 
         mMotion.mMatR = cv::Mat(3,3,CV_64FC1);//Rcw.clone();
         mMotion.mMatT = cv::Mat(3,1,CV_64FC1);//tcw.clone();
         //meMode = WorkMode::Normal;
-        for(int i=0;i<3;i++)
-            for(int j=0;j<3;j++)
-                mMotion.mMatR.at<double>(i,j) = Rcw.at<float>(i,j);
 
-        for(int i=0;i<3;i++)
-            mMotion.mMatT.at<double>(i) = tcw.at<float>(i);
+        Rcw.convertTo(mMotion.mMatR, CV_64FC1 );
+//        for(int i=0;i<3;i++)
+//            for(int j=0;j<3;j++)
+//                mMotion.mMatR.at<double>(i,j) = Rcw.at<float>(i,j);
 
+        tcw.convertTo(mMotion.mMatT, CV_64FC1);
+//        for(int i=0;i<3;i++)
+//            mMotion.mMatT.at<double>(i) = tcw.at<float>(i);
+
+        //confirm direction forward
         if ( mMotion.mMatT.at<double>(2) > 0.0f ) {
             mMotion.mMatT = - mMotion.mMatT;
         }
-            mMotion.mMatT = -mMotion.mMatR.inv() * mMotion.mMatT;
-            mMotion.mMatR = mMotion.mMatR.inv();
+//            mMotion.mMatT = -mMotion.mMatR.inv() * mMotion.mMatT;
+//            mMotion.mMatR = mMotion.mMatR.inv();
 
         // this is matrix which transform point in frame(0) to frame(1)
         // not the matrix transform frame0's origin to frame1's origin
         std::cout<<mMotion.mMatR << std::endl<<mMotion.mMatT<<std::endl;
 
 
-        bStatus = initStepBuildMap(mMotion);
+        bStatus = initStepBuildMap(mMotion, vP3D);
 
         if ( false == bStatus ) return false;
 
@@ -632,10 +638,56 @@ bool Tracker::initStepSecondKeyFrame() {
 }
 
 
-bool Tracker::initStepBuildMap(MotionState initMotion){
-    mpIniFrame->mT = Const::mat44_1111;
-    mpCurFrame->mT = cv::Mat(4,4,CV_64FC1);
+bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D) {
+    mpIniFrame->mT2w = Const::mat44_1111;
+    mpCurFrame->mT2w = cv::Mat(4,4,CV_64FC1);
 
+    initMotion.mMatR.copyTo( mpCurFrame->mT2w.rowRange(0,3).colRange(0,3) );
+    initMotion.mMatT.copyTo( mpCurFrame->mT2w.rowRange(0,3).col(3) );
+
+
+    //init KeyFrame;
+    shared_ptr<KeyFrameState> pIniKeyFrame = shared_ptr<KeyFrameState>( new KeyFrameState(mpIniFrame, mpVocabulary) );
+    shared_ptr<KeyFrameState> pCurKeyFrame = shared_ptr<KeyFrameState>( new KeyFrameState(mpCurFrame, mpVocabulary) );
+
+    pIniKeyFrame->getBoW();
+    pCurKeyFrame->getBoW();
+
+    // ok
+    mpMap->insertKeyFrame(pIniKeyFrame);
+    mpMap->insertKeyFrame(pCurKeyFrame);
+
+    int N = mvMatchPair12.size();
+    for(int i=0;i<N;i++) {
+        if ( mvMatchMask12[i] == false ) continue;
+
+        cv::Mat matMapPointPos = Utils::convert(vP3D[i]);
+        // ok
+        shared_ptr<MapPoint> pMapPoint = shared_ptr<MapPoint>( new MapPoint(matMapPointPos, pCurKeyFrame, i) );
+
+        // ok
+        pMapPoint->setKeyFrame(pIniKeyFrame, i);
+        pMapPoint->setKeyFrame(pCurKeyFrame, mvMatchPair12[i]);
+
+
+        // ok
+        pIniKeyFrame->insertMapPoint(pMapPoint, i);
+        pIniKeyFrame->insertMapPoint(pMapPoint, mvMatchPair12[i] );
+
+        // ok
+        mpCurFrame->insertMapPoint( pMapPoint, mvMatchPair12[i] );
+
+        // ok
+        mpMap->insertMapPoint(pMapPoint);
+
+    }
+
+    // TODO:
+    // should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
+
+    // Optimizer::GlobalBundleAdjustemnt(mpMap,20);
+
+    std::cout<< "Init Map's MapPoint size"<<mpMap->mspMapPoint.size()<<std::endl;
 
     return true;
 }
