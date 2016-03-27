@@ -16,8 +16,8 @@
 #include "MapPoint.hpp"
 
 //DBoW2
-#include "BowVector.h"
-#include "FeatureVector.h"
+#include "third/DBoW2/DBoW2/BowVector.h"
+#include "third/DBoW2/DBoW2/FeatureVector.h"
 
 class MapPoint;
 class FrameState;
@@ -27,9 +27,9 @@ private:
 
     Vocabulary* mpVocabulary;
 
-    std::vector<shared_ptr<MapPoint>> mvpMapPoint;
 
-    void updatePose(cv::Mat _mT);
+
+
 
 public:
     KeyFrameState(shared_ptr<FrameState> _pFrame, Vocabulary *_pVocabulary);
@@ -37,6 +37,7 @@ public:
     DBoW2::BowVector mvBow;
     DBoW2::FeatureVector mvFeature;
     shared_ptr<FrameState> mpFrame;
+    std::vector<shared_ptr<MapPoint>> mvpMapPoint;
 
     cv::Mat mT2w;
     cv::Mat mMatR;
@@ -47,7 +48,8 @@ public:
     void insertMapPoint(shared_ptr<MapPoint> pMp, int nP) {
         mvpMapPoint[nP] = pMp;
     }
-
+    void updatePose(cv::Mat _mT);
+    float ComputeSceneMedianDepth(int r);
 };
 
 #endif /* KeyFrameState_hpp */

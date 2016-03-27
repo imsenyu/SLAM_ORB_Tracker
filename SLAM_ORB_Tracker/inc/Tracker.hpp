@@ -21,9 +21,12 @@
 #include "KeyFrameState.hpp"
 #include "Map.hpp"
 #include "MapPoint.hpp"
+#include "Optimizer.hpp"
+
 //ORB
 #include "Initializer.h"
-
+#include "ORBmatcher.h"
+#include "ORBextractor.h"
 
 class Tracker {
 private:
@@ -64,6 +67,7 @@ private:
     std::vector<int> mvMatchPair12;
     std::vector<uchar> mvMatchMask12;
     std::vector<cv::Point2f> mvMatchPoint[2];
+    std::vector<cv::Point2f> mvIniMatched;
     int match(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<int>& vMatchPair12, std::vector<uchar>& vMatchMask12, std::vector<cv::Point2f> vMatchPoint[2]);
     int filterByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<int>& vMatchPair12, std::vector<uchar>& vMatchMask12, std::vector<cv::Point2f> vMatchPoint[2]);
     //bool computeMotion(shared_ptr<FrameState> pPreFrame, shared_ptr<FrameState> pCurFrame, std::vector<cv::Point2f> *vMatchPoint, MotionState &motion, std::vector<uchar> &vMatchMask);
@@ -78,6 +82,7 @@ private:
     MotionState mMotion;
     bool initStepSecondKeyFrame();
     bool initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D);
+    bool TrackFromPreFrame();
 
 public:
     Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap);

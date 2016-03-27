@@ -35,12 +35,14 @@ int Tracker::threadRun() {
 
     // this get method is sync.
     mpCurFrame = mpInputBuffer->get();
-    mpCurFrame->extract();
+
 
 
     if ( meMode == WorkMode::InitStep0 ) {
         // init first keyFrame
         // init first camera pose
+        mpCurFrame->extractInit();
+
         initPose();
 
         initStepFirstKeyFrame();
@@ -48,13 +50,18 @@ int Tracker::threadRun() {
     }
     else if ( meMode == WorkMode::InitStep1 ) {
         // obtain second keyframe to build
+        mpCurFrame->extractInit();
 
         bool st = initStepSecondKeyFrame();
-
+        if ( st ) {
+            mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
+        }
         updateDrawer();
     }
     // inited
     else {
+        mpCurFrame->extractNormal();
+
         bool bStatus = false;
         //MotionState motion;
 
@@ -62,6 +69,25 @@ int Tracker::threadRun() {
         if ( meMode == WorkMode::Normal ) {
             // tracking
             std::cout<< "normal at" << mpCurFrame->mId << std::endl;
+            bStatus = TrackFromPreFrame();
+
+            if ( bStatus ) {
+
+                // TODO: how to insert KeyFrame
+                //if(NeedNewKeyFrame())
+                //    CreateNewKeyFrame();
+                mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
+            }
+            else {
+                meMode = WorkMode::Fail;
+                return -1;
+                // should reset to relocation
+            }
+
+
+
+
+
             //int numMatch = match(mpPreFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint);
             //std::cout<< "match: " << numMatch << std::endl;
             //numMatch = filerByOpticalFlow(mpPreFrame, mpCurFrame, mvMatchPoint);
@@ -83,11 +109,11 @@ int Tracker::threadRun() {
 
 
         // 4. if any failed
-        if ( bStatus == false ) {
-            //meMode = WorkMode::Fail;
-            //updateDrawer();
-            return -1;
-        }
+//        if ( bStatus == false ) {
+//            //meMode = WorkMode::Fail;
+//            //updateDrawer();
+//            return -1;
+//        }
 
     }
 
@@ -339,15 +365,22 @@ int Tracker::filterByOpticalFlow(shared_ptr<FrameState> pPreFrame, shared_ptr<Fr
 //}
 
 void Tracker::initStepFirstKeyFrame() {
+    std::cout<< "init0 at" << mpCurFrame->mId << " "<<mpCurFrame->mvKeyPoint.size()<<std::endl;
     if ( mpCurFrame->mvKeyPoint.size() < 100 ) return;
 
     mpIniFrame = shared_ptr<FrameState>( mpCurFrame );
+
+    //mvIniMatched
+    mvIniMatched.clear();
+    for(int i=0;i<mpIniFrame->mvKeyPoint.size();i++) {
+        mvIniMatched.push_back( mpIniFrame->mvKeyPoint[i].pt );
+    }
 
     if ( mpIniter ) delete mpIniter;
     mpIniter = new ORB_SLAM::Initializer(mpIniFrame,1.0,200);
 
     meMode = WorkMode::InitStep1;
-    std::cout<< "init0 at" << mpCurFrame->mId << std::endl;
+
 
 }
 
@@ -547,7 +580,7 @@ void Tracker::initStepFirstKeyFrame() {
 
 bool Tracker::initStepSecondKeyFrame() {
     bool bStatus = false;
-    std::cout<< "init1 try at" << mpIniFrame->mId<<"-"<<mpCurFrame->mId << std::endl;
+    std::cout<< "init1 try at" << mpIniFrame->mId<<"-"<<mpCurFrame->mId <<" "<<mpCurFrame->mvKeyPoint.size()<< std::endl;
     mMotion.mvIds[0] = mpIniFrame->mId;
     mMotion.mvIds[1] = mpCurFrame->mId;
 
@@ -558,8 +591,11 @@ bool Tracker::initStepSecondKeyFrame() {
 
     // getMatch
     int numMatch;
+    ORB_SLAM::ORBmatcher matcher(0.9,true);
+    //  TODO: is orbSLAM 's matcher good enough?
+    numMatch = matcher.SearchForInitialization(mpIniFrame,mpCurFrame,mvIniMatched,mvMatchPair12,100);
 
-    numMatch = match(mpIniFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
+    //numMatch = match(mpIniFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
 
     std::cout<<"init1 match "<<numMatch<<std::endl;
     if (numMatch < 100) {
@@ -568,9 +604,9 @@ bool Tracker::initStepSecondKeyFrame() {
     }
 
     //不修改 KeyPoint的数量, 只修改是否可用
-    numMatch = filterByOpticalFlow(mpIniFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
+    //numMatch = filterByOpticalFlow(mpIniFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
 
-    std::cout<<"init1 flow "<<numMatch<<std::endl;
+    //std::cout<<"init1 flow "<<numMatch<<std::endl;
     if (numMatch < 100) {
         meMode = WorkMode::InitStep0;
         return false;
@@ -580,21 +616,27 @@ bool Tracker::initStepSecondKeyFrame() {
     cv::Mat tcw; // Current Camera Translation
     vector<bool> vbTriangulated; // Triangulated Correspondences (mvIniMatches)
     vector<cv::Point3f> vP3D;
+    bool bInited = mpIniter->Initialize(mpCurFrame, mvMatchPair12, Rcw, tcw, vP3D, vbTriangulated);
 
-    if ( mpIniter->Initialize(mpCurFrame, mvMatchPair12, Rcw, tcw, vP3D, vbTriangulated)) {
+    std::cout<<"init1 init"<<bInited<<std::endl;
+    if ( bInited) {
         for(size_t i=0, iend=mvMatchPair12.size(); i<iend;i++)
         {
+//            if ( mvMatchPair12[i]<0 ) {
+//                mvMatchMask12[i] = false;
+//            }
+
             if(mvMatchPair12[i]>=0 && !vbTriangulated[i])
             {
                 mvMatchPair12[i]=-1;
-                mvMatchMask12[i]=false;
+                //mvMatchMask12[i]=false;
 
                 numMatch--;
             }
 
-            if ( mvMatchMask12[i] ) {
-                mpCurFrame->mvMatchMask[  mvMatchPair12[i] ] = true;
-            }
+            //if ( mvMatchMask12[i] ) {
+            //    mpCurFrame->mvMatchMask[  mvMatchPair12[i] ] = true;
+            //}
         }
 
         mMotion.mMatR = cv::Mat(3,3,CV_64FC1);//Rcw.clone();
@@ -614,11 +656,12 @@ bool Tracker::initStepSecondKeyFrame() {
         if ( mMotion.mMatT.at<double>(2) > 0.0f ) {
             mMotion.mMatT = - mMotion.mMatT;
         }
-//            mMotion.mMatT = -mMotion.mMatR.inv() * mMotion.mMatT;
-//            mMotion.mMatR = mMotion.mMatR.inv();
+  //          mMotion.mMatT = -mMotion.mMatR.inv() * mMotion.mMatT;
+ //           mMotion.mMatR = mMotion.mMatR.inv();
 
         // this is matrix which transform point in frame(0) to frame(1)
         // not the matrix transform frame0's origin to frame1's origin
+        std::cout<<"init1 initMat"<<Rcw << std::endl<<tcw<<std::endl;
         std::cout<<mMotion.mMatR << std::endl<<mMotion.mMatT<<std::endl;
 
 
@@ -644,7 +687,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 
     initMotion.mMatR.copyTo( mpCurFrame->mT2w.rowRange(0,3).colRange(0,3) );
     initMotion.mMatT.copyTo( mpCurFrame->mT2w.rowRange(0,3).col(3) );
-
+    mpCurFrame->mT2w.at<double>(3,3) = 1.0f;
 
     //init KeyFrame;
     shared_ptr<KeyFrameState> pIniKeyFrame = shared_ptr<KeyFrameState>( new KeyFrameState(mpIniFrame, mpVocabulary) );
@@ -659,9 +702,9 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 
     int N = mvMatchPair12.size();
     for(int i=0;i<N;i++) {
-        if ( mvMatchMask12[i] == false ) continue;
+        if ( mvMatchPair12[i] <0 ) continue;
 
-        cv::Mat matMapPointPos = Utils::convert(vP3D[i]);
+        cv::Mat matMapPointPos = Utils::convertToCvMat31(vP3D[i]);
         // ok
         shared_ptr<MapPoint> pMapPoint = shared_ptr<MapPoint>( new MapPoint(matMapPointPos, pCurKeyFrame, i) );
 
@@ -672,7 +715,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 
         // ok
         pIniKeyFrame->insertMapPoint(pMapPoint, i);
-        pIniKeyFrame->insertMapPoint(pMapPoint, mvMatchPair12[i] );
+        pCurKeyFrame->insertMapPoint(pMapPoint, mvMatchPair12[i] );
 
         // ok
         mpCurFrame->insertMapPoint( pMapPoint, mvMatchPair12[i] );
@@ -682,10 +725,46 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 
     }
 
-    // TODO:
-    // should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
+    // TODO: should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
+    //pKFini->UpdateConnections();
+    //pKFcur->UpdateConnections();
+    // TODO: Optimizer::GlobalBundleAdjustemnt(mpMap,20);
 
-    // Optimizer::GlobalBundleAdjustemnt(mpMap,20);
+
+
+
+    // Set median depth to 1
+    float medianDepth = pIniKeyFrame->ComputeSceneMedianDepth(2);
+    float invMedianDepth = 1.0f/medianDepth;
+    std::cout<<"medianDepth"<<medianDepth<<std::endl;
+    if(medianDepth<0 )
+    {
+        return false;
+    }
+
+    // Scale initial baseline
+    cv::Mat Tc2w = pCurKeyFrame->mT2w.clone();
+    Tc2w.col(3).rowRange(0,3) = Tc2w.col(3).rowRange(0,3)*invMedianDepth;
+    pCurKeyFrame->updatePose(Tc2w);
+
+    std::cout<<"updated Tc2w"<<Tc2w<<std::endl;
+
+    // Scale points
+    std::vector<shared_ptr<MapPoint>> vpAllMapPoints = pIniKeyFrame->mvpMapPoint;
+    for(int iMP=0; iMP<vpAllMapPoints.size(); iMP++)
+    {
+        if(vpAllMapPoints[iMP])
+        {
+            std::cout<<"MapPoint["<<iMP<<"] "<< vpAllMapPoints[iMP]->mPos <<std::endl;
+            shared_ptr<MapPoint> pMP = vpAllMapPoints[iMP];
+            pMP->mPos = pMP->mPos*invMedianDepth;
+        }
+    }
+
+    mpCurFrame->mT2w = pCurKeyFrame->mT2w.clone();
+
+
+
 
     std::cout<< "Init Map's MapPoint size"<<mpMap->mspMapPoint.size()<<std::endl;
 
@@ -693,105 +772,72 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 }
 
 
-//void Tracking::CreateInitialMap(cv::Mat &Rcw, cv::Mat &tcw)
-//{
-//    // Set Frame Poses
-//    mInitialFrame.mTcw = cv::Mat::eye(4,4,CV_32F);
-//    mCurrentFrame.mTcw = cv::Mat::eye(4,4,CV_32F);
-//    Rcw.copyTo(mCurrentFrame.mTcw.rowRange(0,3).colRange(0,3));
-//    tcw.copyTo(mCurrentFrame.mTcw.rowRange(0,3).col(3));
-//
-//    // Create KeyFrames
-//    KeyFrame* pKFini = new KeyFrame(mInitialFrame,mpMap,mpKeyFrameDB);
-//    KeyFrame* pKFcur = new KeyFrame(mCurrentFrame,mpMap,mpKeyFrameDB);
-//
-//    pKFini->ComputeBoW();
-//    pKFcur->ComputeBoW();
-//
-//    // Insert KFs in the map
-//    mpMap->AddKeyFrame(pKFini);
-//    mpMap->AddKeyFrame(pKFcur);
-//
-//    // Create MapPoints and asscoiate to keyframes
-//    for(size_t i=0; i<mvIniMatches.size();i++)
-//    {
-//        if(mvIniMatches[i]<0)
-//            continue;
-//
-//        //Create MapPoint.
-//        cv::Mat worldPos(mvIniP3D[i]);
-//
-//        MapPoint* pMP = new MapPoint(worldPos,pKFcur,mpMap);
-//
-//        pKFini->AddMapPoint(pMP,i);
-//        pKFcur->AddMapPoint(pMP,mvIniMatches[i]);
-//
-//        pMP->AddObservation(pKFini,i);
-//        pMP->AddObservation(pKFcur,mvIniMatches[i]);
-//
-//        pMP->ComputeDistinctiveDescriptors();
-//        pMP->UpdateNormalAndDepth();
-//
-//        //Fill Current Frame structure
-//        mCurrentFrame.mvpMapPoints[mvIniMatches[i]] = pMP;
-//
-//        //Add to Map
-//        mpMap->AddMapPoint(pMP);
-//
+bool Tracker::TrackFromPreFrame() {
+    ORB_SLAM::ORBmatcher matcher(0.9,true);
+    std::vector<shared_ptr<MapPoint>> vpMapPoint;
+    bool bStatus = false;
+    int numMatch = 0;
+
+    // TODO: match
+    numMatch = matcher.WindowSearch(mpPreFrame,mpCurFrame,100,vpMapPoint,0);
+    //numMatch = match(mpPreFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
+    std::cout<<"TrackLast match "<<numMatch<<std::endl;
+
+    // TODO: filterByOptical
+    //numMatch = filterByOpticalFlow(mpPreFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
+    //std::cout<<"TrackLast flow "<<numMatch<<std::endl;
+
+    // mpLsatFrame has its MapPoint vector
+    // TODO: change matchPoint to matchMapPoint
+//    vpMapPoint = std::vector<shared_ptr<MapPoint>>( mpCurFrame->mvKeyPoint.size(), shared_ptr<MapPoint>(NULL) );
+//    int N = mvMatchPair12.size();
+//    int numMatchMapPoint = 0;
+//    for(int i=0;i<N;i++) {
+//        if(false == mvMatchMask12[i]) continue;
+//        if (!mpPreFrame->mvpMapPoint[ i ]) continue;
+//        vpMapPoint[ mvMatchPair12[ i ] ] = mpPreFrame->mvpMapPoint[ i ];
+//        numMatchMapPoint++;
 //    }
-//
-//    // Update Connections
-//    pKFini->UpdateConnections();
-//    pKFcur->UpdateConnections();
-//
-//    // Bundle Adjustment
-//    ROS_INFO("New Map created with %d points",mpMap->MapPointsInMap());
-//
-//    Optimizer::GlobalBundleAdjustemnt(mpMap,20);
-//
-//    // Set median depth to 1
-//    float medianDepth = pKFini->ComputeSceneMedianDepth(2);
-//    float invMedianDepth = 1.0f/medianDepth;
-//
-//    if(medianDepth<0 || pKFcur->TrackedMapPoints()<100)
-//    {
-//        ROS_INFO("Wrong initialization, reseting...");
-//        Reset();
-//        return;
+    //std::cout<< "numMatchMapPoint " <<numMatchMapPoint<<std::endl;
+
+    // TODO: set estimation mT2w
+    mpCurFrame->mT2w = mpPreFrame->mT2w.clone();
+    mpCurFrame->mvpMapPoint = vpMapPoint;
+
+    // TODO: if matches > 10  poseOptimization
+//    if ( numMatch > 10 ) {
+//        Optimizer::PoseOptimization(mpCurFrame);
+//        for(int i =0; i<mpCurFrame->mvbOutlier.size(); i++)
+//            if(mpCurFrame->mvbOutlier[i])
+//            {
+//                mpCurFrame->mvpMapPoint[i]=shared_ptr<MapPoint>(NULL);
+//                mpCurFrame->mvbOutlier[i]=false;
+//                numMatch--;
+//            }
 //    }
-//
-//    // Scale initial baseline
-//    cv::Mat Tc2w = pKFcur->GetPose();
-//    Tc2w.col(3).rowRange(0,3) = Tc2w.col(3).rowRange(0,3)*invMedianDepth;
-//    pKFcur->SetPose(Tc2w);
-//
-//    // Scale points
-//    vector<MapPoint*> vpAllMapPoints = pKFini->GetMapPointMatches();
-//    for(size_t iMP=0; iMP<vpAllMapPoints.size(); iMP++)
-//    {
-//        if(vpAllMapPoints[iMP])
-//        {
-//            MapPoint* pMP = vpAllMapPoints[iMP];
-//            pMP->SetWorldPos(pMP->GetWorldPos()*invMedianDepth);
-//        }
-//    }
-//
-//    mpLocalMapper->InsertKeyFrame(pKFini);
-//    mpLocalMapper->InsertKeyFrame(pKFcur);
-//
-//    mCurrentFrame.mTcw = pKFcur->GetPose().clone();
-//    mLastFrame = Frame(mCurrentFrame);
-//    mnLastKeyFrameId=mCurrentFrame.mnId;
-//    mpLastKeyFrame = pKFcur;
-//
-//    mvpLocalKeyFrames.push_back(pKFcur);
-//    mvpLocalKeyFrames.push_back(pKFini);
-//    mvpLocalMapPoints=mpMap->GetAllMapPoints();
-//    mpReferenceKF = pKFcur;
-//
-//    mpMap->SetReferenceMapPoints(mvpLocalMapPoints);
-//
-//    mpMapPublisher->SetCurrentCameraPose(pKFcur->GetPose());
-//
-//    mState=WORKING;
-//}
+    // TODO: use normal projection match again
+//    numMatch = matcher.SearchByProjection(mpPreFrame,mpCurFrame,50,vpMapPoint);
+//    mpCurFrame->mvpMapPoint = vpMapPoint;
+//    std::cout<<"TrackLast proj "<<numMatch<<std::endl;
+
+
+    // TODO: if numMatch < 10 return
+    if ( numMatch < 10 ) {
+        return false;
+    }
+
+    // TODO: pose Optimization
+    Optimizer::PoseOptimization(mpCurFrame);
+
+    for(int i =0; i<mpCurFrame->mvbOutlier.size(); i++) {
+        if(mpCurFrame->mvbOutlier[i])
+        {
+            mpCurFrame->mvpMapPoint[i]=shared_ptr<MapPoint>(NULL);
+            mpCurFrame->mvbOutlier[i]=false;
+            numMatch--;
+        }
+    }
+    std::cout<< "estimation mT2w "<<mpPreFrame->mT2w<<std::endl;
+    std::cout<< "optimization mT2w "<<mpCurFrame->mT2w<<std::endl;
+    return numMatch > 10;
+}

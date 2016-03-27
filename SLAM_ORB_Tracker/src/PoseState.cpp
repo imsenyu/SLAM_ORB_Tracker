@@ -45,8 +45,8 @@ PoseState PoseState::move(MotionState& _motion) {
     
 
     //cv::Point3转cv::Mat(3,1)
-    cv::Mat matLocalPos = Utils::convert(mPos);
-    cv::Mat matLocalDir = Utils::convert(mDir);
+    cv::Mat matLocalPos = Utils::convertToCvMat31(mPos);
+    cv::Mat matLocalDir = Utils::convertToCvMat31(mDir);
 
     
     cv::Mat matTmpRotate;
@@ -94,8 +94,8 @@ PoseState PoseState::move(MotionState& _motion) {
     }
 
     retPose.mId = vMotionId[1];
-    retPose.mDir = Utils::convert(matLocalDir);
-    retPose.mPos = Utils::convert(matLocalPos);
+    retPose.mDir = Utils::convertToPoint3d(matLocalDir);
+    retPose.mPos = Utils::convertToPoint3d(matLocalPos);
     
     retPose.mDir3 = mDir3.clone();
     

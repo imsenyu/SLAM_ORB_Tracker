@@ -112,7 +112,7 @@ bool Initializer::Initialize(shared_ptr<FrameState> CurrentFrame, const vector<i
 
     // Compute ratio of scores
     float RH = SH/(SH+SF);
-
+    std::cout<<"SH,SF"<<SH<<" "<<SF<<std::endl;
     // Try to reconstruct from homography or fundamental depending on the ratio (0.40-0.45)
     //if(RH>0.40)
     //    return ReconstructH(vbMatchesInliersH,H,mK,R21,t21,vP3D,vbTriangulated,0.01,50);
@@ -498,13 +498,14 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
     int nGood2 = CheckRT(R2,t1,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D2, 4.0*mSigma2, vbTriangulated2, parallax2);
     int nGood3 = CheckRT(R1,t2,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D3, 4.0*mSigma2, vbTriangulated3, parallax3);
     int nGood4 = CheckRT(R2,t2,mvKeys1,mvKeys2,mvMatches12,vbMatchesInliers,K, vP3D4, 4.0*mSigma2, vbTriangulated4, parallax4);
+    printf("nGood1234: %d %d %d %d\n",nGood1, nGood2, nGood3, nGood4);
 
     int maxGood = max(nGood1,max(nGood2,max(nGood3,nGood4)));
 
     R21 = cv::Mat();
     t21 = cv::Mat();
 
-    int nMinGood = max(static_cast<int>(0.5*N),minTriangulated);
+    int nMinGood = max(static_cast<int>(0.9*N),minTriangulated);
 
     int nsimilar = 0;
     if(nGood1>0.7*maxGood)
@@ -517,6 +518,7 @@ bool Initializer::ReconstructF(vector<bool> &vbMatchesInliers, cv::Mat &F21, cv:
         nsimilar++;
 
     // If there is not a clear winner or not enough triangulated points reject initialization
+
     if(maxGood<nMinGood || nsimilar>1)
     {
         return false;

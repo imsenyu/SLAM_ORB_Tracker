@@ -7,10 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		684240194D0966B0985B142F /* Optimizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */; };
 		6842405E4B73F91D4B553B4F /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424BCBCC9C77B25984FCC0 /* Map.cpp */; };
+		684240FEBC9232D35FF2B8BC /* ORBextractor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 68424FD80CEAC66F210301CD /* ORBextractor.cc */; };
 		6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */; };
 		684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684248FBF32618DB250B4B50 /* MapInitializer.cpp */; };
-		68424567E98D51CFA9EA8EC1 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 68424C0A731E1805A75FB237 /* Initializer.cc */; };
+		684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842448CAB6464C237ED57EC /* Initializer.cc */; };
+		68424E66C2C4242C9BF1A94A /* ORBmatcher.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842436352005E2720FD4CFD /* ORBmatcher.cc */; };
 		EB2CCF701CA24E0300170EEE /* libDBoW2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */; };
 		EB301C371C9F94AB00F685EE /* libg2o_cli.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */; };
 		EB301C381C9F94AB00F685EE /* libg2o_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */; };
@@ -144,20 +147,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		68424189E6A92C803627ED07 /* BowVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BowVector.h; path = third/DBoW2/DBoW2/BowVector.h; sourceTree = "<group>"; };
-		68424331FB87CB271CDE3B03 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Random.h; sourceTree = "<group>"; };
-		6842444402A24606AC45445A /* FClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FClass.h; path = third/DBoW2/DBoW2/FClass.h; sourceTree = "<group>"; };
-		684244793E8A9700F5D5AFF7 /* ScoringObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScoringObject.h; path = third/DBoW2/DBoW2/ScoringObject.h; sourceTree = "<group>"; };
-		6842448257EE4BDC2325F11C /* Timestamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timestamp.h; sourceTree = "<group>"; };
-		68424689FB97E22674F6EADC /* FeatureVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureVector.h; path = third/DBoW2/DBoW2/FeatureVector.h; sourceTree = "<group>"; };
+		68424086D3C909E0A07B35B2 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Initializer.h; sourceTree = "<group>"; };
+		6842436352005E2720FD4CFD /* ORBmatcher.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBmatcher.cc; sourceTree = "<group>"; };
+		6842448CAB6464C237ED57EC /* Initializer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Initializer.cc; sourceTree = "<group>"; };
+		684244CAD6D08898B6209094 /* ORBextractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBextractor.h; sourceTree = "<group>"; };
 		684246AC35F9293964205A49 /* MapPoint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapPoint.hpp; sourceTree = "<group>"; };
 		684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapPoint.cpp; sourceTree = "<group>"; };
 		6842470832A1DC42A57812C7 /* MapInitializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapInitializer.hpp; sourceTree = "<group>"; };
-		684247A2112D274416D90446 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer.h; path = third/ORB/Initializer.h; sourceTree = "<group>"; };
+		684247F1994032F5A8E342A6 /* ORBmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBmatcher.h; sourceTree = "<group>"; };
+		684248003DB3D1575EBC521D /* Optimizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Optimizer.hpp; sourceTree = "<group>"; };
 		684248FBF32618DB250B4B50 /* MapInitializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapInitializer.cpp; sourceTree = "<group>"; };
 		68424AD6B666DAA47A38A761 /* Map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Map.hpp; sourceTree = "<group>"; };
 		68424BCBCC9C77B25984FCC0 /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
-		68424C0A731E1805A75FB237 /* Initializer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Initializer.cc; path = third/ORB/Initializer.cc; sourceTree = "<group>"; };
+		68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Optimizer.cpp; sourceTree = "<group>"; };
+		68424FD80CEAC66F210301CD /* ORBextractor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBextractor.cc; sourceTree = "<group>"; };
 		EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDBoW2.a; path = "../../../Library/Developer/Xcode/DerivedData/SLAM_ORB_Tracker-dwkscwtidfjkxdggobyagrolwzft/Build/Products/Debug/libDBoW2.a"; sourceTree = "<group>"; };
 		EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_cli.dylib; path = /usr/local/lib/libg2o_cli.dylib; sourceTree = "<absolute>"; };
 		EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_core.dylib; path = /usr/local/lib/libg2o_core.dylib; sourceTree = "<absolute>"; };
@@ -205,8 +208,6 @@
 		EB361E2C1C9EC56200883F14 /* Vocabulary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vocabulary.cpp; sourceTree = "<group>"; };
 		EB361E2F1C9EC58600883F14 /* Vocabulary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vocabulary.hpp; sourceTree = "<group>"; };
 		EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrameState.cpp; sourceTree = "<group>"; };
-		EB361F6E1C9EEE9E00883F14 /* FORB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FORB.h; path = third/DBoW2/DBoW2/FORB.h; sourceTree = "<group>"; };
-		EB361F6F1C9EEE9E00883F14 /* TemplatedVocabulary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TemplatedVocabulary.h; path = third/DBoW2/DBoW2/TemplatedVocabulary.h; sourceTree = "<group>"; };
 		EBAB8D901CA18B64009A0ED4 /* libopencv_calib3d.2.4.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.12.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.12/lib/libopencv_calib3d.2.4.12.dylib; sourceTree = "<group>"; };
 		EBAB8D911CA18B64009A0ED4 /* libopencv_contrib.2.4.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_contrib.2.4.12.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.12/lib/libopencv_contrib.2.4.12.dylib; sourceTree = "<group>"; };
 		EBAB8D921CA18B64009A0ED4 /* libopencv_core.2.4.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.2.4.12.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.12/lib/libopencv_core.2.4.12.dylib; sourceTree = "<group>"; };
@@ -412,23 +413,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		684241534BE018B5B4A6C48A /* ORB */ = {
+		684244D85D9D30B26C844984 /* third */ = {
 			isa = PBXGroup;
 			children = (
-				68424C0A731E1805A75FB237 /* Initializer.cc */,
-				684247A2112D274416D90446 /* Initializer.h */,
+				6842484DFAAA9C4E4A78646B /* ORB */,
 			);
-			name = ORB;
+			path = third;
 			sourceTree = "<group>";
 		};
-		68424C151452BA54174B1071 /* DUtils */ = {
+		6842484DFAAA9C4E4A78646B /* ORB */ = {
 			isa = PBXGroup;
 			children = (
-				68424331FB87CB271CDE3B03 /* Random.h */,
-				6842448257EE4BDC2325F11C /* Timestamp.h */,
+				6842448CAB6464C237ED57EC /* Initializer.cc */,
+				68424086D3C909E0A07B35B2 /* Initializer.h */,
+				6842436352005E2720FD4CFD /* ORBmatcher.cc */,
+				684247F1994032F5A8E342A6 /* ORBmatcher.h */,
+				68424FD80CEAC66F210301CD /* ORBextractor.cc */,
+				684244CAD6D08898B6209094 /* ORBextractor.h */,
 			);
-			name = DUtils;
-			path = third/DBoW2/DUtils;
+			path = ORB;
 			sourceTree = "<group>";
 		};
 		EB301C1D1C9F946B00F685EE /* g2o */ = {
@@ -463,29 +466,6 @@
 			name = g2o;
 			sourceTree = "<group>";
 		};
-		EB361E791C9EE35400883F14 /* third */ = {
-			isa = PBXGroup;
-			children = (
-				EB361E7A1C9EE35A00883F14 /* DBoW2 */,
-				684241534BE018B5B4A6C48A /* ORB */,
-				68424C151452BA54174B1071 /* DUtils */,
-			);
-			name = third;
-			sourceTree = "<group>";
-		};
-		EB361E7A1C9EE35A00883F14 /* DBoW2 */ = {
-			isa = PBXGroup;
-			children = (
-				EB361F6E1C9EEE9E00883F14 /* FORB.h */,
-				EB361F6F1C9EEE9E00883F14 /* TemplatedVocabulary.h */,
-				68424189E6A92C803627ED07 /* BowVector.h */,
-				68424689FB97E22674F6EADC /* FeatureVector.h */,
-				6842444402A24606AC45445A /* FClass.h */,
-				684244793E8A9700F5D5AFF7 /* ScoringObject.h */,
-			);
-			name = DBoW2;
-			sourceTree = "<group>";
-		};
 		EB361F701C9EEEAF00883F14 /* DBoW2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -515,9 +495,9 @@
 		EBFE5B651C9D9FD300E6DA0B /* SLAM_ORB_Tracker */ = {
 			isa = PBXGroup;
 			children = (
-				EB361E791C9EE35400883F14 /* third */,
 				EBFE5B721C9DA1F100E6DA0B /* src */,
 				EBFE5B741C9DA1F100E6DA0B /* inc */,
+				684244D85D9D30B26C844984 /* third */,
 			);
 			path = SLAM_ORB_Tracker;
 			sourceTree = "<group>";
@@ -543,6 +523,7 @@
 				68424BCBCC9C77B25984FCC0 /* Map.cpp */,
 				684248FBF32618DB250B4B50 /* MapInitializer.cpp */,
 				684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */,
+				68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -569,6 +550,7 @@
 				68424AD6B666DAA47A38A761 /* Map.hpp */,
 				6842470832A1DC42A57812C7 /* MapInitializer.hpp */,
 				684246AC35F9293964205A49 /* MapPoint.hpp */,
+				684248003DB3D1575EBC521D /* Optimizer.hpp */,
 			);
 			path = inc;
 			sourceTree = "<group>";
@@ -751,8 +733,11 @@
 				EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */,
 				6842405E4B73F91D4B553B4F /* Map.cpp in Sources */,
 				684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */,
-				68424567E98D51CFA9EA8EC1 /* Initializer.cc in Sources */,
 				6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */,
+				684240194D0966B0985B142F /* Optimizer.cpp in Sources */,
+				684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */,
+				68424E66C2C4242C9BF1A94A /* ORBmatcher.cc in Sources */,
+				684240FEBC9232D35FF2B8BC /* ORBextractor.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -795,6 +780,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/usr/local/include/eigen3,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -832,6 +822,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/usr/local/include/eigen3,
+				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -845,11 +840,44 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
-				HEADER_SEARCH_PATHS = /usr/local/include/;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					/usr/local/include/eigen3/,
+					"${PROJECT_DIR}/SLAM_ORB_Tracker",
+					"${PROJECT_DIR}/SLAM_ORB_Tracker/third/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.60.0/lib,
 					/usr/local/Cellar/opencv/2.4.12/lib,
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -864,11 +892,44 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
-				HEADER_SEARCH_PATHS = /usr/local/include/;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					/usr/local/include/eigen3/,
+					"${PROJECT_DIR}/SLAM_ORB_Tracker",
+					"${PROJECT_DIR}/SLAM_ORB_Tracker/third/**",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.60.0/lib,
 					/usr/local/Cellar/opencv/2.4.12/lib,
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
+					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";

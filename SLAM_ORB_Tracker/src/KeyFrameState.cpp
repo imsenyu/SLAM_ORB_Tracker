@@ -43,3 +43,32 @@ void KeyFrameState::updatePose(cv::Mat _mT) {
 
     mO2w = - mMatR.t() * mMatT;
 }
+
+float KeyFrameState::ComputeSceneMedianDepth(int r) {
+
+    std::vector<shared_ptr<MapPoint>> vpMapPoints;
+    cv::Mat Tcw_;
+        vpMapPoints = mvpMapPoint;
+        Tcw_ = mT2w.clone();
+
+
+    std::vector<float> vDepths;
+    vDepths.reserve(mvpMapPoint.size());
+    cv::Mat Rcw2 = Tcw_.row(2).colRange(0,3);
+    Rcw2 = Rcw2.t();
+    float zcw = Tcw_.at<float>(2,3);
+    for(size_t i=0; i<mvpMapPoint.size(); i++)
+    {
+        if(mvpMapPoint[i])
+        {
+            shared_ptr<MapPoint> pMP = mvpMapPoint[i];
+            cv::Mat x3Dw = pMP->mPos;
+            float z = Rcw2.dot(x3Dw)+zcw;
+            vDepths.push_back(z);
+        }
+    }
+
+    sort(vDepths.begin(),vDepths.end());
+
+    return vDepths[(vDepths.size()-1)/r];
+}
