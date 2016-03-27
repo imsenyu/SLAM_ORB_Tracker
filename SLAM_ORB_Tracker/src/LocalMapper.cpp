@@ -7,3 +7,15 @@
 //
 
 #include "LocalMapper.hpp"
+
+LocalMapper::LocalMapper() {
+
+}
+
+void LocalMapper::addKeyFrame(shared_ptr<KeyFrameState> pKeyFrameState) {
+
+}
+
+void LocalMapper::createNewMapPoint() {
+
+}

@@ -48,7 +48,8 @@ int main(int argc, char * argv[]) {
     // initialize Tracker for localization
     FrameDrawer frameDrawer;
     MapDrawer mapDrawer(&map);
-    Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer, &vocabulary, &map);
+    LocalMapper localMapper;
+    Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer, &vocabulary, &map, &localMapper);
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
     
     

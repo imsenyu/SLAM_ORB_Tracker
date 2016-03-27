@@ -22,7 +22,7 @@
 #include "Map.hpp"
 #include "MapPoint.hpp"
 #include "Optimizer.hpp"
-
+#include "LocalMapper.hpp"
 //ORB
 #include "Initializer.h"
 #include "ORBmatcher.h"
@@ -80,12 +80,13 @@ private:
     Map* mpMap;
     void initStepFirstKeyFrame();
     MotionState mMotion;
+    LocalMapper* mpLocalMapper;
     bool initStepSecondKeyFrame();
     bool initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D);
     bool TrackFromPreFrame();
-
+    bool TrackLocalMap();
 public:
-    Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap);
+    Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper);
     ~Tracker();
     
     int run();

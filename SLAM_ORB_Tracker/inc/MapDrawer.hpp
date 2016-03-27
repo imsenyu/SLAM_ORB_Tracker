@@ -37,13 +37,13 @@ private:
     cv::Mat mPathCanvas;
     cv::Mat mPathCanvasWithDir;
     
-    BlockingQueue<PoseState> mBuffer;
+    BlockingQueue<shared_ptr<FrameState>> mBuffer;
     void take();
     bool inited;
 public:
     MapDrawer(Map *_pMap);
     
-    void update(PoseState& _poseState);
+    void update(shared_ptr<FrameState> pFS);
     void show();
 
 };

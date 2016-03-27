@@ -14,9 +14,9 @@ MapDrawer::MapDrawer(Map *_pMap) : inited(false), mpVizWin(NULL), mpMap(_pMap) {
     initViz();
 }
 
-void MapDrawer::update(PoseState& _poseState) {
+void MapDrawer::update(shared_ptr<FrameState> pFS) {
     
-    mBuffer.put(_poseState);
+    mBuffer.put(pFS);
     
 }
 
@@ -47,7 +47,21 @@ void MapDrawer::show() {
 }
 
 void MapDrawer::take() {
-    mCurPose = mBuffer.take();
+    shared_ptr<FrameState> pFS = mBuffer.take();
+    cv::Mat pop = pFS->mT2w;
+    std::cout<<"show take "<<pop<<std::endl;
+
+    cv::Mat R = pop.rowRange(0,3).colRange(0,3);
+    cv::Mat t = pop.rowRange(0,3).col(3);
+
+    t = -R.inv() * t;
+    R = R.inv();
+    mCurPose.mId = pFS->mId;
+    mCurPose.mPos = Utils::convertToPoint3d(t);
+    mCurPose.mDir3 = R;
+    mCurPose.mDir = Utils::convertToPoint3d(R.inv() * Const::mat31_001);
+
+    std::cout<<"------------draw---------"<<std::endl<<mCurPose.mPos<<mCurPose.mDir<<std::endl;
 }
 
 void MapDrawer::initCanvas() {
@@ -110,8 +124,8 @@ void MapDrawer::initViz() {
 }
 
 void MapDrawer::drawViz() {
-    cv::viz::WPlane curPlane(mCurPose.mPos, mCurPose.mDir, cv::Point3d(0,0,-1.0f), cv::Size2d(2.0f, 1.0f), cv::viz::Color::blue());
-    cv::viz::WArrow curArrow(mCurPose.mPos, mCurPose.mPos+mCurPose.mDir*0.5f, 0.1f, cv::viz::Color::red());
+    cv::viz::WPlane curPlane(mCurPose.mPos*20, mCurPose.mDir*20, cv::Point3d(0,1.0f,0), cv::Size2d(2.0f, 1.0f), cv::viz::Color::blue());
+    cv::viz::WArrow curArrow(mCurPose.mPos*20, mCurPose.mPos*20+mCurPose.mDir*0.5f, 0.1f, cv::viz::Color::red());
     mpVizWin->showWidget(cv::format("id-%d",mCurPose.mId), curPlane);
     mpVizWin->showWidget(cv::format("id2-%d",mCurPose.mId), curArrow);
 
@@ -127,7 +141,7 @@ void MapDrawer::drawViz() {
     auto iter = spMapPoint.begin();
     for(; iter!=spMapPoint.end(); iter++) {
         shared_ptr<MapPoint> pMP = *iter;
-        cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos);
+        cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos*20);
 
         // -2.0  ->  0.5;
         float radio = (pos.y - (-2.0f))/2.5f;

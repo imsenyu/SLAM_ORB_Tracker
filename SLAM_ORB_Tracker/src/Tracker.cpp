@@ -8,10 +8,11 @@
 
 #include "Tracker.hpp"
 #include "Initializer.h"
-Tracker::Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap) :
+Tracker::Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper) :
     mpInputBuffer(_pIB), mpFrameDrawer(_pFD), mpMapDrawer(_pMD),
     meMode(Tracker::WorkMode::InitStep0), meLastMode(Tracker::WorkMode::Start),
-    mpIniter(NULL),mpVocabulary(_pVocabulary), mpMap(_pMap) {
+    mpIniter(NULL),mpVocabulary(_pVocabulary), mpMap(_pMap),
+    mpLocalMapper(_pLocalMapper){
     
 }
 
@@ -42,21 +43,23 @@ int Tracker::threadRun() {
         // init first keyFrame
         // init first camera pose
         mpCurFrame->extractInit();
+        //mpCurFrame->extract();
 
-        initPose();
 
         initStepFirstKeyFrame();
+        initPose();
         updateDrawer();
     }
     else if ( meMode == WorkMode::InitStep1 ) {
         // obtain second keyframe to build
         mpCurFrame->extractInit();
-
+        //mpCurFrame->extract();
         bool st = initStepSecondKeyFrame();
         if ( st ) {
             mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
+            updateDrawer();
         }
-        updateDrawer();
+
     }
     // inited
     else {
@@ -73,9 +76,19 @@ int Tracker::threadRun() {
 
             if ( bStatus ) {
 
+
+                bStatus = TrackLocalMap();
+                updateDrawer();
+
                 // TODO: how to insert KeyFrame
-                //if(NeedNewKeyFrame())
-                //    CreateNewKeyFrame();
+                if( false /*NeedNewKeyFrame()*/) {
+                    mpLocalMapper->addKeyFrame( shared_ptr<KeyFrameState>( new KeyFrameState(mpCurFrame, mpVocabulary) ) );
+
+                    mpLocalMapper->createNewMapPoint();
+                }
+
+
+
                 mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
             }
             else {
@@ -130,14 +143,21 @@ int Tracker::threadRun() {
 
 void Tracker::updateDrawer() {
     mpFrameDrawer->update(mpCurFrame);
-    mpMapDrawer->update(mCurPose);
+
+    std::cout<<"update MapDrawer at"<<mpCurFrame->mId<<std::endl<<mpCurFrame->mT2w<<std::endl;
+    mpMapDrawer->update(mpCurFrame);
 }
 
 void Tracker::initPose() {
+
     mCurPose = PoseState(mpCurFrame->mId);
     mCurPose.mDir = Const::pnt3d_001;
     mCurPose.mPos = Const::pnt3d_000;
     mCurPose.mDir3 = Const::mat33_111.clone();
+
+    mpIniFrame->mT2w = cv::Mat::eye(4,4,CV_64FC1);
+    mCurPose.mDir3.copyTo( mpIniFrame->mT2w.rowRange(0,3).colRange(0,3) );
+    //mCurPose.mPos.copyTo( mpIniFrame->mT2w.rowRange(0,3).col(3) );
 }
 
 
@@ -783,21 +803,10 @@ bool Tracker::TrackFromPreFrame() {
     //numMatch = match(mpPreFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
     std::cout<<"TrackLast match "<<numMatch<<std::endl;
 
-    // TODO: filterByOptical
     //numMatch = filterByOpticalFlow(mpPreFrame, mpCurFrame, mvMatchPair12, mvMatchMask12, mvMatchPoint );
     //std::cout<<"TrackLast flow "<<numMatch<<std::endl;
 
     // mpLsatFrame has its MapPoint vector
-    // TODO: change matchPoint to matchMapPoint
-//    vpMapPoint = std::vector<shared_ptr<MapPoint>>( mpCurFrame->mvKeyPoint.size(), shared_ptr<MapPoint>(NULL) );
-//    int N = mvMatchPair12.size();
-//    int numMatchMapPoint = 0;
-//    for(int i=0;i<N;i++) {
-//        if(false == mvMatchMask12[i]) continue;
-//        if (!mpPreFrame->mvpMapPoint[ i ]) continue;
-//        vpMapPoint[ mvMatchPair12[ i ] ] = mpPreFrame->mvpMapPoint[ i ];
-//        numMatchMapPoint++;
-//    }
     //std::cout<< "numMatchMapPoint " <<numMatchMapPoint<<std::endl;
 
     // TODO: set estimation mT2w
@@ -839,5 +848,13 @@ bool Tracker::TrackFromPreFrame() {
     }
     std::cout<< "estimation mT2w "<<mpPreFrame->mT2w<<std::endl;
     std::cout<< "optimization mT2w "<<mpCurFrame->mT2w<<std::endl;
+
     return numMatch > 10;
+}
+
+bool Tracker::TrackLocalMap() {
+
+
+
+    return false;
 }

@@ -4,7 +4,7 @@
 <iImageBeginIdx>0</iImageBeginIdx>
 <iImageEndIdx>4540</iImageEndIdx>
 <sPathVocabulary>/tmp/voc.txt</sPathVocabulary>
-<iFeatureNum>1000</iFeatureNum>
+<iFeatureNum>4000</iFeatureNum>
 <dDrawFrameStep>1.</dDrawFrameStep>
 <mCameraParameter type_id="opencv-matrix">
   <rows>3</rows>
