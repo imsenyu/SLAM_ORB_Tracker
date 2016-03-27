@@ -44,7 +44,7 @@ public:
     ~FrameState();
 
 
-    //int extract();
+    int extract();
     int extractInit();
     int extractNormal();
     void insertMapPoint(shared_ptr<MapPoint> pMp, int nP) {

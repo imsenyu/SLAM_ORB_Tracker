@@ -83,39 +83,39 @@ bool FrameState::loadImage(int _id) {
 FrameState::~FrameState() {
 }
 
-//int FrameState::extract() {
-//
-//
-//    cv::ORB orbDetector(Config::iFeatureNum, 1.2f, 8);
-//    orbDetector.detect(mImage, mvKeyPoint);
-//    orbDetector.compute(mImage, mvKeyPoint, mDescriptor);
-//
-//
-//    int nKP = mvKeyPoint.size();
-//    mvpMapPoint = std::vector<shared_ptr<MapPoint>>( nKP, shared_ptr<MapPoint>(NULL) );
-//    mvMatchMask = std::vector<uchar>( nKP, false );
-//    mvbOutlier = std::vector<uchar>( nKP, false);
-//
-//    for(size_t i=0;i<mvKeyPoint.size();i++)
-//    {
-//        cv::KeyPoint &kp = mvKeyPoint[i];
-//
-//        int posX, posY;
-//        posX = round((kp.pt.x-mnMinX)*mfGridElementWidthInv);
-//        posY = round((kp.pt.y-mnMinY)*mfGridElementHeightInv);
-//
-//        //Keypoint's coordinates are undistorted, which could cause to go out of the image
-//        if(posX<0 || posX>=FRAME_GRID_COLS || posY<0 || posY>=FRAME_GRID_ROWS)
-//            continue;
-//
-//        mGrid[posX][posY].push_back(i);
-//    }
-//
-//
-//    if ( nKP == 0 ) return 0;
-//
-//    return nKP;
-//}
+int FrameState::extract() {
+
+
+    cv::ORB orbDetector(Config::iFeatureNum, 1.2f, 8);
+    orbDetector.detect(mImage, mvKeyPoint);
+    orbDetector.compute(mImage, mvKeyPoint, mDescriptor);
+
+
+    int nKP = mvKeyPoint.size();
+    mvpMapPoint = std::vector<shared_ptr<MapPoint>>( nKP, shared_ptr<MapPoint>(NULL) );
+    mvMatchMask = std::vector<uchar>( nKP, false );
+    mvbOutlier = std::vector<uchar>( nKP, false);
+
+    for(size_t i=0;i<mvKeyPoint.size();i++)
+    {
+        cv::KeyPoint &kp = mvKeyPoint[i];
+
+        int posX, posY;
+        posX = round((kp.pt.x-mnMinX)*mfGridElementWidthInv);
+        posY = round((kp.pt.y-mnMinY)*mfGridElementHeightInv);
+
+        //Keypoint's coordinates are undistorted, which could cause to go out of the image
+        if(posX<0 || posX>=FRAME_GRID_COLS || posY<0 || posY>=FRAME_GRID_ROWS)
+            continue;
+
+        mGrid[posX][posY].push_back(i);
+    }
+
+
+    if ( nKP == 0 ) return 0;
+
+    return nKP;
+}
 
 
 
