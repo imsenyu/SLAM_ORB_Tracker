@@ -59,7 +59,7 @@ void MapDrawer::take() {
     mCurPose.mId = pFS->mId;
     mCurPose.mPos = Utils::convertToPoint3d(t);
     mCurPose.mDir3 = R;
-    mCurPose.mDir = Utils::convertToPoint3d(R.inv() * Const::mat31_001);
+    mCurPose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
 
     std::cout<<"------------draw---------"<<std::endl<<mCurPose.mPos<<mCurPose.mDir<<std::endl;
 }
