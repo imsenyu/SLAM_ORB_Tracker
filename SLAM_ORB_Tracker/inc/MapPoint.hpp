@@ -11,15 +11,17 @@
 
 class KeyFrameState;
 
-class MapPoint {
+class MapPoint: public boost::enable_shared_from_this<MapPoint> {
 private:
-    std::map<shared_ptr<KeyFrameState>, int> msKeyFrame2FeatureId;
-    shared_ptr<KeyFrameState> mpKeyFrameFirst;
-    int mIdFromKeyFrame;
+
 
 
 
 public:
+    std::map<shared_ptr<KeyFrameState>, int> msKeyFrame2FeatureId;
+    shared_ptr<KeyFrameState> mpKeyFrameFirst;
+    int mIdFromKeyFrame;
+
     MapPoint(cv::Mat _matMapPointPos, shared_ptr<KeyFrameState> _pKFS, int nP);
     void setKeyFrame(shared_ptr<KeyFrameState> _pKFS, int nP) {
         msKeyFrame2FeatureId[_pKFS] = nP;

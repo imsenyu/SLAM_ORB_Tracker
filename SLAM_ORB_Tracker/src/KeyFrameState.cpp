@@ -9,12 +9,14 @@
 #include "KeyFrameState.hpp"
 
 KeyFrameState::KeyFrameState(shared_ptr<FrameState> _pFrame, Vocabulary *_pVocabulary):
-    mpFrame( _pFrame ), mpVocabulary(_pVocabulary){
+    mpFrame( _pFrame ), mpVocabulary(_pVocabulary),
+    mvpMapPoint( _pFrame->mvpMapPoint )
+{
 
     updatePose(_pFrame->mT2w);
 
-    int nKP =_pFrame->mvKeyPoint.size();
-    mvpMapPoint = std::vector<shared_ptr<MapPoint>>( nKP, shared_ptr<MapPoint>(NULL) );
+    //int nKP =_pFrame->mvKeyPoint.size();
+    //mvpMapPoint = std::vector<shared_ptr<MapPoint>>( nKP, shared_ptr<MapPoint>(NULL) );
 
 }
 
@@ -71,4 +73,151 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
     sort(vDepths.begin(),vDepths.end());
 
     return vDepths[(vDepths.size()-1)/r];
+}
+
+std::vector<shared_ptr<KeyFrameState>> KeyFrameState::GetBestCovisibilityKeyFrames(const int &N)
+{
+    if((int)mvpOrderedConnectedKeyFrames.size()<N)
+        return mvpOrderedConnectedKeyFrames;
+    else
+        return std::vector<shared_ptr<KeyFrameState>>(mvpOrderedConnectedKeyFrames.begin(),mvpOrderedConnectedKeyFrames.begin()+N);
+
+}
+void KeyFrameState::AddConnection(shared_ptr<KeyFrameState> pKF, const int &weight)
+{
+
+    if(!mConnectedKeyFrameWeights.count(pKF))
+        mConnectedKeyFrameWeights[pKF]=weight;
+    else if(mConnectedKeyFrameWeights[pKF]!=weight)
+        mConnectedKeyFrameWeights[pKF]=weight;
+    else
+        return;
+
+
+    UpdateBestCovisibles();
+}
+
+void KeyFrameState::UpdateBestCovisibles()
+{
+    //std::cout<<"UpdateBestCovisibles at frameId"<<(this->mpFrame->mId)<<std::endl;
+
+    std::vector<std::pair<int,shared_ptr<KeyFrameState>> > vPairs;
+    vPairs.reserve(mConnectedKeyFrameWeights.size());
+    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=mConnectedKeyFrameWeights.begin(), mend=mConnectedKeyFrameWeights.end(); mit!=mend; mit++)
+        vPairs.push_back(std::make_pair(mit->second,mit->first));
+
+    std::sort(vPairs.begin(),vPairs.end());
+    std::list<shared_ptr<KeyFrameState>> lKFs;
+    std::list<int> lWs;
+    for(size_t i=0, iend=vPairs.size(); i<iend;i++)
+    {
+        lKFs.push_front(vPairs[i].second);
+        lWs.push_front(vPairs[i].first);
+    }
+
+    mvpOrderedConnectedKeyFrames = std::vector<shared_ptr<KeyFrameState>>(lKFs.begin(),lKFs.end());
+    //std::cout<<"mvpOrderedConnectedKeyFrames size "<<mvpOrderedConnectedKeyFrames.size()<<std::endl;
+    mvOrderedWeights = std::vector<int>(lWs.begin(), lWs.end());
+}
+
+void KeyFrameState::UpdateConnections()
+{
+    //std::cout<<"updateConnection at frameId"<<(this->mpFrame->mId)<<std::endl;
+    std::map<shared_ptr<KeyFrameState>,int> KFcounter;
+
+    std::vector<shared_ptr<MapPoint>> vpMP = mvpMapPoint;
+
+    //For all map points in keyframe check in which other keyframes are they seen
+    //Increase counter for those keyframes
+    for(std::vector<shared_ptr<MapPoint>>::iterator vit=vpMP.begin(), vend=vpMP.end(); vit!=vend; vit++)
+    {
+
+        shared_ptr<MapPoint> pMP = *vit;
+
+        if(!pMP)
+            continue;
+
+        //if(pMP->isBad())
+        //    continue;
+
+        std::map<shared_ptr<KeyFrameState>,int> observations = pMP->msKeyFrame2FeatureId;
+
+        for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
+        {
+            //std::cout<<"saw mapPoint in frame "<<(mit->first->mpFrame->mId)<<" featureId "<<mit->second<<std::endl;
+            if(mit->first->mpFrame->mId==mpFrame->mId)
+                continue;
+            KFcounter[mit->first]++;
+        }
+    }
+
+    //std::cout<<"KFCounter.size "<<KFcounter.size()<<std::endl;
+    if(KFcounter.empty())
+        return;
+
+    //If the counter is greater than threshold add connection
+    //In case no keyframe counter is over threshold add the one with maximum counter
+    int nmax=0;
+    shared_ptr<KeyFrameState> pKFmax=shared_ptr<KeyFrameState>(NULL);
+    int th = 15;
+
+    std::vector<std::pair<int,shared_ptr<KeyFrameState>> > vPairs;
+    vPairs.reserve(KFcounter.size());
+    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=KFcounter.begin(), mend=KFcounter.end(); mit!=mend; mit++)
+    {
+        if(mit->second>nmax)
+        {
+            nmax=mit->second;
+            pKFmax=mit->first;
+        }
+        if(mit->second>=th)
+        {
+            vPairs.push_back(std::make_pair(mit->second,mit->first));
+
+                //(mit->first)->AddConnection(shared_ptr<KeyFrameState>(this),mit->second);
+                (mit->first)->AddConnection(shared_from_this(),mit->second);
+        }
+    }
+
+    if(vPairs.empty())
+    {
+        vPairs.push_back(std::make_pair(nmax,pKFmax));
+        //pKFmax->AddConnection(shared_ptr<KeyFrameState>(this),nmax);
+        pKFmax->AddConnection(shared_from_this(),nmax);
+    }
+
+    std::sort(vPairs.begin(),vPairs.end());
+    std::list<shared_ptr<KeyFrameState>> lKFs;
+    std::list<int> lWs;
+    for(size_t i=0; i<vPairs.size();i++)
+    {
+        lKFs.push_front(vPairs[i].second);
+        lWs.push_front(vPairs[i].first);
+    }
+
+
+
+    // mspConnectedKeyFrames = spConnectedKeyFrames;
+    // copy mvpOrderedConnectedKeyFrames for not destory them by shared_ptr<>
+    //std::vector<shared_ptr<KeyFrameState>> copy = mvpOrderedConnectedKeyFrames;
+
+
+    mConnectedKeyFrameWeights = KFcounter;
+    mvpOrderedConnectedKeyFrames = std::vector<shared_ptr<KeyFrameState>>(lKFs.begin(),lKFs.end());
+
+    //std::cout<<"mvpOrderedConnectedKeyFrames size "<<mvpOrderedConnectedKeyFrames.size()<<std::endl;
+    mvOrderedWeights = std::vector<int>(lWs.begin(), lWs.end());
+
+//    if(mbFirstConnection && mpFrame->mId!=0)
+//    {
+//        mpParent = mvpOrderedConnectedKeyFrames.front();
+//        mpParent->AddChild(this);
+//        mbFirstConnection = false;
+//    }
+
+
+}
+void KeyFrameState::insertMapPoint(shared_ptr<MapPoint> pMp, int nP) {
+    mvpMapPoint[nP] = pMp;
+    mpFrame->insertMapPoint(pMp, nP);
 }

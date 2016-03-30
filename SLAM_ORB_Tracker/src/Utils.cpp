@@ -117,3 +117,23 @@ cv::Mat Utils::convertToCvMat44(const Eigen::Matrix<double, 4, 4> &m)
 
     return cvMat.clone();
 }
+
+cv::Mat Utils::convectToSymmetricMatrix(const cv::Mat &v)
+{
+    cv::Mat_<double> ret(3,3);
+    if ( v.type() == CV_32FC1 ) {
+        ret << 0.0f, -v.at<float>(2), v.at<float>(1),
+            v.at<float>(2),               0,-v.at<float>(0),
+            -v.at<float>(1),  v.at<float>(0),              0.0f;
+    }
+    else if ( v.type() == CV_64FC1 ) {
+        ret << 0.0f, -v.at<double>(2), v.at<double>(1),
+            v.at<double>(2),               0,-v.at<double>(0),
+            -v.at<double>(1),  v.at<double>(0),              0.0f;
+    }
+    else {
+        std::cout<<"err"<<std::endl;
+    }
+
+    return ret;
+}

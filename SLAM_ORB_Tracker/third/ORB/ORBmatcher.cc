@@ -132,26 +132,36 @@ ORBmatcher::ORBmatcher(float nnratio, bool checkOri): mfNNratio(nnratio), mbChec
 //        return 4.0;
 //}
 //
-//
-//bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoint &kp2,const cv::Mat &F12,const KeyFrameState* pKF2)
-//{
-//    // Epipolar line in second image l = x1'F12 = [a b c]
-//    const float a = kp1.pt.x*F12.at<float>(0,0)+kp1.pt.y*F12.at<float>(1,0)+F12.at<float>(2,0);
-//    const float b = kp1.pt.x*F12.at<float>(0,1)+kp1.pt.y*F12.at<float>(1,1)+F12.at<float>(2,1);
-//    const float c = kp1.pt.x*F12.at<float>(0,2)+kp1.pt.y*F12.at<float>(1,2)+F12.at<float>(2,2);
-//
-//    const float num = a*kp2.pt.x+b*kp2.pt.y+c;
-//
-//    const float den = a*a+b*b;
-//
-//    if(den==0)
-//        return false;
-//
-//    const float dsqr = num*num/den;
-//
-//    return dsqr<3.84*pKF2->GetSigma2(kp2.octave);
-//}
-//
+
+bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoint &kp2,const cv::Mat &F12,const shared_ptr<KeyFrameState> pKF2)
+{
+    // Epipolar line in second image l = x1'F12 = [a b c]
+    float a,b,c;
+    if ( F12.type() == CV_32FC1 ) {
+        a = kp1.pt.x*F12.at<float>(0,0)+kp1.pt.y*F12.at<float>(1,0)+F12.at<float>(2,0);
+        b = kp1.pt.x*F12.at<float>(0,1)+kp1.pt.y*F12.at<float>(1,1)+F12.at<float>(2,1);
+        c = kp1.pt.x*F12.at<float>(0,2)+kp1.pt.y*F12.at<float>(1,2)+F12.at<float>(2,2);
+    }
+    else if ( F12.type() == CV_64FC1 ) {
+        a = kp1.pt.x*F12.at<double>(0,0)+kp1.pt.y*F12.at<double>(1,0)+F12.at<double>(2,0);
+        b = kp1.pt.x*F12.at<double>(0,1)+kp1.pt.y*F12.at<double>(1,1)+F12.at<double>(2,1);
+        c = kp1.pt.x*F12.at<double>(0,2)+kp1.pt.y*F12.at<double>(1,2)+F12.at<double>(2,2);
+    }
+    else {
+        std::cout<<"err"<<std::endl;
+    }
+    const float num = a*kp2.pt.x+b*kp2.pt.y+c;
+
+    const float den = a*a+b*b;
+
+    if(den==0)
+        return false;
+
+    const float dsqr = num*num/den;
+
+    return dsqr<3.84*  pow( pow(1.2f, kp2.octave) ,2.0f);//  pKF2->GetSigma2(kp2.octave);
+}
+
 //int ORBmatcher::SearchByBoW(KeyFrameState* pKF,FrameState &F, vector<MapPoint*> &vpMapPointMatches)
 //{
 //    vector<MapPoint*> vpMapPointsKF = pKF->GetMapPointMatches();
@@ -864,171 +874,175 @@ int ORBmatcher::SearchForInitialization(shared_ptr<FrameState> pF1, shared_ptr<F
 //
 //    return nmatches;
 //}
-//
-//int ORBmatcher::SearchForTriangulation(KeyFrameState *pKF1, KeyFrameState *pKF2, cv::Mat F12,
-//vector<cv::KeyPoint> &vMatchedKeys1, vector<cv::KeyPoint> &vMatchedKeys2, vector<pair<size_t, size_t> > &vMatchedPairs)
-//{
-//    vector<MapPoint*> vpMapPoints1 = pKF1->GetMapPointMatches();
-//    vector<cv::KeyPoint> vKeysUn1 = pKF1->GetKeyPointsUn();
-//    cv::Mat Descriptors1 = pKF1->GetDescriptors();
-//    DBoW2::FeatureVector vFeatVec1 = pKF1->GetFeatureVector();
-//
-//    vector<MapPoint*> vpMapPoints2 = pKF2->GetMapPointMatches();
-//    vector<cv::KeyPoint> vKeysUn2 = pKF2->GetKeyPointsUn();
-//    cv::Mat Descriptors2 = pKF2->GetDescriptors();
-//    DBoW2::FeatureVector vFeatVec2 = pKF2->GetFeatureVector();
-//
-//    // Find matches between not tracked keypoints
-//    // Matching speeded-up by ORB Vocabulary
-//    // Compare only ORB that share the same node
-//
-//    int nmatches=0;
-//    vector<bool> vbMatched2(vKeysUn2.size(),false);
-//    vector<int> vMatches12(vKeysUn1.size(),-1);
-//
-//    vector<int> rotHist[HISTO_LENGTH];
-//    for(int i=0;i<HISTO_LENGTH;i++)
-//        rotHist[i].reserve(500);
-//
-//    const float factor = 1.0f/HISTO_LENGTH;
-//
-//    DBoW2::FeatureVector::iterator f1it = vFeatVec1.begin();
-//    DBoW2::FeatureVector::iterator f2it = vFeatVec2.begin();
-//    DBoW2::FeatureVector::iterator f1end = vFeatVec1.end();
-//    DBoW2::FeatureVector::iterator f2end = vFeatVec2.end();
-//
-//    while(f1it!=f1end && f2it!=f2end)
-//    {
-//        if(f1it->first == f2it->first)
-//        {
-//            for(size_t i1=0, iend1=f1it->second.size(); i1<iend1; i1++)
-//            {
-//                size_t idx1 = f1it->second[i1];
-//
-//                MapPoint* pMP1 = vpMapPoints1[idx1];
-//
-//                // If there is already a MapPoint skip
-//                if(pMP1)
-//                    continue;
-//
-//                const cv::KeyPoint &kp1 = vKeysUn1[idx1];
-//
-//                cv::Mat d1 = Descriptors1.row(idx1);
-//
-//                vector<pair<int,size_t> > vDistIndex;
-//
-//                for(size_t i2=0, iend2=f2it->second.size(); i2<iend2; i2++)
-//                {
-//                    size_t idx2 = f2it->second[i2];
-//
-//                    MapPoint* pMP2 = vpMapPoints2[idx2];
-//
-//                    // If we have already matched or there is a MapPoint skip
-//                    if(vbMatched2[idx2] || pMP2)
-//                        continue;
-//
-//                    cv::Mat d2 = Descriptors2.row(idx2);
-//
-//                    const int dist = DescriptorDistance(d1,d2);
-//
-//                    if(dist>TH_LOW)
-//                        continue;
-//
-//                    vDistIndex.push_back(make_pair(dist,idx2));
-//                }
-//
-//                if(vDistIndex.empty())
-//                    continue;
-//
-//                sort(vDistIndex.begin(),vDistIndex.end());
-//                int BestDist = vDistIndex.front().first;
-//                int DistTh = round(2*BestDist);
-//
-//                for(size_t id=0; id<vDistIndex.size(); id++)
-//                {
-//                    if(vDistIndex[id].first>DistTh)
-//                        break;
-//
-//                    int currentIdx2 = vDistIndex[id].second;
-//                    cv::KeyPoint &kp2 = vKeysUn2[currentIdx2];
-//                    if(CheckDistEpipolarLine(kp1,kp2,F12,pKF2))
-//                    {
-//                        vbMatched2[currentIdx2]=true;
-//                        vMatches12[idx1]=currentIdx2;
-//                        nmatches++;
-//
-//                        if(mbCheckOrientation)
-//                        {
-//                            float rot = kp1.angle-kp2.angle;
-//                            if(rot<0.0)
-//                                rot+=360.0f;
-//                            int bin = round(rot*factor);
-//                            if(bin==HISTO_LENGTH)
-//                                bin=0;
-//                            ROS_ASSERT(bin>=0 && bin<HISTO_LENGTH);
-//                            rotHist[bin].push_back(idx1);
-//                        }
-//
-//                        break;
-//                    }
-//
-//                }
-//            }
-//
-//            f1it++;
-//            f2it++;
-//        }
-//        else if(f1it->first < f2it->first)
-//        {
-//            f1it = vFeatVec1.lower_bound(f2it->first);
-//        }
-//        else
-//        {
-//            f2it = vFeatVec2.lower_bound(f1it->first);
-//        }
-//    }
-//
-//    if(mbCheckOrientation)
-//    {
-//        int ind1=-1;
-//        int ind2=-1;
-//        int ind3=-1;
-//
-//        ComputeThreeMaxima(rotHist,HISTO_LENGTH,ind1,ind2,ind3);
-//
-//        for(int i=0; i<HISTO_LENGTH; i++)
-//        {
-//            if(i==ind1 || i==ind2 || i==ind3)
-//                continue;
-//            for(size_t j=0, jend=rotHist[i].size(); j<jend; j++)
-//            {
-//                vMatches12[rotHist[i][j]]=-1;
-//                nmatches--;
-//            }
-//        }
-//
-//    }
-//
-//    vMatchedKeys1.clear();
-//    vMatchedKeys1.reserve(nmatches);
-//    vMatchedKeys2.clear();
-//    vMatchedKeys2.reserve(nmatches);
-//    vMatchedPairs.clear();
-//    vMatchedPairs.reserve(nmatches);
-//
-//    for(size_t i=0, iend=vMatches12.size(); i<iend; i++)
-//    {
-//        if(vMatches12[i]<0)
-//            continue;
-//
-//        vMatchedKeys1.push_back(vKeysUn1[i]);
-//        vMatchedKeys2.push_back(vKeysUn2[vMatches12[i]]);
-//        vMatchedPairs.push_back(make_pair(i,vMatches12[i]));
-//    }
-//
-//    return nmatches;
-//}
-//
+
+int ORBmatcher::SearchForTriangulation(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFrameState> pKF2, cv::Mat F12,
+std::vector<cv::KeyPoint> &vMatchedKeys1, std::vector<cv::KeyPoint> &vMatchedKeys2, std::vector<std::pair<size_t, size_t> > &vMatchedPairs)
+{
+    vector<shared_ptr<MapPoint>> vpMapPoints1 = pKF1->mvpMapPoint;
+    vector<cv::KeyPoint> vKeysUn1 = pKF1->mpFrame->mvKeyPoint;
+    cv::Mat Descriptors1 = pKF1->mpFrame->mDescriptor;
+    DBoW2::FeatureVector vFeatVec1 = pKF1->mvFeature;
+
+    vector<shared_ptr<MapPoint>> vpMapPoints2 = pKF2->mvpMapPoint;
+    vector<cv::KeyPoint> vKeysUn2 = pKF2->mpFrame->mvKeyPoint;
+    cv::Mat Descriptors2 = pKF2->mpFrame->mDescriptor;
+    DBoW2::FeatureVector vFeatVec2 = pKF2->mvFeature;
+
+    std::cout<<"featureVector1 "<<vFeatVec1.size()<<std::endl;
+    std::cout<<"featureVector2 "<<vFeatVec2.size()<<std::endl;
+
+
+    // Find matches between not tracked keypoints
+    // Matching speeded-up by ORB Vocabulary
+    // Compare only ORB that share the same node
+
+    int nmatches=0;
+    vector<bool> vbMatched2(vKeysUn2.size(),false);
+    vector<int> vMatches12(vKeysUn1.size(),-1);
+
+    vector<int> rotHist[HISTO_LENGTH];
+    for(int i=0;i<HISTO_LENGTH;i++)
+        rotHist[i].reserve(500);
+
+    const float factor = 1.0f/HISTO_LENGTH;
+
+    DBoW2::FeatureVector::iterator f1it = vFeatVec1.begin();
+    DBoW2::FeatureVector::iterator f2it = vFeatVec2.begin();
+    DBoW2::FeatureVector::iterator f1end = vFeatVec1.end();
+    DBoW2::FeatureVector::iterator f2end = vFeatVec2.end();
+
+    while(f1it!=f1end && f2it!=f2end)
+    {
+        if(f1it->first == f2it->first)
+        {
+            for(size_t i1=0, iend1=f1it->second.size(); i1<iend1; i1++)
+            {
+                size_t idx1 = f1it->second[i1];
+
+                shared_ptr<MapPoint> pMP1 = vpMapPoints1[idx1];
+
+                // If there is already a MapPoint skip
+                if(pMP1)
+                    continue;
+
+                const cv::KeyPoint &kp1 = vKeysUn1[idx1];
+
+                cv::Mat d1 = Descriptors1.row(idx1);
+
+                vector<pair<int,size_t> > vDistIndex;
+
+                for(size_t i2=0, iend2=f2it->second.size(); i2<iend2; i2++)
+                {
+                    size_t idx2 = f2it->second[i2];
+
+                    shared_ptr<MapPoint> pMP2 = vpMapPoints2[idx2];
+
+                    // If we have already matched or there is a MapPoint skip
+                    if(vbMatched2[idx2] || pMP2)
+                        continue;
+
+                    cv::Mat d2 = Descriptors2.row(idx2);
+
+                    const int dist = DescriptorDistance(d1,d2);
+
+                    if(dist>TH_LOW)
+                        continue;
+
+                    vDistIndex.push_back(std::make_pair(dist,idx2));
+                }
+
+                if(vDistIndex.empty())
+                    continue;
+
+                sort(vDistIndex.begin(),vDistIndex.end());
+                int BestDist = vDistIndex.front().first;
+                int DistTh = round(2*BestDist);
+
+                for(size_t id=0; id<vDistIndex.size(); id++)
+                {
+                    if(vDistIndex[id].first>DistTh)
+                        break;
+
+                    int currentIdx2 = vDistIndex[id].second;
+                    cv::KeyPoint &kp2 = vKeysUn2[currentIdx2];
+                    if(CheckDistEpipolarLine(kp1,kp2,F12,pKF2))
+                    {
+                        vbMatched2[currentIdx2]=true;
+                        vMatches12[idx1]=currentIdx2;
+                        nmatches++;
+
+                        if(mbCheckOrientation)
+                        {
+                            float rot = kp1.angle-kp2.angle;
+                            if(rot<0.0)
+                                rot+=360.0f;
+                            int bin = round(rot*factor);
+                            if(bin==HISTO_LENGTH)
+                                bin=0;
+                            //ROS_ASSERT(bin>=0 && bin<HISTO_LENGTH);
+                            rotHist[bin].push_back(idx1);
+                        }
+
+                        break;
+                    }
+
+                }
+            }
+
+            f1it++;
+            f2it++;
+        }
+        else if(f1it->first < f2it->first)
+        {
+            f1it = vFeatVec1.lower_bound(f2it->first);
+        }
+        else
+        {
+            f2it = vFeatVec2.lower_bound(f1it->first);
+        }
+    }
+
+    if(mbCheckOrientation)
+    {
+        int ind1=-1;
+        int ind2=-1;
+        int ind3=-1;
+
+        ComputeThreeMaxima(rotHist,HISTO_LENGTH,ind1,ind2,ind3);
+
+        for(int i=0; i<HISTO_LENGTH; i++)
+        {
+            if(i==ind1 || i==ind2 || i==ind3)
+                continue;
+            for(size_t j=0, jend=rotHist[i].size(); j<jend; j++)
+            {
+                vMatches12[rotHist[i][j]]=-1;
+                nmatches--;
+            }
+        }
+
+    }
+
+    vMatchedKeys1.clear();
+    vMatchedKeys1.reserve(nmatches);
+    vMatchedKeys2.clear();
+    vMatchedKeys2.reserve(nmatches);
+    vMatchedPairs.clear();
+    vMatchedPairs.reserve(nmatches);
+
+    for(size_t i=0, iend=vMatches12.size(); i<iend; i++)
+    {
+        if(vMatches12[i]<0)
+            continue;
+
+        vMatchedKeys1.push_back(vKeysUn1[i]);
+        vMatchedKeys2.push_back(vKeysUn2[vMatches12[i]]);
+        vMatchedPairs.push_back(std::make_pair(i,vMatches12[i]));
+    }
+
+    return nmatches;
+}
+
 //int ORBmatcher::Fuse(KeyFrameState *pKF, vector<MapPoint *> &vpMapPoints, float th)
 //{
 //    cv::Mat Rcw = pKF->GetRotation();

@@ -72,24 +72,32 @@ int Tracker::threadRun() {
         if ( meMode == WorkMode::Normal ) {
             // tracking
             std::cout<< "normal at" << mpCurFrame->mId << std::endl;
+
+            Config::time("TrackFromPreFrame");
             bStatus = TrackFromPreFrame();
+            Config::timeEnd("TrackFromPreFrame");
 
             if ( bStatus ) {
 
 
-                bStatus = TrackLocalMap();
-                updateDrawer();
+                //bStatus = TrackLocalMap();
+
 
                 // TODO: how to insert KeyFrame
-                if( false /*NeedNewKeyFrame()*/) {
-                    mpLocalMapper->addKeyFrame( shared_ptr<KeyFrameState>( new KeyFrameState(mpCurFrame, mpVocabulary) ) );
-
-                    mpLocalMapper->createNewMapPoint();
+                Config::time("localMapper");
+                if( mpCurFrame->mId - mLastMapperId >= 1 /*NeedNewKeyFrame()*/) {
+                    createKeyFrame();
+                    mpLocalMapper->processKeyFrameLoop();
+                    mLastMapperId = mpCurFrame->mId;
+                    //mpLocalMapper->createNewMapPoint();
                 }
+                Config::timeEnd("localMapper");
 
-
-
+                Config::time("updateDrawer");
+                updateDrawer();
+                Config::timeEnd("updateDrawer");
                 mpPreFrame = shared_ptr<FrameState>( mpCurFrame );
+
             }
             else {
                 meMode = WorkMode::Fail;
@@ -746,8 +754,8 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     }
 
     // TODO: should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
-    //pKFini->UpdateConnections();
-    //pKFcur->UpdateConnections();
+    pIniKeyFrame->UpdateConnections();
+    pCurKeyFrame->UpdateConnections();
     // TODO: Optimizer::GlobalBundleAdjustemnt(mpMap,20);
 
 
@@ -783,8 +791,13 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 
     mpCurFrame->mT2w = pCurKeyFrame->mT2w.clone();
 
+    mpLocalMapper->addKeyFrame(pIniKeyFrame);
+    mpLocalMapper->addKeyFrame(pCurKeyFrame);
 
+    mpLocalMapper->processKeyFrameLoop();
+    mpLocalMapper->processKeyFrameLoop();
 
+    mLastMapperId = pCurKeyFrame->mpFrame->mId;
 
     std::cout<< "Init Map's MapPoint size"<<mpMap->mspMapPoint.size()<<std::endl;
 
@@ -812,7 +825,7 @@ bool Tracker::TrackFromPreFrame() {
     // TODO: set estimation mT2w
     mpCurFrame->mT2w = mpPreFrame->mT2w.clone();
     mpCurFrame->mvpMapPoint = vpMapPoint;
-
+    std::cout<< "estimation mT2w!!! "<<mpPreFrame->mT2w<<std::endl;
     // TODO: if matches > 10  poseOptimization
 //    if ( numMatch > 10 ) {
 //        Optimizer::PoseOptimization(mpCurFrame);
@@ -849,6 +862,7 @@ bool Tracker::TrackFromPreFrame() {
     std::cout<< "estimation mT2w "<<mpPreFrame->mT2w<<std::endl;
     std::cout<< "optimization mT2w "<<mpCurFrame->mT2w<<std::endl;
 
+
     return numMatch > 10;
 }
 
@@ -857,4 +871,9 @@ bool Tracker::TrackLocalMap() {
 
 
     return false;
+}
+
+void Tracker::createKeyFrame() {
+    mpLocalMapper->addKeyFrame( shared_ptr<KeyFrameState>( new KeyFrameState(mpCurFrame, mpVocabulary) ) );
+
 }

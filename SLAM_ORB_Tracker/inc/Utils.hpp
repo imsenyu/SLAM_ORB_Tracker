@@ -26,6 +26,7 @@ namespace Utils {
     Eigen::Matrix<double,3,1> convertToEigenMat31(const cv::Mat &cvVector);
     cv::Mat convertToCvMat44(const g2o::SE3Quat &SE3);
     cv::Mat convertToCvMat44(const Eigen::Matrix<double, 4, 4> &m);
+    cv::Mat convectToSymmetricMatrix(const cv::Mat &v);
 };
 
 

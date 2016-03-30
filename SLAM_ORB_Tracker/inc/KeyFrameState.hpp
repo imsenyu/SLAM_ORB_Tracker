@@ -22,13 +22,13 @@
 class MapPoint;
 class FrameState;
 
-class KeyFrameState {
+class KeyFrameState: public boost::enable_shared_from_this<KeyFrameState> {
 private:
 
     Vocabulary* mpVocabulary;
-
-
-
+    std::vector<shared_ptr<KeyFrameState>> mvpOrderedConnectedKeyFrames;
+    std::map<shared_ptr<KeyFrameState>,int> mConnectedKeyFrameWeights;
+    std::vector<int> mvOrderedWeights;
 
 
 public:
@@ -44,12 +44,20 @@ public:
     cv::Mat mMatT;
     cv::Mat mO2w;
 
+
+
     void getBoW();
-    void insertMapPoint(shared_ptr<MapPoint> pMp, int nP) {
-        mvpMapPoint[nP] = pMp;
-    }
+    void insertMapPoint(shared_ptr<MapPoint> pMp, int nP);
     void updatePose(cv::Mat _mT);
     float ComputeSceneMedianDepth(int r);
+    std::vector<shared_ptr<KeyFrameState>> GetBestCovisibilityKeyFrames(const int &N);
+    void AddConnection(shared_ptr<KeyFrameState> pKF, const int &weight);
+
+    void UpdateBestCovisibles();
+
+    void UpdateConnections();
 };
+
+
 
 #endif /* KeyFrameState_hpp */

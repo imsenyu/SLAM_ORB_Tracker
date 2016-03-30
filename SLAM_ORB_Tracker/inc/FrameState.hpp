@@ -23,7 +23,7 @@ using std::vector;
 using std::max;
 using std::min;
 
-class FrameState {
+class FrameState: public boost::enable_shared_from_this<FrameState> {
 private:
     bool loadImage(int _id);
     

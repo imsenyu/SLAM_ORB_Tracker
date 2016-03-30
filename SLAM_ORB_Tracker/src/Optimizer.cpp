@@ -148,12 +148,13 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    SE3quat_recov = vSE3_recov->estimate();
 //    pose = Utils::convertToCvMat44(SE3quat_recov);
 //    std::cout<<"opt before0: "<<pose<<std::endl;
-
+    int count = 0;
     for(int i=0; i<N; i++)
     {
         shared_ptr<MapPoint> pMP = pFrame->mvpMapPoint[i];
         if(pMP)
         {
+            count++;
 //            std::cout<< "MapPoint("<<i<<")"<< pMP->mPos<<std::endl;
 //            std::cout<< "KeyPoint("<<i<<")"<<(pFrame->mvKeyPoint[i].pt - cv::Point2f( Config::mCameraParameter.at<double>(0,2),
 //            Config::mCameraParameter.at<double>(1,2)) )<<std::endl<<std::endl;
@@ -201,7 +202,7 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
         }
 
     }
-
+    std::cout<<"==========N="<<N<<" avaMapPoint"<<count<<std::endl;
     // We perform 4 optimizations, decreasing the inlier region
     // From second to final optimization we include only inliers in the optimization
     // At the end of each optimization we check which points are inliers

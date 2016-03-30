@@ -74,9 +74,9 @@ public:
     int SearchForInitialization(shared_ptr<FrameState> pF1, shared_ptr<FrameState> pF2, std::vector<cv::Point2f> &vbPrevMatched, std::vector<int> &vnMatches12, int windowSize=10);
 
     // Matching to triangulate new MapPoints. Check Epipolar Constraint
-//    int SearchForTriangulation(shared_ptr<KeyFrameState>pKF1, shared_ptr<KeyFrameState> pKF2, cv::Mat F12,
-//                               std::vector<cv::KeyPoint> &vMatchedKeys1, std::vector<cv::KeyPoint> &vMatchedKeys2,
-//                               std::vector<std::pair<size_t, size_t> > &vMatchedPairs);
+    int SearchForTriangulation(shared_ptr<KeyFrameState>pKF1, shared_ptr<KeyFrameState> pKF2, cv::Mat F12,
+                               std::vector<cv::KeyPoint> &vMatchedKeys1, std::vector<cv::KeyPoint> &vMatchedKeys2,
+                               std::vector<std::pair<size_t, size_t> > &vMatchedPairs);
 
     // Search matches between MapPoints seen in KF1 and KF2 transforming by a Sim3 [s12*R12|t12]
     //int SearchBySim3(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFrameState> pKF2, std::vector<MapPoint *> &vpMatches12, const float &s12, const cv::Mat &R12, const cv::Mat &t12, float th);
@@ -96,7 +96,7 @@ public:
 
 protected:
 
-//    bool CheckDistEpipolarLine(const cv::KeyPoint &kp1, const cv::KeyPoint &kp2, const cv::Mat &F12, const shared_ptr<KeyFrameState>pKF);
+    bool CheckDistEpipolarLine(const cv::KeyPoint &kp1, const cv::KeyPoint &kp2, const cv::Mat &F12, const shared_ptr<KeyFrameState> pKF);
 //
 //    float RadiusByViewingCos(const float &viewCos);
 //

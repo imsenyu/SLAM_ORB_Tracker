@@ -48,7 +48,7 @@ void MapDrawer::show() {
 
 void MapDrawer::take() {
     shared_ptr<FrameState> pFS = mBuffer.take();
-    cv::Mat pop = pFS->mT2w;
+    cv::Mat pop = pFS->mT2w.clone();
     std::cout<<"show take "<<pop<<std::endl;
 
     cv::Mat R = pop.rowRange(0,3).colRange(0,3);
@@ -112,7 +112,7 @@ void MapDrawer::initViz() {
     // campos   相机观察点的位置
     // cam focal point   ,相机焦点位置, 观察方向从相机观察点朝向相机焦点
     // cam_y_dir   ,相机的y轴的朝向,      默认 位于  \downarrow  是y轴,  \rightarrow 是x轴, \inside 是z轴
-    double cameraHeight = 10.0f;
+    double cameraHeight = 50.0f;
     cv::Point3d cam_y_dir(0.0f,0.0f,-1.0f);
     cv::Point3d cam_pos(0.0f, -cameraHeight, 0.0f);
     cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.1f, 0.0f);
@@ -129,25 +129,25 @@ void MapDrawer::drawViz() {
     mpVizWin->showWidget(cv::format("id-%d",mCurPose.mId), curPlane);
     mpVizWin->showWidget(cv::format("id2-%d",mCurPose.mId), curArrow);
 
-    double cameraHeight = 30.0f;
+    double cameraHeight = 100.0f;
     cv::Point3d cam_y_dir(0.0f,0.0f,-1.0f);
-    cv::Point3d cam_pos = mCurPose.mPos + cv::Point3d(0.0f, -cameraHeight, 0.0f);
-    cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.5f, 0.0f);
+    cv::Point3d cam_pos = mCurPose.mPos*20 + cv::Point3d(0.0f, -cameraHeight, 0.0f);
+    cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.2f, 0.0f);
     mCamPose = cv::viz::makeCameraPose(cam_pos, cam_focal_point, cam_y_dir);
 
     mpVizWin->setViewerPose(mCamPose);
 
-    std::set<shared_ptr<MapPoint>> spMapPoint = mpMap->mspMapPoint;
-    auto iter = spMapPoint.begin();
-    for(; iter!=spMapPoint.end(); iter++) {
-        shared_ptr<MapPoint> pMP = *iter;
-        cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos*20);
-
-        // -2.0  ->  0.5;
-        float radio = (pos.y - (-2.0f))/2.5f;
-        radio = radio > 1.0f ? 1.0f : radio;
-        radio = radio < 0.0f ? 0.0f : radio;
-        cv::viz::WSphere curPoint(pos,0.10f, 10, cv::viz::Color(255*radio,0,255*(1.0f-radio)));
-        mpVizWin->showWidget( cv::format("mp-%d", pMP->getUID()), curPoint );
-    }
+//    std::set<shared_ptr<MapPoint>> spMapPoint = mpMap->mspMapPoint;
+//    auto iter = spMapPoint.begin();
+//    for(; iter!=spMapPoint.end(); iter++) {
+//        shared_ptr<MapPoint> pMP = *iter;
+//        cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos*20);
+//
+//        // -2.0  ->  0.5;
+//        float radio = (pos.y - (-2.0f))/2.5f;
+//        radio = radio > 1.0f ? 1.0f : radio;
+//        radio = radio < 0.0f ? 0.0f : radio;
+//        cv::viz::WSphere curPoint(pos,0.10f, 10, cv::viz::Color(255*radio,0,255*(1.0f-radio)));
+//        mpVizWin->showWidget( cv::format("mp-%d", pMP->getUID()), curPoint );
+//    }
 }

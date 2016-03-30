@@ -85,6 +85,8 @@ private:
     bool initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D);
     bool TrackFromPreFrame();
     bool TrackLocalMap();
+    void createKeyFrame();
+    int mLastMapperId;
 public:
     Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper);
     ~Tracker();

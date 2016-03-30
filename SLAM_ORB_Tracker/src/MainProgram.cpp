@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
     // vocabulary initialize
     Vocabulary vocabulary;
     Config::time("voc");
-    bool isVocLoaded = true || vocabulary.loadFromTextFile(Config::sPathVocabulary);
+    bool isVocLoaded =  vocabulary.loadFromTextFile(Config::sPathVocabulary);
     Config::timeEnd("voc");
     
     if ( !isVocLoaded ) {
@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) {
     // initialize Tracker for localization
     FrameDrawer frameDrawer;
     MapDrawer mapDrawer(&map);
-    LocalMapper localMapper;
+    LocalMapper localMapper(&map);
     Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer, &vocabulary, &map, &localMapper);
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
     
