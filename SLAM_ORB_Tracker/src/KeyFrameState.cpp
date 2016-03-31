@@ -10,7 +10,7 @@
 
 KeyFrameState::KeyFrameState(shared_ptr<FrameState> _pFrame, Vocabulary *_pVocabulary):
     mpFrame( _pFrame ), mpVocabulary(_pVocabulary),
-    mvpMapPoint( _pFrame->mvpMapPoint )
+    /*mvpMapPoint( _pFrame->mvpMapPoint ),*/ mId(_pFrame->mId)
 {
 
     updatePose(_pFrame->mT2w);
@@ -50,20 +50,20 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
 
     std::vector<shared_ptr<MapPoint>> vpMapPoints;
     cv::Mat Tcw_;
-        vpMapPoints = mvpMapPoint;
+        vpMapPoints = GetMapPointMatch();
         Tcw_ = mT2w.clone();
 
 
     std::vector<float> vDepths;
-    vDepths.reserve(mvpMapPoint.size());
+    vDepths.reserve(vpMapPoints.size());
     cv::Mat Rcw2 = Tcw_.row(2).colRange(0,3);
     Rcw2 = Rcw2.t();
     float zcw = Tcw_.at<float>(2,3);
-    for(size_t i=0; i<mvpMapPoint.size(); i++)
+    for(size_t i=0; i<vpMapPoints.size(); i++)
     {
-        if(mvpMapPoint[i])
+        if(vpMapPoints[i])
         {
-            shared_ptr<MapPoint> pMP = mvpMapPoint[i];
+            shared_ptr<MapPoint> pMP = vpMapPoints[i];
             cv::Mat x3Dw = pMP->mPos;
             float z = Rcw2.dot(x3Dw)+zcw;
             vDepths.push_back(z);
@@ -125,7 +125,7 @@ void KeyFrameState::UpdateConnections()
     //std::cout<<"updateConnection at frameId"<<(this->mpFrame->mId)<<std::endl;
     std::map<shared_ptr<KeyFrameState>,int> KFcounter;
 
-    std::vector<shared_ptr<MapPoint>> vpMP = mvpMapPoint;
+    std::vector<shared_ptr<MapPoint>> vpMP = GetMapPointMatch();
 
     //For all map points in keyframe check in which other keyframes are they seen
     //Increase counter for those keyframes
@@ -217,7 +217,54 @@ void KeyFrameState::UpdateConnections()
 
 
 }
+
+std::vector<shared_ptr<MapPoint>> KeyFrameState::GetMapPointMatch() {
+    return mpFrame->mvpMapPoint;
+}
+
 void KeyFrameState::insertMapPoint(shared_ptr<MapPoint> pMp, int nP) {
-    mvpMapPoint[nP] = pMp;
+    //mvpMapPoint[nP] = pMp;
     mpFrame->insertMapPoint(pMp, nP);
+}
+
+bool KeyFrameState::IsInImage(const float &x, const float &y)
+{
+    return mpFrame->IsInImage(x,y);
+}
+std::vector<size_t> KeyFrameState::getFeaturesInArea(const float &x, const float &y, const float &r, const int minLevel, const int maxLevel)
+{
+    return mpFrame->getFeaturesInArea(x,y,r,minLevel,maxLevel);
+}
+int KeyFrameState::GetKeyPointScaleLevel(const size_t &idx) const
+{
+    return mpFrame->mvKeyPoint[idx].octave;
+}
+
+cv::Mat KeyFrameState::GetDescriptor(const size_t &idx)
+{
+    return mpFrame->mDescriptor.row(idx).clone();
+}
+shared_ptr<MapPoint> KeyFrameState::GetMapPoint(const size_t &idx)
+{
+    return mpFrame->mvpMapPoint[idx];
+}
+
+void KeyFrameState::EraseMapPointMatch(shared_ptr<MapPoint> pMP)
+{
+    int idx = -1;
+    if ( pMP->msKeyFrame2FeatureId.count(shared_from_this()) )
+        idx = pMP->msKeyFrame2FeatureId[shared_from_this()];
+    if(idx>=0)
+        mpFrame->mvpMapPoint[idx]=shared_ptr<MapPoint>(NULL);
+}
+
+
+void KeyFrameState::EraseMapPointMatch(const size_t &idx)
+{
+    mpFrame->mvpMapPoint[idx]=shared_ptr<MapPoint>(NULL);
+}
+
+void KeyFrameState::ReplaceMapPointMatch(const size_t &idx, shared_ptr<MapPoint> pMP)
+{
+    mpFrame->mvpMapPoint[idx]=pMP;
 }

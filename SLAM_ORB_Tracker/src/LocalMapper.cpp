@@ -34,7 +34,7 @@ int LocalMapper::processKeyFrameLoop() {
     mpCurKeyFrame->getBoW();
 
     // add (tracked MapPoint is in this KeyFrame) to Map
-    vector<shared_ptr<MapPoint>> vpMapPointMatch = mpCurKeyFrame->mvpMapPoint;
+    vector<shared_ptr<MapPoint>> vpMapPointMatch = mpCurKeyFrame->GetMapPointMatch();
     //int numMatch = 0;
     if( true ) //This operations are already done in the tracking for the first two keyframes
     {
@@ -48,9 +48,20 @@ int LocalMapper::processKeyFrameLoop() {
                     //numMatch ++;
                     pMP->setKeyFrame(mpCurKeyFrame, i);
                     //pMP->AddObservation(mpCurrentKeyFrame, i);
-                    //pMP->UpdateNormalAndDepth();
-                    //pMP->ComputeDistinctiveDescriptors();
+                    pMP->UpdateNormalAndDepth();
+                    pMP->ComputeDistinctiveDescriptors();
                 }
+            }
+        }
+    }
+    if(mpCurKeyFrame->mId==1)
+    {
+        for(size_t i=0; i<vpMapPointMatch.size(); i++)
+        {
+            shared_ptr<MapPoint> pMP = vpMapPointMatch[i];
+            if(pMP)
+            {
+                mlpRecentAddedMapPoints.push_back(pMP);
             }
         }
     }
@@ -66,13 +77,14 @@ int LocalMapper::processKeyFrameLoop() {
 
 
     // erase Bad MapPoint
-
+    MapPointCulling();
 
     // according to computed mT2w, searchForTriangle with neighbour KeyFrame
-    triangleNewMapPoint();
-
+    int numMatch = triangleNewMapPoint();
+    std::cout<<"triangle mapPoint size"<< numMatch<<std::endl;
 
     // TODO: process duplicated MapPoint
+    removeDuplicatedMapPoint();
 
     mpCurKeyFrame = shared_ptr<KeyFrameState>(NULL);
 
@@ -88,9 +100,9 @@ int LocalMapper::run() {
 int LocalMapper::triangleNewMapPoint() {
 
     // Take neighbor keyframes in covisibility graph
-    std::vector<shared_ptr<KeyFrameState>> vpNeighKFs = mpCurKeyFrame->GetBestCovisibilityKeyFrames(10);
+    std::vector<shared_ptr<KeyFrameState>> vpNeighKFs = mpCurKeyFrame->GetBestCovisibilityKeyFrames(20);
 
-    ORB_SLAM::ORBmatcher matcher(0.6,false);
+    ORB_SLAM::ORBmatcher matcher(0.5,false);
 
     cv::Mat Rcw1 = mpCurKeyFrame->mMatR.clone();
     cv::Mat Rwc1 = Rcw1.t();
@@ -100,10 +112,10 @@ int LocalMapper::triangleNewMapPoint() {
     tcw1.copyTo(Tcw1.col(3));
     cv::Mat Ow1 = mpCurKeyFrame->mO2w.clone();
 
-    const float fx1 = Config::mCameraParameter.at<double>(0,0);
-    const float fy1 = Config::mCameraParameter.at<double>(1,1);
-    const float cx1 = Config::mCameraParameter.at<double>(0,2);
-    const float cy1 = Config::mCameraParameter.at<double>(1,2);
+    const float fx1 = Config::dFx;
+    const float fy1 = Config::dFy;
+    const float cx1 = Config::dCx;
+    const float cy1 = Config::dCy;
     const float invfx1 = 1.0f/fx1;
     const float invfy1 = 1.0f/fy1;
 
@@ -148,15 +160,15 @@ int LocalMapper::triangleNewMapPoint() {
 //        std::cout<<"tcw2"<<tcw2<<std::endl;
 //        std::cout<<"Tcw2"<<Tcw2<<std::endl;
 
-        const float fx2 = Config::mCameraParameter.at<double>(0,0);
-        const float fy2 = Config::mCameraParameter.at<double>(1,1);
-        const float cx2 = Config::mCameraParameter.at<double>(0,2);
-        const float cy2 = Config::mCameraParameter.at<double>(1,2);
+        const float fx2 = Config::dFx;
+        const float fy2 = Config::dFy;
+        const float cx2 = Config::dCx;
+        const float cy2 = Config::dCy;
         const float invfx2 = 1.0f/fx2;
         const float invfy2 = 1.0f/fy2;
 
         // Triangulate each match
-        std::cout<<"triangulate each size"<<vMatchedKeysUn1.size()<<std::endl;
+        //std::cout<<"triangulate each size"<<vMatchedKeysUn1.size()<<std::endl;
         std::vector<int> cnt(10,0);
         for(size_t ikp=0, iendkp=vMatchedKeysUn1.size(); ikp<iendkp; ikp++)
         {
@@ -223,8 +235,8 @@ int LocalMapper::triangleNewMapPoint() {
             }
 
             //Check reprojection error in first keyframe
-            float sigma1 = pow(1.2f, kp1.octave);
-            float sigmaSquare1 = sigma1*sigma1;//mpCurKeyFrame->GetSigma2(kp1.octave);
+
+            float sigmaSquare1 = Config::vLevelSigma2[kp1.octave];
             float x1 = Rcw1.row(0).dot(x3Dt)+tcw1.at<double>(0);
             float y1 = Rcw1.row(1).dot(x3Dt)+tcw1.at<double>(1);
             float invz1 = 1.0/z1;
@@ -238,8 +250,7 @@ int LocalMapper::triangleNewMapPoint() {
             }
 
             //Check reprojection error in second keyframe
-            float sigma2 = pow(1.2f, kp2.octave);
-            float sigmaSquare2 = sigma2*sigma2;
+            float sigmaSquare2 = Config::vLevelSigma2[kp2.octave];
             float x2 = Rcw2.row(0).dot(x3Dt)+tcw2.at<double>(0);
             float y2 = Rcw2.row(1).dot(x3Dt)+tcw2.at<double>(1);
             float invz2 = 1.0/z2;
@@ -265,14 +276,14 @@ int LocalMapper::triangleNewMapPoint() {
             }
 
             float ratioDist = dist1/dist2;
-            float ratioOctave = pow(1.2f, kp1.octave-kp2.octave);//1.2f/1.2f;//mpCurKeyFrame->GetScaleFactor(kp1.octave)/pKF2->GetScaleFactor(kp2.octave);
+            float ratioOctave = Config::vScaleFactors[kp1.octave] / Config::vScaleFactors[kp2.octave];//mpCurKeyFrame->GetScaleFactor(kp1.octave)/pKF2->GetScaleFactor(kp2.octave);
             if(ratioDist*ratioFactor<ratioOctave || ratioDist>ratioOctave*ratioFactor){
                 cnt[7]++;
                 continue;
             }
 
             // Triangulation is succesfull
-            shared_ptr<MapPoint> pMP = shared_ptr<MapPoint>(new MapPoint(x3D,mpCurKeyFrame,idx1));
+            shared_ptr<MapPoint> pMP = shared_ptr<MapPoint>(new MapPoint(x3D, mpCurKeyFrame, idx1, mpMap));
 
             pMP->setKeyFrame(pKF2, idx2);
             pMP->setKeyFrame(mpCurKeyFrame, idx1);
@@ -287,20 +298,20 @@ int LocalMapper::triangleNewMapPoint() {
             ////mpCurrentKeyFrame->AddMapPoint(pMP,idx1);
             ////pKF2->AddMapPoint(pMP,idx2);
 
-            // TODO: pMP->ComputeDistinctiveDescriptors();
+            pMP->ComputeDistinctiveDescriptors();
 
-            // TODO: pMP->UpdateNormalAndDepth();
+            pMP->UpdateNormalAndDepth();
 
             mpMap->insertMapPoint(pMP);
             ////mpMap->AddMapPoint(pMP);
-            // TODO: mlpRecentAddedMapPoints.push_back(pMP);
+            mlpRecentAddedMapPoints.push_back(pMP);
             numMatchMP ++;
             cnt[8]++;
         }
 
-        for(int i=0;i<=8;i++) {
-            std::cout<<"["<<i<<"] "<<cnt[i]<<std::endl;
-        }
+//        for(int i=0;i<=8;i++) {
+//            std::cout<<"["<<i<<"] "<<cnt[i]<<std::endl;
+//        }
     }
     return numMatchMP;
 }
@@ -308,10 +319,10 @@ int LocalMapper::triangleNewMapPoint() {
 
 cv::Mat LocalMapper::computeF12(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFrameState> pKF2)
 {
-    cv::Mat R1w = pKF1->mMatR;
-    cv::Mat t1w = pKF1->mMatT;
-    cv::Mat R2w = pKF2->mMatR;
-    cv::Mat t2w = pKF2->mMatT;
+    cv::Mat R1w = pKF1->mMatR.clone();
+    cv::Mat t1w = pKF1->mMatT.clone();
+    cv::Mat R2w = pKF2->mMatR.clone();
+    cv::Mat t2w = pKF2->mMatT.clone();
 
     cv::Mat R12 = R1w*R2w.t();
     cv::Mat t12 = -R1w*R2w.t()*t2w+t1w;
@@ -325,4 +336,117 @@ cv::Mat LocalMapper::computeF12(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFr
 
 
     return K1.t().inv()*t12x*R12*K2.inv();
+}
+
+
+int LocalMapper::removeDuplicatedMapPoint()
+{
+    // Retrieve neighbor keyframes
+    vector<shared_ptr<KeyFrameState>> vpNeighKFs = mpCurKeyFrame->GetBestCovisibilityKeyFrames(20);
+    vector<shared_ptr<KeyFrameState>> vpTargetKFs;
+    for(vector<shared_ptr<KeyFrameState>>::iterator vit=vpNeighKFs.begin(), vend=vpNeighKFs.end(); vit!=vend; vit++)
+    {
+        shared_ptr<KeyFrameState> pKFi = *vit;
+        if(/*pKFi->isBad() ||*/ pKFi->mnFuseTargetForKF == mpCurKeyFrame->mId)
+        //    continue;
+        vpTargetKFs.push_back(pKFi);
+        pKFi->mnFuseTargetForKF = mpCurKeyFrame->mId;
+
+        // Extend to some second neighbors
+        vector<shared_ptr<KeyFrameState>> vpSecondNeighKFs = pKFi->GetBestCovisibilityKeyFrames(5);
+        for(vector<shared_ptr<KeyFrameState>>::iterator vit2=vpSecondNeighKFs.begin(), vend2=vpSecondNeighKFs.end(); vit2!=vend2; vit2++)
+        {
+            shared_ptr<KeyFrameState> pKFi2 = *vit2;
+            if(/*pKFi2->isBad() || */pKFi2->mnFuseTargetForKF==mpCurKeyFrame->mId || pKFi2->mId==mpCurKeyFrame->mId)
+                continue;
+            vpTargetKFs.push_back(pKFi2);
+        }
+    }
+
+
+    // Search matches by projection from current KF in target KFs
+    ORB_SLAM::ORBmatcher matcher(0.6);
+    vector<shared_ptr<MapPoint>> vpMapPointMatches = mpCurKeyFrame->GetMapPointMatch();
+    for(vector<shared_ptr<KeyFrameState>>::iterator vit=vpTargetKFs.begin(), vend=vpTargetKFs.end(); vit!=vend; vit++)
+    {
+        shared_ptr<KeyFrameState> pKFi = *vit;
+
+        matcher.Fuse(pKFi,vpMapPointMatches);
+    }
+
+    // Search matches by projection from target KFs in current KF
+    vector<shared_ptr<MapPoint>> vpFuseCandidates;
+    vpFuseCandidates.reserve(vpTargetKFs.size()*vpMapPointMatches.size());
+
+    for(vector<shared_ptr<KeyFrameState>>::iterator vitKF=vpTargetKFs.begin(), vendKF=vpTargetKFs.end(); vitKF!=vendKF; vitKF++)
+    {
+        shared_ptr<KeyFrameState> pKFi = *vitKF;
+
+        vector<shared_ptr<MapPoint>> vpMapPointsKFi = pKFi->GetMapPointMatch();
+
+        for(vector<shared_ptr<MapPoint>>::iterator vitMP=vpMapPointsKFi.begin(), vendMP=vpMapPointsKFi.end(); vitMP!=vendMP; vitMP++)
+        {
+            shared_ptr<MapPoint> pMP = *vitMP;
+            if(!pMP)
+                continue;
+            if(/*pMP->isBad() ||*/ pMP->mnFuseCandidateForKF == mpCurKeyFrame->mpFrame->mId)
+                continue;
+            pMP->mnFuseCandidateForKF = mpCurKeyFrame->mpFrame->mId;
+            vpFuseCandidates.push_back(pMP);
+        }
+    }
+
+    matcher.Fuse(mpCurKeyFrame,vpFuseCandidates);
+
+
+    // Update points
+    vpMapPointMatches = mpCurKeyFrame->GetMapPointMatch();
+    for(size_t i=0, iend=vpMapPointMatches.size(); i<iend; i++)
+    {
+        shared_ptr<MapPoint> pMP=vpMapPointMatches[i];
+        if(pMP)
+        {
+            if(true /*!pMP->isBad()*/)
+            {
+                pMP->ComputeDistinctiveDescriptors();
+                pMP->UpdateNormalAndDepth();
+            }
+        }
+    }
+
+    // Update connections in covisibility graph
+    mpCurKeyFrame->UpdateConnections();
+
+    return 0;
+}
+
+
+void LocalMapper::MapPointCulling()
+{
+    // Check Recent Added MapPoints
+    std::list<shared_ptr<MapPoint>>::iterator lit = mlpRecentAddedMapPoints.begin();
+    const unsigned long int nCurrentKFid = mpCurKeyFrame->mId;
+    while(lit!=mlpRecentAddedMapPoints.end())
+    {
+        shared_ptr<MapPoint> pMP = *lit;
+        if(pMP->isBad())
+        {
+            lit = mlpRecentAddedMapPoints.erase(lit);
+        }
+//        else if(pMP->GetFoundRatio()<0.25f )
+//        {
+//            pMP->SetBadFlag();
+//            lit = mlpRecentAddedMapPoints.erase(lit);
+//        }
+//        else if((nCurrentKFid-pMP->mIdFromKeyFrame)>=2 && pMP->msKeyFrame2FeatureId.size()<=2)
+//        {
+//
+//            pMP->SetBadFlag();
+//            lit = mlpRecentAddedMapPoints.erase(lit);
+//        }
+        else if((nCurrentKFid-pMP->mIdFromKeyFrame)>=3)
+            lit = mlpRecentAddedMapPoints.erase(lit);
+        else
+            lit++;
+    }
 }

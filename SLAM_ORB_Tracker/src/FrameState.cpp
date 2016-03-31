@@ -86,7 +86,7 @@ FrameState::~FrameState() {
 int FrameState::extract() {
 
 
-    cv::ORB orbDetector(Config::iFeatureNum, 1.2f, 8);
+    cv::ORB orbDetector(Config::iFeatureNum, Config::dScaleFactor, Config::dScaleLevel);
     orbDetector.detect(mImage, mvKeyPoint);
     orbDetector.compute(mImage, mvKeyPoint, mDescriptor);
 
@@ -121,7 +121,7 @@ int FrameState::extract() {
 
 
 int FrameState::extractInit() {
-    ORB_SLAM::ORBextractor ORBextractor(Config::iFeatureNum*2,1.2,8,1,20);
+    ORB_SLAM::ORBextractor ORBextractor(Config::iFeatureNum*2, Config::dScaleFactor, Config::dScaleLevel,1,20);
     ORBextractor(mImage,cv::Mat(),mvKeyPoint,mDescriptor);
 
     int nKP = mvKeyPoint.size();
@@ -152,7 +152,7 @@ int FrameState::extractInit() {
 
 int FrameState::extractNormal() {
 
-    ORB_SLAM::ORBextractor ORBextractor(Config::iFeatureNum,1.2,8,1,20);
+    ORB_SLAM::ORBextractor ORBextractor(Config::iFeatureNum, Config::dScaleFactor, Config::dScaleLevel,1,20);
     ORBextractor(mImage,cv::Mat(),mvKeyPoint,mDescriptor);
 
     int nKP = mvKeyPoint.size();

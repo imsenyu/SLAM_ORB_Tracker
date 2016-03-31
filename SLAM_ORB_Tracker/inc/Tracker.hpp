@@ -55,6 +55,7 @@ private:
     shared_ptr<FrameState> mpPreFrame;
     shared_ptr<FrameState> mpCurFrame;
     shared_ptr<FrameState> mpIniFrame;
+    shared_ptr<FrameState> mpRefFrame;
     
     PoseState mCurPose;
     void initPose();
@@ -85,6 +86,8 @@ private:
     bool initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D);
     bool TrackFromPreFrame();
     bool TrackLocalMap();
+    bool TrackMotion();
+    cv::Mat mVelocity;
     void createKeyFrame();
     int mLastMapperId;
 public:

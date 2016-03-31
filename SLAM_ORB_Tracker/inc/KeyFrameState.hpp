@@ -37,13 +37,15 @@ public:
     DBoW2::BowVector mvBow;
     DBoW2::FeatureVector mvFeature;
     shared_ptr<FrameState> mpFrame;
-    std::vector<shared_ptr<MapPoint>> mvpMapPoint;
+    //std::vector<shared_ptr<MapPoint>> mvpMapPoint;
 
     cv::Mat mT2w;
     cv::Mat mMatR;
     cv::Mat mMatT;
     cv::Mat mO2w;
+    int mId;
 
+    int mnFuseTargetForKF;
 
 
     void getBoW();
@@ -56,6 +58,22 @@ public:
     void UpdateBestCovisibles();
 
     void UpdateConnections();
+
+    bool IsInImage(const float &x, const float &y);
+    std::vector<size_t> getFeaturesInArea(const float &x, const float &y, const float &r, const int minLevel = -1, const int maxLevel = -1);
+
+    int GetKeyPointScaleLevel(const size_t &idx) const;
+
+    cv::Mat GetDescriptor(const size_t &idx);
+
+    shared_ptr<MapPoint> GetMapPoint(const size_t &idx);
+
+    std::vector<shared_ptr<MapPoint>> GetMapPointMatch();
+
+    void EraseMapPointMatch(shared_ptr<MapPoint> pMP);
+    void EraseMapPointMatch(const size_t &idx);
+
+    void ReplaceMapPointMatch(const size_t &idx, shared_ptr<MapPoint> pMP);
 };
 
 

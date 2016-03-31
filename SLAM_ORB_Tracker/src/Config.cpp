@@ -19,7 +19,7 @@ int Config::iFeatureNum = 0;
 double Config::dDrawFrameStep = 0.0f;
 cv::Mat Config::mCameraParameter;
 double Config::dOpticalFlowThreshold;
-∑int Config::dScaleLevel;
+int Config::dScaleLevel;
 double Config::dScaleFactor;
 std::vector<double> Config::vScaleFactors;
 std::vector<double> Config::vLevelSigma2;

@@ -49,7 +49,7 @@ public:
 //
 //    // Project MapPoints tracked in last frame into the current frame and search matches.
 //    // Used to track from previous frame (Tracking)
-//    int SearchByProjection(FrameState &CurrentFrame, const FrameState &LastFrame, float th);
+    int SearchByProjection(shared_ptr<FrameState> CurrentFrame, shared_ptr<FrameState> LastFrame, float th);
 //
 //    // Project MapPoints seen in KeyFrame into the Frame and search matches.
 //    // Used in relocalisation (Tracking)
@@ -82,7 +82,7 @@ public:
     //int SearchBySim3(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFrameState> pKF2, std::vector<MapPoint *> &vpMatches12, const float &s12, const cv::Mat &R12, const cv::Mat &t12, float th);
 
     // Project MapPoints into KeyFrameState and search for duplicated MapPoints.
-    //int Fuse(shared_ptr<KeyFrameState> pKF, std::vector<MapPoint *> &vpMapPoints, float th=2.5);
+    int Fuse(shared_ptr<KeyFrameState> pKF, std::vector<shared_ptr<MapPoint>> vpMapPoints, float th=2.5);
 
     // Project MapPoints into KeyFrameState using a given Sim3 and search for duplicated MapPoints.
    // int Fuse(shared_ptr<KeyFrameState> pKF, cv::Mat Scw, const std::vector<shared_ptr<MapPoint>> &vpPoints, float th=2.5);

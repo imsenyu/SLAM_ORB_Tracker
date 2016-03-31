@@ -18,6 +18,7 @@
 #include <deque>
 #include <functional>
 #include <fstream>
+#include <algorithm>
 
 
 // Boost Lib

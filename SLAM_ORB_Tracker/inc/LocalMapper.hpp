@@ -22,7 +22,7 @@ private:
     BlockingQueue<shared_ptr<KeyFrameState>> mBuffer;
     shared_ptr<KeyFrameState> mpCurKeyFrame;
     Map* mpMap;
-
+    std::list<shared_ptr<MapPoint>> mlpRecentAddedMapPoints;
     cv::Mat computeF12(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFrameState> pKF2);
 
 public:
@@ -40,6 +40,10 @@ public:
     int run();
 
     int triangleNewMapPoint();
+
+    int removeDuplicatedMapPoint();
+
+    void MapPointCulling();
 };
 
 #endif /* LocalMapper_hpp */

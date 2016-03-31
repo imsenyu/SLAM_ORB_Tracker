@@ -10,6 +10,9 @@
 #include "KeyFrameState.hpp"
 #include "MapPoint.hpp"
 
+class MapPoint;
+class KeyFrameState;
+
 class Map {
 public:
     std::set<shared_ptr<MapPoint>> mspMapPoint;
@@ -22,6 +25,10 @@ public:
     }
     void insertMapPoint(shared_ptr<MapPoint> _pMapPoint) {
         mspMapPoint.insert( _pMapPoint );
+    }
+    void EraseMapPoint(shared_ptr<MapPoint> pMP)
+    {
+        mspMapPoint.erase(pMP);
     }
 };
 

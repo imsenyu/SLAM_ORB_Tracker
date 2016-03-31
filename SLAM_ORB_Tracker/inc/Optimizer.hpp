@@ -65,7 +65,7 @@ class Optimizer {
 public:
 
     static int PoseOptimization(shared_ptr<FrameState> _pFrame);
-
+    static void LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStopFlag = false);
 };
 
 

@@ -60,6 +60,10 @@ public:
     static int mnMaxY;
     static bool mbInitialComputations;
     std::vector<std::size_t> mGrid[FRAME_GRID_COLS][FRAME_GRID_ROWS];
+    bool IsInImage(const float &x, const float &y) const
+    {
+        return (x>=mnMinX && x<mnMaxX && y>=mnMinY && y<mnMaxY);
+    }
 };
 
 #endif /* FrameState_hpp */

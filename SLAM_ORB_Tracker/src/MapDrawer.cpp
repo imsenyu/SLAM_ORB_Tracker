@@ -30,7 +30,7 @@ void MapDrawer::show() {
             inited = true;
         }
         else {
-            std::cout << "show" <<mCurPose << std::endl;
+            //std::cout << "show" <<mCurPose << std::endl;
             drawCanvas();
             drawViz();
             cv::imshow("Map", mPathCanvasWithDir);
@@ -49,7 +49,7 @@ void MapDrawer::show() {
 void MapDrawer::take() {
     shared_ptr<FrameState> pFS = mBuffer.take();
     cv::Mat pop = pFS->mT2w.clone();
-    std::cout<<"show take "<<pop<<std::endl;
+    //std::cout<<"show take "<<pop<<std::endl;
 
     cv::Mat R = pop.rowRange(0,3).colRange(0,3);
     cv::Mat t = pop.rowRange(0,3).col(3);
@@ -61,7 +61,7 @@ void MapDrawer::take() {
     mCurPose.mDir3 = R;
     mCurPose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
 
-    std::cout<<"------------draw---------"<<std::endl<<mCurPose.mPos<<mCurPose.mDir<<std::endl;
+    //std::cout<<"------------draw---------"<<std::endl<<mCurPose.mPos<<mCurPose.mDir<<std::endl;
 }
 
 void MapDrawer::initCanvas() {
@@ -95,7 +95,7 @@ void MapDrawer::drawCanvas(){
     mPathCanvasWithDir = mPathCanvas.clone();
     cv::line(mPathCanvasWithDir,
              mDrawBase + Config::dDrawFrameStep*cv::Point2f(mCurPose.mPos.x, -mCurPose.mPos.z),
-             mDrawBase + Config::dDrawFrameStep*cv::Point2f(mCurPose.mPos.x, -mCurPose.mPos.z) + 10.0f*Config::dDrawFrameStep * cv::Point2f(mCurPose.mDir.x, -mCurPose.mDir.z),
+             mDrawBase + Config::dDrawFrameStep*cv::Point2f(mCurPose.mPos.x, -mCurPose.mPos.z) + 1.0f*Config::dDrawFrameStep * cv::Point2f(mCurPose.mDir.x, -mCurPose.mDir.z),
              cv::Scalar(255, 0, 0));
 
 
@@ -129,10 +129,10 @@ void MapDrawer::drawViz() {
     mpVizWin->showWidget(cv::format("id-%d",mCurPose.mId), curPlane);
     mpVizWin->showWidget(cv::format("id2-%d",mCurPose.mId), curArrow);
 
-    double cameraHeight = 100.0f;
+    double cameraHeight = 50.0f;
     cv::Point3d cam_y_dir(0.0f,0.0f,-1.0f);
     cv::Point3d cam_pos = mCurPose.mPos*20 + cv::Point3d(0.0f, -cameraHeight, 0.0f);
-    cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.2f, 0.0f);
+    cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.1f, 0.0f);
     mCamPose = cv::viz::makeCameraPose(cam_pos, cam_focal_point, cam_y_dir);
 
     mpVizWin->setViewerPose(mCamPose);
