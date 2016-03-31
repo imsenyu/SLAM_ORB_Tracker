@@ -19,6 +19,16 @@ int Config::iFeatureNum = 0;
 double Config::dDrawFrameStep = 0.0f;
 cv::Mat Config::mCameraParameter;
 double Config::dOpticalFlowThreshold;
+∑int Config::dScaleLevel;
+double Config::dScaleFactor;
+std::vector<double> Config::vScaleFactors;
+std::vector<double> Config::vLevelSigma2;
+std::vector<double> Config::vInvLevelSigma2;
+double Config::dFx;
+double Config::dFy;
+double Config::dCx;
+double Config::dCy;
+
 
 int Config::parse(int argc, char * argv[]) {
     namespace po = boost::program_options;
@@ -65,6 +75,9 @@ int Config::loadConfig(std::string cfgPath) {
     dDrawFrameStep          = getDefault<double>(1.0, fs["dDrawFrameStep"]);
     mCameraParameter        = getDefault<cv::Mat>(Const::mat33_111, fs["mCameraParameter"]);
     dOpticalFlowThreshold   = getDefault<double>(1.0f, fs["dOpticalFlowThreshold"]);
+    dScaleLevel             = getDefault<int>(8, fs["dScaleLevel"]);
+    dScaleFactor            = getDefault<double>(1.2f, fs["dScaleFactor"]);
+
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
     
@@ -76,8 +89,31 @@ int Config::loadConfig(std::string cfgPath) {
     fs << "dDrawFrameStep"          << dDrawFrameStep;
     fs << "mCameraParameter"        << mCameraParameter;
     fs << "dOpticalFlowThreshold"   << dOpticalFlowThreshold;
+    fs << "dScaleLevel"             << dScaleLevel;
+    fs << "dScaleFactor"            << dScaleFactor;
     fs.release();
-    
+
+    // do some MATH
+
+    vScaleFactors.resize(dScaleLevel);
+    vLevelSigma2.resize(dScaleLevel);
+    vInvLevelSigma2.resize(vLevelSigma2.size());
+
+    vScaleFactors[0]=1.0f;
+    vLevelSigma2[0]=1.0f;
+    vInvLevelSigma2[0]=1.0f;
+    for(int i=1; i<dScaleLevel; i++)
+    {
+        vScaleFactors[i]=vScaleFactors[i-1]*dScaleFactor;
+        vLevelSigma2[i]=vScaleFactors[i]*vScaleFactors[i];
+        vInvLevelSigma2[i]=1/vLevelSigma2[i];
+    }
+
+    dFx = mCameraParameter.at<double>(0,0);
+    dFy = mCameraParameter.at<double>(1,1);
+    dCx = mCameraParameter.at<double>(0,2);
+    dCy = mCameraParameter.at<double>(1,2);
+
     return !opened;
 }
 

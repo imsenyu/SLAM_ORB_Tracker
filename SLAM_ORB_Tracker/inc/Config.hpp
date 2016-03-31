@@ -45,6 +45,15 @@ namespace Config {
     extern double dDrawFrameStep;
     extern cv::Mat mCameraParameter;
     extern double dOpticalFlowThreshold;
+    extern int dScaleLevel;
+    extern double dScaleFactor;
+    extern std::vector<double> vScaleFactors;
+    extern std::vector<double> vLevelSigma2;
+    extern std::vector<double> vInvLevelSigma2;
+    extern double dFx;
+    extern double dFy;
+    extern double dCx;
+    extern double dCy;
 
 };
 
