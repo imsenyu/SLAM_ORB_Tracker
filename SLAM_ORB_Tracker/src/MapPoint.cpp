@@ -38,13 +38,13 @@ void MapPoint::UpdateNormalAndDepth()
     for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
     {
         shared_ptr<KeyFrameState> pKF = mit->first;
-        cv::Mat Owi = pKF->mO2w.clone();
+        cv::Mat Owi = pKF->getMatO2w();
         cv::Mat normali = mPos - Owi;
         normal = normal + normali/cv::norm(normali);
         n++;
     }
 
-    cv::Mat PC = Pos - pRefKF->mO2w.clone();
+    cv::Mat PC = Pos - pRefKF->getMatO2w();
     const float dist = cv::norm(PC);
     const int level = pRefKF->GetKeyPointScaleLevel(observations[pRefKF]);
     const float scaleFactor = Config::dScaleFactor;//pRefKF->GetScaleFactor();

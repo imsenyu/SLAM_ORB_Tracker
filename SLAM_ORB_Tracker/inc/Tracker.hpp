@@ -85,7 +85,13 @@ private:
     bool initStepSecondKeyFrame();
     bool initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D);
     bool TrackFromPreFrame();
-    bool TrackLocalMap();
+    bool UpdateLocal();
+
+//    bool TrackLocalMap();
+//    void UpdateReferenceKeyFrames();
+//    void UpdateReferencePoints();
+//    void SearchReferencePointsInFrustum();
+
     bool TrackMotion();
     cv::Mat mVelocity;
     void createKeyFrame();

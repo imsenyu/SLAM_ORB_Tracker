@@ -36,7 +36,8 @@ private:
     cv::Point2f mDrawBase;
     cv::Mat mPathCanvas;
     cv::Mat mPathCanvasWithDir;
-    
+
+    shared_ptr<FrameState> mpCurFrame;
     BlockingQueue<shared_ptr<FrameState>> mBuffer;
     void take();
     bool inited;

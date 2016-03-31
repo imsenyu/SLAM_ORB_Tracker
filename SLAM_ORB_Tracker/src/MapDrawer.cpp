@@ -47,8 +47,8 @@ void MapDrawer::show() {
 }
 
 void MapDrawer::take() {
-    shared_ptr<FrameState> pFS = mBuffer.take();
-    cv::Mat pop = pFS->mT2w.clone();
+    mpCurFrame = mBuffer.take();
+    cv::Mat pop = mpCurFrame->mT2w.clone();
     //std::cout<<"show take "<<pop<<std::endl;
 
     cv::Mat R = pop.rowRange(0,3).colRange(0,3);
@@ -56,7 +56,7 @@ void MapDrawer::take() {
 
     t = -R.inv() * t;
     R = R.inv();
-    mCurPose.mId = pFS->mId;
+    mCurPose.mId = mpCurFrame->mId;
     mCurPose.mPos = Utils::convertToPoint3d(t);
     mCurPose.mDir3 = R;
     mCurPose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
@@ -123,8 +123,14 @@ void MapDrawer::initViz() {
     mpVizWin->setBackgroundColor(cv::viz::Color::white());
 }
 
+cv::viz::Color getColor(shared_ptr<FrameState> mpCurFrame) {
+    if ( mpCurFrame->mnTrackedType == 1 ) return cv::viz::Color::blue();
+    else if ( mpCurFrame->mnTrackedType == 2 ) return cv::viz::Color::red();
+    return cv::viz::Color::green();
+}
+
 void MapDrawer::drawViz() {
-    cv::viz::WPlane curPlane(mCurPose.mPos*20, mCurPose.mDir*20, cv::Point3d(0,1.0f,0), cv::Size2d(2.0f, 1.0f), cv::viz::Color::blue());
+    cv::viz::WPlane curPlane(mCurPose.mPos*20, mCurPose.mDir*20, cv::Point3d(0,1.0f,0), cv::Size2d(2.0f, 1.0f), getColor(mpCurFrame)      );
     cv::viz::WArrow curArrow(mCurPose.mPos*20, mCurPose.mPos*20+mCurPose.mDir*0.5f, 0.1f, cv::viz::Color::red());
     mpVizWin->showWidget(cv::format("id-%d",mCurPose.mId), curPlane);
     mpVizWin->showWidget(cv::format("id2-%d",mCurPose.mId), curArrow);

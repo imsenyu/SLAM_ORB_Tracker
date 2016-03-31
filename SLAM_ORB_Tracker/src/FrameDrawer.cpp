@@ -19,10 +19,10 @@ void FrameDrawer::update(shared_ptr<FrameState> _pFS ) {
 
 void FrameDrawer::drawFeaturePoint() {
     if ( !mImageDraw.cols && !mImageDraw.rows )
-        mImageDraw = mImage.clone();
+        cv::cvtColor(mImage,mImageDraw,CV_GRAY2RGB);
     
     for(int i=0;i<mvKeyPoint.size();i++) {
-        if ( mvMatchMask[i] == false ) continue;
+        if ( !!mvpMapPoint[i] ) continue;
         cv::rectangle(mImageDraw, mvKeyPoint[i].pt - cv::Point2f(1.5,1.5), mvKeyPoint[i].pt + cv::Point2f(1.5,1.5), cv::Scalar(0,0,255,128));
     }
 }
@@ -30,7 +30,7 @@ void FrameDrawer::drawFeaturePoint() {
 
 void FrameDrawer::drawText() {
     if ( !mImageDraw.cols && !mImageDraw.rows )
-        mImageDraw = mImage.clone();
+        cv::cvtColor(mImage,mImageDraw,CV_GRAY2RGB);
     
     cv::putText(mImageDraw, cv::format("[%d]", mId), cv::Point2f(mImageDraw.cols -70, mImageDraw.rows - 20), CV_FONT_NORMAL, 0.5f, cv::Scalar(255, 0, 255));
 
@@ -41,7 +41,8 @@ void FrameDrawer::take() {
     mImage = top->mImage;
     mvKeyPoint = top->mvKeyPoint;
     mId = top->mId;
-    mvMatchMask = top->mvMatchMask;
+    mvpMapPoint = top->mvpMapPoint;
+    mnTrackedType = top->mnTrackedType;
 }
 
 void FrameDrawer::show() {

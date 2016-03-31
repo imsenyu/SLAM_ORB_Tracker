@@ -31,13 +31,25 @@ public:
     int mId;
     bool mLoaded;
     cv::Mat mImage;
-    cv::Mat mT2w; // the 4x4 matrix transform one point from startposition's coord to this cameraposition's coord
+    cv::Mat mT2w;
+    cv::Mat mMatR;
+    cv::Mat mMatT;
+    cv::Mat mO2w;
+    void updatePose(cv::Mat _mT) {
+        mT2w = _mT.clone();
+
+        mMatR = mT2w.rowRange(0,3).colRange(0,3);
+        mMatT = mT2w.rowRange(0,3).col(3);
+
+        mO2w = - mMatR.t() * mMatT;
+    }
     std::vector<cv::KeyPoint> mvKeyPoint;
     std::vector<uchar>  mvMatchMask;
     std::vector<uchar>  mvbOutlier;
     cv::Mat mDescriptor;
     std::vector<shared_ptr<MapPoint>> mvpMapPoint;
-    
+    int mnTrackedType;
+
     FrameState(int _id);
     FrameState(const FrameState& _FS);
     FrameState(const FrameState* _pFS);

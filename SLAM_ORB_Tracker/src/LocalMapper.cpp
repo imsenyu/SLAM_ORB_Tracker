@@ -43,7 +43,7 @@ int LocalMapper::processKeyFrameLoop() {
             shared_ptr<MapPoint> pMP = vpMapPointMatch[i];
             if(pMP)
             {
-                if(true /*!pMP->isBad()*/)
+                if(!pMP->isBad())
                 {
                     //numMatch ++;
                     pMP->setKeyFrame(mpCurKeyFrame, i);
@@ -102,15 +102,15 @@ int LocalMapper::triangleNewMapPoint() {
     // Take neighbor keyframes in covisibility graph
     std::vector<shared_ptr<KeyFrameState>> vpNeighKFs = mpCurKeyFrame->GetBestCovisibilityKeyFrames(20);
 
-    ORB_SLAM::ORBmatcher matcher(0.5,false);
+    ORB_SLAM::ORBmatcher matcher(0.6,false);
 
-    cv::Mat Rcw1 = mpCurKeyFrame->mMatR.clone();
+    cv::Mat Rcw1 = mpCurKeyFrame->getMatR2w();
     cv::Mat Rwc1 = Rcw1.t();
-    cv::Mat tcw1 = mpCurKeyFrame->mMatT.clone();
+    cv::Mat tcw1 = mpCurKeyFrame->getMatt2w();
     cv::Mat Tcw1(3,4,CV_64FC1);
     Rcw1.copyTo(Tcw1.colRange(0,3));
     tcw1.copyTo(Tcw1.col(3));
-    cv::Mat Ow1 = mpCurKeyFrame->mO2w.clone();
+    cv::Mat Ow1 = mpCurKeyFrame->getMatO2w();
 
     const float fx1 = Config::dFx;
     const float fy1 = Config::dFy;
@@ -129,7 +129,7 @@ int LocalMapper::triangleNewMapPoint() {
 
         // Check first that baseline is not too short
         // Small translation errors for short baseline keyframes make scale to diverge
-        cv::Mat Ow2 = pKF2->mO2w.clone();//->GetCameraCenter();
+        cv::Mat Ow2 = pKF2->getMatO2w();//->GetCameraCenter();
         cv::Mat vBaseline = Ow2-Ow1;
         const float baseline = cv::norm(vBaseline);
         const float medianDepthKF2 = pKF2->ComputeSceneMedianDepth(2);
@@ -149,9 +149,9 @@ int LocalMapper::triangleNewMapPoint() {
         std::vector<std::pair<size_t,size_t> > vMatchedIndices;
         int numMatch = matcher.SearchForTriangulation(mpCurKeyFrame,pKF2,F12,vMatchedKeysUn1,vMatchedKeysUn2,vMatchedIndices);
 
-        cv::Mat Rcw2 = pKF2->mMatR.clone();
+        cv::Mat Rcw2 = pKF2->getMatR2w();
         cv::Mat Rwc2 = Rcw2.t();
-        cv::Mat tcw2 = pKF2->mMatT.clone();
+        cv::Mat tcw2 = pKF2->getMatt2w();
         cv::Mat Tcw2(3,4,CV_64FC1);
         Rcw2.copyTo(Tcw2.colRange(0,3));
         tcw2.copyTo(Tcw2.col(3));
@@ -319,10 +319,10 @@ int LocalMapper::triangleNewMapPoint() {
 
 cv::Mat LocalMapper::computeF12(shared_ptr<KeyFrameState> pKF1, shared_ptr<KeyFrameState> pKF2)
 {
-    cv::Mat R1w = pKF1->mMatR.clone();
-    cv::Mat t1w = pKF1->mMatT.clone();
-    cv::Mat R2w = pKF2->mMatR.clone();
-    cv::Mat t2w = pKF2->mMatT.clone();
+    cv::Mat R1w = pKF1->getMatR2w();
+    cv::Mat t1w = pKF1->getMatt2w();
+    cv::Mat R2w = pKF2->getMatR2w();
+    cv::Mat t2w = pKF2->getMatt2w();
 
     cv::Mat R12 = R1w*R2w.t();
     cv::Mat t12 = -R1w*R2w.t()*t2w+t1w;
@@ -357,7 +357,7 @@ int LocalMapper::removeDuplicatedMapPoint()
         for(vector<shared_ptr<KeyFrameState>>::iterator vit2=vpSecondNeighKFs.begin(), vend2=vpSecondNeighKFs.end(); vit2!=vend2; vit2++)
         {
             shared_ptr<KeyFrameState> pKFi2 = *vit2;
-            if(/*pKFi2->isBad() || */pKFi2->mnFuseTargetForKF==mpCurKeyFrame->mId || pKFi2->mId==mpCurKeyFrame->mId)
+            if(/*pKFi2->isBad() ||*/ pKFi2->mnFuseTargetForKF==mpCurKeyFrame->mId || pKFi2->mId==mpCurKeyFrame->mId)
                 continue;
             vpTargetKFs.push_back(pKFi2);
         }
@@ -365,7 +365,7 @@ int LocalMapper::removeDuplicatedMapPoint()
 
 
     // Search matches by projection from current KF in target KFs
-    ORB_SLAM::ORBmatcher matcher(0.6);
+    ORB_SLAM::ORBmatcher matcher(0.7);
     vector<shared_ptr<MapPoint>> vpMapPointMatches = mpCurKeyFrame->GetMapPointMatch();
     for(vector<shared_ptr<KeyFrameState>>::iterator vit=vpTargetKFs.begin(), vend=vpTargetKFs.end(); vit!=vend; vit++)
     {
@@ -389,7 +389,7 @@ int LocalMapper::removeDuplicatedMapPoint()
             shared_ptr<MapPoint> pMP = *vitMP;
             if(!pMP)
                 continue;
-            if(/*pMP->isBad() ||*/ pMP->mnFuseCandidateForKF == mpCurKeyFrame->mpFrame->mId)
+            if(pMP->isBad() || pMP->mnFuseCandidateForKF == mpCurKeyFrame->mpFrame->mId)
                 continue;
             pMP->mnFuseCandidateForKF = mpCurKeyFrame->mpFrame->mId;
             vpFuseCandidates.push_back(pMP);
@@ -406,7 +406,7 @@ int LocalMapper::removeDuplicatedMapPoint()
         shared_ptr<MapPoint> pMP=vpMapPointMatches[i];
         if(pMP)
         {
-            if(true /*!pMP->isBad()*/)
+            if(!pMP->isBad())
             {
                 pMP->ComputeDistinctiveDescriptors();
                 pMP->UpdateNormalAndDepth();

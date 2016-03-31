@@ -12,6 +12,7 @@
 #include "stdafx.hpp"
 #include "FrameState.hpp"
 #include "BlockingQueue.hpp"
+#include "MapPoint.hpp"
 
 class FrameDrawer {
 private:
@@ -20,8 +21,9 @@ private:
     cv::Mat mImageDraw;
     std::vector<cv::KeyPoint> mvKeyPoint;
     BlockingQueue<shared_ptr<FrameState>> mBuffer;
-    std::vector<uchar> mvMatchMask;
-    
+    std::vector<shared_ptr<MapPoint>> mvpMapPoint;
+    int mnTrackedType;
+
     void drawFeaturePoint();
     void drawText();
     void take();

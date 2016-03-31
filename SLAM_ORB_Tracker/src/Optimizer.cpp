@@ -211,7 +211,7 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
     // From second to final optimization we include only inliers in the optimization
     // At the end of each optimization we check which points are inliers
     const float chi2[4]={9.210,7.378,5.991,5.991};
-    const int its[4]={20,20,10,10};
+    const int its[4]={15,10,10,7};
 
     int nBad=0;
 
@@ -286,16 +286,16 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    std::list<shared_ptr<MapPoint>> lLocalMapPoints;
 //    for(list<shared_ptr<KeyFrameState>>::iterator lit=lLocalKeyFrames.begin() , lend=lLocalKeyFrames.end(); lit!=lend; lit++)
 //    {
-//        std::vector<shared_ptr<MapPoint>> vpMPs = (*lit)->GetMapPointMatches();
+//        std::vector<shared_ptr<MapPoint>> vpMPs = (*lit)->GetMapPointMatch();
 //        for(vector<shared_ptr<MapPoint>>::iterator vit=vpMPs.begin(), vend=vpMPs.end(); vit!=vend; vit++)
 //        {
 //            shared_ptr<MapPoint> pMP = *vit;
 //            if(pMP)
 //            if(!pMP->isBad())
-//            if(pMP->mnBALocalForKF!=pKF->mnId)
+//            if(pMP->mnBALocalForKF!=pKF->mId)
 //            {
 //                lLocalMapPoints.push_back(pMP);
-//                pMP->mnBALocalForKF=pKF->mpFrame->mId;
+//                pMP->mnBALocalForKF=pKF->mId;
 //            }
 //        }
 //    }
@@ -304,14 +304,14 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    std::list<shared_ptr<KeyFrameState>> lFixedCameras;
 //    for(std::list<shared_ptr<MapPoint>>::iterator lit=lLocalMapPoints.begin(), lend=lLocalMapPoints.end(); lit!=lend; lit++)
 //    {
-//        std::map<shared_ptr<KeyFrameState>,size_t> observations = (*lit)->GetObservations();
-//        for(std::map<shared_ptr<KeyFrameState>,size_t>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
+//        std::map<shared_ptr<KeyFrameState>,int> observations = (*lit)->msKeyFrame2FeatureId;
+//        for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
 //        {
 //            shared_ptr<KeyFrameState> pKFi = mit->first;
 //
-//            if(pKFi->mnBALocalForKF!=pKF->mnId && pKFi->mnBAFixedForKF!=pKF->mnId)
+//            if(pKFi->mnBALocalForKF!=pKF->mId && pKFi->mnBAFixedForKF!=pKF->mId)
 //            {
-//                pKFi->mnBAFixedForKF=pKF->mnId;
+//                pKFi->mnBAFixedForKF=pKF->mId;
 //                if(!pKFi->isBad())
 //                    lFixedCameras.push_back(pKFi);
 //            }
@@ -339,25 +339,25 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    {
 //        shared_ptr<KeyFrameState> pKFi = *lit;
 //        g2o::VertexSE3Expmap * vSE3 = new g2o::VertexSE3Expmap();
-//        vSE3->setEstimate(Converter::toSE3Quat(pKFi->GetPose()));
-//        vSE3->setId(pKFi->mnId);
-//        vSE3->setFixed(pKFi->mnId==0);
+//        vSE3->setEstimate(Utils::convertToSE3Quat(pKFi->getMatT2w()));
+//        vSE3->setId(pKFi->mId);
+//        vSE3->setFixed(pKFi->mId==0);
 //        optimizer.addVertex(vSE3);
-//        if(pKFi->mnId>maxKFid)
-//            maxKFid=pKFi->mnId;
+//        if(pKFi->mId>maxKFid)
+//            maxKFid=pKFi->mId;
 //    }
 //
 //    // SET FIXED KEYFRAME VERTICES
-//    for(list<shared_ptr<KeyFrameState>>::iterator lit=lFixedCameras.begin(), lend=lFixedCameras.end(); lit!=lend; lit++)
+//    for(std::list<shared_ptr<KeyFrameState>>::iterator lit=lFixedCameras.begin(), lend=lFixedCameras.end(); lit!=lend; lit++)
 //    {
 //        shared_ptr<KeyFrameState> pKFi = *lit;
 //        g2o::VertexSE3Expmap * vSE3 = new g2o::VertexSE3Expmap();
-//        vSE3->setEstimate(Converter::toSE3Quat(pKFi->GetPose()));
-//        vSE3->setId(pKFi->mnId);
+//        vSE3->setEstimate(Utils::convertToSE3Quat(pKFi->getMatT2w()));
+//        vSE3->setId(pKFi->mId);
 //        vSE3->setFixed(true);
 //        optimizer.addVertex(vSE3);
-//        if(pKFi->mnId>maxKFid)
-//            maxKFid=pKFi->mnId;
+//        if(pKFi->mId>maxKFid)
+//            maxKFid=pKFi->mId;
 //    }
 //
 //    // SET MAP POINT VERTICES
@@ -381,42 +381,42 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    {
 //        shared_ptr<MapPoint> pMP = *lit;
 //        g2o::VertexSBAPointXYZ* vPoint = new g2o::VertexSBAPointXYZ();
-//        vPoint->setEstimate(Converter::toVector3d(pMP->GetWorldPos()));
-//        int id = pMP->mnId+maxKFid+1;
+//        vPoint->setEstimate(Utils::convertToVector3d(pMP->mPos));
+//        int id = pMP->getUID()+maxKFid+1;
 //        vPoint->setId(id);
 //        vPoint->setMarginalized(true);
 //        optimizer.addVertex(vPoint);
 //
-//        map<shared_ptr<KeyFrameState>,size_t> observations = pMP->GetObservations();
+//        std::map<shared_ptr<KeyFrameState>,size_t> observations = pMP->msKeyFrame2FeatureId;
 //
 //        //SET EDGES
-//        for(map<shared_ptr<KeyFrameState>,size_t>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
+//        for(std::map<shared_ptr<KeyFrameState>,size_t>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
 //        {
 //            shared_ptr<KeyFrameState> pKFi = mit->first;
 //
 //            if(!pKFi->isBad())
 //            {
 //                Eigen::Matrix<double,2,1> obs;
-//                cv::KeyPoint kpUn = pKFi->GetKeyPointUn(mit->second);
+//                cv::KeyPoint kpUn = pKFi->mpFrame->mvKeyPoint[mit->second];
 //                obs << kpUn.pt.x, kpUn.pt.y;
 //
 //                g2o::EdgeSE3ProjectXYZ* e = new g2o::EdgeSE3ProjectXYZ();
 //
 //                e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(id)));
-//                e->setVertex(1, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKFi->mnId)));
+//                e->setVertex(1, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKFi->mId)));
 //                e->setMeasurement(obs);
-//                float sigma2 = pKFi->GetSigma2(kpUn.octave);
-//                float invSigma2 = pKFi->GetInvSigma2(kpUn.octave);
+//                float sigma2 = Config::vLevelSigma2[kpUn.octave];
+//                float invSigma2 = Config::vLevelSigma2[kpUn.octave];
 //                e->setInformation(Eigen::Matrix2d::Identity()*invSigma2);
 //
 //                g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
 //                e->setRobustKernel(rk);
 //                rk->setDelta(thHuber);
 //
-//                e->fx = pKFi->fx;
-//                e->fy = pKFi->fy;
-//                e->cx = pKFi->cx;
-//                e->cy = pKFi->cy;
+//                e->fx = Config::dFx;//pKFi->fx;
+//                e->fy = Config::dFy;//pKFi->fy;
+//                e->cx = Config::dCx;//pKFi->cx;
+//                e->cy = Config::dCy;//pKFi->cy;
 //
 //                optimizer.addEdge(e);
 //                vpEdges.push_back(e);
@@ -456,16 +456,16 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    for(list<shared_ptr<KeyFrameState>>::iterator lit=lLocalKeyFrames.begin(), lend=lLocalKeyFrames.end(); lit!=lend; lit++)
 //    {
 //        shared_ptr<KeyFrameState> pKF = *lit;
-//        g2o::VertexSE3Expmap* vSE3 = static_cast<g2o::VertexSE3Expmap*>(optimizer.vertex(pKF->mnId));
+//        g2o::VertexSE3Expmap* vSE3 = static_cast<g2o::VertexSE3Expmap*>(optimizer.vertex(pKF->mId));
 //        g2o::SE3Quat SE3quat = vSE3->estimate();
-//        pKF->SetPose(Converter::toCvMat(SE3quat));
+//        pKF->updatePose(Utils::convertToCvMat(SE3quat));
 //    }
 //    //Points
 //    for(list<shared_ptr<MapPoint>>::iterator lit=lLocalMapPoints.begin(), lend=lLocalMapPoints.end(); lit!=lend; lit++)
 //    {
 //        shared_ptr<MapPoint> pMP = *lit;
-//        g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->mnId+maxKFid+1));
-//        pMP->SetWorldPos(Converter::toCvMat(vPoint->estimate()));
+//        g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->getUID()+maxKFid+1));
+//        pMP->mPos = Utils::convertToCvMat(vPoint->estimate() );
 //        pMP->UpdateNormalAndDepth();
 //    }
 //
@@ -501,16 +501,16 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //    for(list<shared_ptr<KeyFrameState>>::iterator lit=lLocalKeyFrames.begin(), lend=lLocalKeyFrames.end(); lit!=lend; lit++)
 //    {
 //        shared_ptr<KeyFrameState> pKF = *lit;
-//        g2o::VertexSE3Expmap* vSE3 = static_cast<g2o::VertexSE3Expmap*>(optimizer.vertex(pKF->mnId));
+//        g2o::VertexSE3Expmap* vSE3 = static_cast<g2o::VertexSE3Expmap*>(optimizer.vertex(pKF->mId));
 //        g2o::SE3Quat SE3quat = vSE3->estimate();
-//        pKF->SetPose(Converter::toCvMat(SE3quat));
+//        pKF->updatePose(Utils::convertToCvMat(SE3quat));
 //    }
 //
 //    //Points
 //    for(list<shared_ptr<MapPoint>>::iterator lit=lLocalMapPoints.begin(), lend=lLocalMapPoints.end(); lit!=lend; lit++)
 //    {
 //        shared_ptr<MapPoint> pMP = *lit;
-//        g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->mnId+maxKFid+1));
+//        g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->getUID()+maxKFid+1));
 //        pMP->SetWorldPos(Converter::toCvMat(vPoint->estimate()));
 //        pMP->UpdateNormalAndDepth();
 //    }

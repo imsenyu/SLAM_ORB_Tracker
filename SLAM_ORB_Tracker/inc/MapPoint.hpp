@@ -34,6 +34,7 @@ public:
     cv::Mat mPos;
 
     int mnFuseCandidateForKF;
+    int mnBALocalForKF;
     bool isBad() {
         return mbBad;
     }

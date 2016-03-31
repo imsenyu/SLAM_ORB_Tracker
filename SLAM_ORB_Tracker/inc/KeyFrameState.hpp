@@ -39,14 +39,12 @@ public:
     shared_ptr<FrameState> mpFrame;
     //std::vector<shared_ptr<MapPoint>> mvpMapPoint;
 
-    cv::Mat mT2w;
-    cv::Mat mMatR;
-    cv::Mat mMatT;
-    cv::Mat mO2w;
+
     int mId;
-
+    int mnBAFixedForKF;
+    int mnBALocalForKF;
     int mnFuseTargetForKF;
-
+    bool isBad() {return false;}
 
     void getBoW();
     void insertMapPoint(shared_ptr<MapPoint> pMp, int nP);
@@ -74,6 +72,14 @@ public:
     void EraseMapPointMatch(const size_t &idx);
 
     void ReplaceMapPointMatch(const size_t &idx, shared_ptr<MapPoint> pMP);
+    std::vector<shared_ptr<KeyFrameState>> GetVectorCovisibleKeyFrames()
+    {
+        return mvpOrderedConnectedKeyFrames;
+    }
+    cv::Mat getMatT2w();
+    cv::Mat getMatR2w();
+    cv::Mat getMatt2w();
+    cv::Mat getMatO2w();
 };
 
 

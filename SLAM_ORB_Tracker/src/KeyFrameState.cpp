@@ -38,12 +38,7 @@ void KeyFrameState::getBoW() {
 }
 
 void KeyFrameState::updatePose(cv::Mat _mT) {
-    mT2w = _mT.clone();
-
-    mMatR = mT2w.rowRange(0,3).colRange(0,3);
-    mMatT = mT2w.rowRange(0,3).col(3);
-
-    mO2w = - mMatR.t() * mMatT;
+    mpFrame->updatePose(_mT);
 }
 
 float KeyFrameState::ComputeSceneMedianDepth(int r) {
@@ -51,14 +46,14 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
     std::vector<shared_ptr<MapPoint>> vpMapPoints;
     cv::Mat Tcw_;
         vpMapPoints = GetMapPointMatch();
-        Tcw_ = mT2w.clone();
+        Tcw_ = mpFrame->mT2w.clone();
 
 
     std::vector<float> vDepths;
     vDepths.reserve(vpMapPoints.size());
     cv::Mat Rcw2 = Tcw_.row(2).colRange(0,3);
     Rcw2 = Rcw2.t();
-    float zcw = Tcw_.at<float>(2,3);
+    float zcw = Tcw_.at<double>(2,3);
     for(size_t i=0; i<vpMapPoints.size(); i++)
     {
         if(vpMapPoints[i])
@@ -137,8 +132,8 @@ void KeyFrameState::UpdateConnections()
         if(!pMP)
             continue;
 
-        //if(pMP->isBad())
-        //    continue;
+        if(pMP->isBad())
+            continue;
 
         std::map<shared_ptr<KeyFrameState>,int> observations = pMP->msKeyFrame2FeatureId;
 
@@ -267,4 +262,20 @@ void KeyFrameState::EraseMapPointMatch(const size_t &idx)
 void KeyFrameState::ReplaceMapPointMatch(const size_t &idx, shared_ptr<MapPoint> pMP)
 {
     mpFrame->mvpMapPoint[idx]=pMP;
+}
+
+cv::Mat KeyFrameState::getMatT2w() {
+    return mpFrame->mT2w.clone();
+}
+
+cv::Mat KeyFrameState::getMatR2w() {
+    return mpFrame->mMatR.clone();
+}
+
+cv::Mat KeyFrameState::getMatt2w() {
+    return mpFrame->mMatT.clone();
+}
+
+cv::Mat KeyFrameState::getMatO2w() {
+    return mpFrame->mO2w.clone();
 }

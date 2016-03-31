@@ -436,8 +436,8 @@ int ORBmatcher::WindowSearch(shared_ptr<FrameState> pF1, shared_ptr<FrameState> 
 
         if(!pMP1)
             continue;
-        //if(pMP1->isBad())
-        //    continue;
+        if(pMP1->isBad())
+            continue;
 
         const cv::KeyPoint &kp1 = pF1->mvKeyPoint[i1];
         int level1 = kp1.octave;
@@ -542,7 +542,7 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> pF1, shared_ptr<FrameS
 
         if(!pMP1)
             continue;
-        if(/*pMP1->isBad() ||*/ spMapPointsAlreadyFound.count(pMP1))
+        if(pMP1->isBad() || spMapPointsAlreadyFound.count(pMP1))
             continue;
 
         cv::KeyPoint kp1 = pF1->mvKeyPoint[i1];
@@ -1045,8 +1045,8 @@ std::vector<cv::KeyPoint> &vMatchedKeys1, std::vector<cv::KeyPoint> &vMatchedKey
 
 int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>> vpMapPoints, float th)
 {
-    cv::Mat Rcw = pKF->mMatR.clone();
-    cv::Mat tcw = pKF->mMatT.clone();
+    cv::Mat Rcw = pKF->getMatR2w();
+    cv::Mat tcw = pKF->getMatt2w();
 
     const float &fx = Config::dFx;//->fx;
     const float &fy = Config::dFy;//pKF->fy;
@@ -1056,7 +1056,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
     const int nMaxLevel = Config::dScaleLevel -1;
     vector<double> vfScaleFactors = Config::vScaleFactors;//pKF->GetScaleFactors();
 
-    cv::Mat Ow = pKF->mO2w.clone();
+    cv::Mat Ow = pKF->getMatO2w();
 
     int nFused=0;
 
@@ -1067,7 +1067,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
         if(!pMP)
             continue;
 
-        if(/*pMP->isBad() ||*/ pMP->msKeyFrame2FeatureId.count(pKF)  /*pMP->IsInKeyFrameState(pKF)*/)
+        if(pMP->isBad() || pMP->msKeyFrame2FeatureId.count(pKF)  /*pMP->IsInKeyFrameState(pKF)*/)
             continue;
 
         cv::Mat p3Dw = pMP->mPos;
