@@ -13,6 +13,7 @@
 #include "KeyFrameState.hpp"
 #include "BlockingQueue.hpp"
 #include "Map.hpp"
+#include "Optimizer.hpp"
 
 // ORB
 #include "ORBmatcher.h"

@@ -6,6 +6,8 @@
 #include "MapPoint.hpp"
 #include "ORBmatcher.h"
 
+int MapPoint::_counterId = 1;
+
 MapPoint::MapPoint(cv::Mat _matMapPointPos, shared_ptr<KeyFrameState> _pKFS, int nP, Map *_pMap) :
     mpRefKF(_pKFS),
     mbBad(false),
@@ -13,10 +15,11 @@ MapPoint::MapPoint(cv::Mat _matMapPointPos, shared_ptr<KeyFrameState> _pKFS, int
 {
     mPos = _matMapPointPos.clone();
     mIdFromKeyFrame = nP;
+    mId = _counterId++;
 }
 
 int MapPoint::getUID() {
-    return 10000*(mpRefKF->mpFrame->mId) + mIdFromKeyFrame + 1;
+    return mId;
 }
 
 void MapPoint::UpdateNormalAndDepth()
@@ -190,4 +193,27 @@ void MapPoint::SetBadFlag()
     }
 
     mpMap->EraseMapPoint(shared_from_this());
+}
+
+
+void MapPoint::EraseObservation(shared_ptr<KeyFrameState> pKF)
+{
+    bool bBad=false;
+    {
+
+        if(msKeyFrame2FeatureId.count(pKF))
+        {
+            msKeyFrame2FeatureId.erase(pKF);
+
+            if(mpRefKF==pKF)
+                mpRefKF=msKeyFrame2FeatureId.begin()->first;
+
+            // If only 2 observations or less, discard point
+            if(msKeyFrame2FeatureId.size()<=2)
+                bBad=true;
+        }
+    }
+
+    if(bBad)
+        SetBadFlag();
 }

@@ -15,8 +15,8 @@ class Map;
 
 class MapPoint: public boost::enable_shared_from_this<MapPoint> {
 private:
-
-
+    static int _counterId;
+    int mId;
     bool mbBad;
 
 public:
@@ -56,6 +56,14 @@ public:
     cv::Mat mNormalVector;
     void Replace(shared_ptr<MapPoint> pMP);
     void SetBadFlag();
+    void EraseObservation(shared_ptr<KeyFrameState> pKF);
+    int GetIndexInKeyFrame(shared_ptr<KeyFrameState> pKF)
+    {
+        if(msKeyFrame2FeatureId.count(pKF))
+            return msKeyFrame2FeatureId[pKF];
+        else
+            return -1;
+    }
 };
 
 

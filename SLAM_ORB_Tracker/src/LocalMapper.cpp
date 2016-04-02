@@ -86,6 +86,10 @@ int LocalMapper::processKeyFrameLoop() {
     // TODO: process duplicated MapPoint
     removeDuplicatedMapPoint();
 
+    Config::time("LocalBundleAdjustment");
+    Optimizer::LocalBundleAdjustment(mpCurKeyFrame,false);
+    Config::timeEnd("LocalBundleAdjustment");
+
     mpCurKeyFrame = shared_ptr<KeyFrameState>(NULL);
 
     return 0;

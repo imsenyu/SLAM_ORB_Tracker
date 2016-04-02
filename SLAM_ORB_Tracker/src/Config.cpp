@@ -106,7 +106,7 @@ int Config::loadConfig(std::string cfgPath) {
     {
         vScaleFactors[i]=vScaleFactors[i-1]*dScaleFactor;
         vLevelSigma2[i]=vScaleFactors[i]*vScaleFactors[i];
-        vInvLevelSigma2[i]=1/vLevelSigma2[i];
+        vInvLevelSigma2[i]=1.0f/vLevelSigma2[i];
     }
 
     dFx = mCameraParameter.at<double>(0,0);

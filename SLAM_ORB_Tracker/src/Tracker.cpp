@@ -74,13 +74,15 @@ int Tracker::threadRun() {
             // tracking
             std::cout<< "normal at" << mpCurFrame->mId << std::endl;
 
-            Config::time("TrackFromPreFrame");
+            Config::time("TrackMotion");
             bStatus = TrackMotion();
+            Config::timeEnd("TrackMotion");
             if ( bStatus ) mpCurFrame->mnTrackedType = 1;
 
 
 
             std::cout<<"trackMotion Status "<<bStatus<<std::endl;
+            Config::time("TrackFromPreFrame");
             if ( bStatus == false ) {
 
                 bStatus = TrackFromPreFrame();
@@ -89,9 +91,9 @@ int Tracker::threadRun() {
             }
             Config::timeEnd("TrackFromPreFrame");
 
-            if ( !bStatus && mpCurFrame->mId > 2) {
-                return -1;
-            }
+//            if ( !bStatus && mpCurFrame->mId > 2) {
+//                return -1;
+//            }
 
             if ( bStatus ) {
 

@@ -118,6 +118,15 @@ cv::Mat Utils::convertToCvMat44(const Eigen::Matrix<double, 4, 4> &m)
     return cvMat.clone();
 }
 
+cv::Mat Utils::convertToCvMat31(const Eigen::Matrix<double,3,1> &m)
+{
+    cv::Mat cvMat(3,1,CV_64FC1);
+    for(int i=0;i<3;i++)
+        cvMat.at<double>(i)=m(i);
+
+    return cvMat.clone();
+}
+
 cv::Mat Utils::convectToSymmetricMatrix(const cv::Mat &v)
 {
     cv::Mat_<double> ret(3,3);
