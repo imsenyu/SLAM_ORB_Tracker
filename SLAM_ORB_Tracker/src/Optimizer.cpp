@@ -277,7 +277,7 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
     for(int i=0, iend=vNeighKFs.size(); i<iend; i++)
     {
         shared_ptr<KeyFrameState> pKFi = vNeighKFs[i];
-        pKFi->mnBALocalForKF = pKF->mpFrame->mId;
+        pKFi->mnBALocalForKF = pKF->mId;
         if(!pKFi->isBad())
             lLocalKeyFrames.push_back(pKFi);
     }
@@ -324,11 +324,11 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
 
     linearSolver = new g2o::LinearSolverEigen<g2o::BlockSolverX::PoseMatrixType>();
 
-    g2o::BlockSolverX * solver_ptr = new g2o::BlockSolverX(linearSolver);
+    g2o::BlockSolverX * pSolver = new g2o::BlockSolverX(linearSolver);
 
-    g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
-    optimizer.setAlgorithm(solver);
-
+    g2o::OptimizationAlgorithmLevenberg* pAlgo = new g2o::OptimizationAlgorithmLevenberg(pSolver);
+    optimizer.setAlgorithm(pAlgo);
+    optimizer.setVerbose(true);
     //if(pbStopFlag)
     //    optimizer.setForceStopFlag(pbStopFlag);
 
@@ -403,7 +403,12 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
                 g2o::EdgeSE3ProjectXYZ* e = new g2o::EdgeSE3ProjectXYZ();
 
                 e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(id)));
-                e->setVertex(1, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKFi->mId)));
+                auto pVertex = dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKFi->mId));
+                if ( pVertex == NULL ) {
+                    delete e;
+                    continue;
+                }
+                e->setVertex(1,pVertex );
                 e->setMeasurement(obs);
                 float sigma2 = Config::vLevelSigma2[kpUn.octave];
                 float invSigma2 = Config::vInvLevelSigma2[kpUn.octave];
