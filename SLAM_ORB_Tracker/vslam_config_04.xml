@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <opencv_storage>
-<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/05/image_0/%06d.png</sPathImageLoad>
+<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/04/image_0/%06d.png</sPathImageLoad>
 <iImageBeginIdx>0</iImageBeginIdx>
-<iImageEndIdx>2760</iImageEndIdx>
+<iImageEndIdx>270</iImageEndIdx>
 <sPathVocabulary>/tmp/ORBvoc.bin</sPathVocabulary>
 <iFeatureNum>1000</iFeatureNum>
 <dDrawFrameStep>20.</dDrawFrameStep>

@@ -150,6 +150,7 @@
 		68424086D3C909E0A07B35B2 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Initializer.h; sourceTree = "<group>"; };
 		684242E68BAF5C4D3A113229 /* vslam_config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config.xml; sourceTree = "<group>"; };
 		6842436352005E2720FD4CFD /* ORBmatcher.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBmatcher.cc; sourceTree = "<group>"; };
+		68424467DD87F16F6CF96645 /* TemplatedVocabulary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplatedVocabulary.h; sourceTree = "<group>"; };
 		6842448CAB6464C237ED57EC /* Initializer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Initializer.cc; sourceTree = "<group>"; };
 		684244CAD6D08898B6209094 /* ORBextractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBextractor.h; sourceTree = "<group>"; };
 		6842451951300DE381D10052 /* vslam_config_05.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_05.xml; sourceTree = "<group>"; };
@@ -159,7 +160,9 @@
 		684247F1994032F5A8E342A6 /* ORBmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBmatcher.h; sourceTree = "<group>"; };
 		684248003DB3D1575EBC521D /* Optimizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Optimizer.hpp; sourceTree = "<group>"; };
 		684248FBF32618DB250B4B50 /* MapInitializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapInitializer.cpp; sourceTree = "<group>"; };
+		68424A2E1DF0FAAAB3C566EA /* vslam_config_04.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_04.xml; sourceTree = "<group>"; };
 		68424AD6B666DAA47A38A761 /* Map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Map.hpp; sourceTree = "<group>"; };
+		68424B39E73E39D432BD5342 /* vslam_config_03.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_03.xml; sourceTree = "<group>"; };
 		68424BCBCC9C77B25984FCC0 /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
 		68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Optimizer.cpp; sourceTree = "<group>"; };
 		68424FD80CEAC66F210301CD /* ORBextractor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBextractor.cc; sourceTree = "<group>"; };
@@ -414,12 +417,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6842428C6B20D4C615A53195 /* DBoW2 */ = {
+			isa = PBXGroup;
+			children = (
+				68424743C7EF7651CBCC1EAD /* DBoW2 */,
+			);
+			path = DBoW2;
+			sourceTree = "<group>";
+		};
 		684244D85D9D30B26C844984 /* third */ = {
 			isa = PBXGroup;
 			children = (
 				6842484DFAAA9C4E4A78646B /* ORB */,
+				6842428C6B20D4C615A53195 /* DBoW2 */,
 			);
 			path = third;
+			sourceTree = "<group>";
+		};
+		68424743C7EF7651CBCC1EAD /* DBoW2 */ = {
+			isa = PBXGroup;
+			children = (
+				68424467DD87F16F6CF96645 /* TemplatedVocabulary.h */,
+			);
+			path = DBoW2;
 			sourceTree = "<group>";
 		};
 		6842484DFAAA9C4E4A78646B /* ORB */ = {
@@ -500,6 +520,8 @@
 				684244D85D9D30B26C844984 /* third */,
 				6842451951300DE381D10052 /* vslam_config_05.xml */,
 				684242E68BAF5C4D3A113229 /* vslam_config.xml */,
+				68424A2E1DF0FAAAB3C566EA /* vslam_config_04.xml */,
+				68424B39E73E39D432BD5342 /* vslam_config_03.xml */,
 			);
 			path = SLAM_ORB_Tracker;
 			sourceTree = "<group>";

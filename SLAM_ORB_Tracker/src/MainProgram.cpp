@@ -32,14 +32,15 @@ int main(int argc, char * argv[]) {
     Vocabulary vocabulary;
     Config::time("voc");
     std::cout<<"voc loading: "<<Config::sPathVocabulary<<std::endl;
-    bool isVocLoaded =  vocabulary.loadFromTextFile(Config::sPathVocabulary);
+    //bool isVocLoaded =  vocabulary.loadFromTextFile(Config::sPathVocabulary);
+    bool isVocLoaded =  vocabulary.loadBinary(Config::sPathVocabulary);
     Config::timeEnd("voc");
     
     if ( !isVocLoaded ) {
         std::cerr << "vocabulary not loaded" << std::endl;
         exit(1);
     }
-    
+    //vocabulary.saveBinary("/tmp/ORBvoc.bin");
     Map map;
     
     // initialize InputBuffer for image read

@@ -103,36 +103,36 @@ int Tracker::threadRun() {
 //                420,440,460,480,500,520,540,560,580,600,620,640,660};
 
                 std::vector<int> vUseBA;
-                for(int i=2;i<3000;i++) {
+                for(int i=2;i<300;i++) {
                     bool bPush = false;
                     if ( i<=4 || i==6|| i==8) bPush = true;
-                    else if( i<=100 ) {
+                    else if( i<=800 ) {
                         if ( i%10 == 0 ) bPush = true;
                     }
-                    else if ( i<= 580 ) {
-                        if ( i%20 == 0 || i==190|| i==195||i==205||i==480) bPush = true;
-                    }
-                    else if ( i<= 640 ) {
-                        if ( i%10 == 0  ) bPush = true;
-                    }
-                    else if ( i<= 750 ) {
-                        if ( i%15 == 0  ) bPush = true;
-                    }
-                    else if ( i<= 1130 ) {
-                        if ( i%20 == 0 ||i==1110 ||i==1130||i==910  ) bPush = true;
-                    }
-                    else if ( i<= 1145 ) {
-                        if ( i%4 == 0 ) bPush = true;
-                    }
-                    else if ( i<= 1300 ) {
-                        if ( i%15 == 0 ) bPush = true;
-                    }
-                    else if ( i<= 1500 ) {
-                        if ( i%20 == 0  || i==1351||i==1355||i==1347) bPush = true;
-                    }
-                    else if ( i<= 3000 ) {
-                        if ( i%20 == 0 ) bPush = true;
-                    }
+//                    else if ( i<= 580 ) {
+//                        if ( i%20 == 0 || i==190|| i==195||i==205||i==480) bPush = true;
+//                    }
+//                    else if ( i<= 640 ) {
+//                        if ( i%10 == 0  ) bPush = true;
+//                    }
+//                    else if ( i<= 750 ) {
+//                        if ( i%15 == 0  ) bPush = true;
+//                    }
+//                    else if ( i<= 1130 ) {
+//                        if ( i%20 == 0 ||i==1110 ||i==1130||i==910  ) bPush = true;
+//                    }
+//                    else if ( i<= 1145 ) {
+//                        if ( i%4 == 0 ) bPush = true;
+//                    }
+//                    else if ( i<= 1300 ) {
+//                        if ( i%15 == 0 ) bPush = true;
+//                    }
+//                    else if ( i<= 1500 ) {
+//                        if ( i%20 == 0  || i==1351||i==1355||i==1347) bPush = true;
+//                    }
+//                    else if ( i<= 3000 ) {
+//                        if ( i%20 == 0 ) bPush = true;
+//                    }
                     if ( bPush ) vUseBA.push_back(i);
                 }
 
