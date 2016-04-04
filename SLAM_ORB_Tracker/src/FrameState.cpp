@@ -121,7 +121,7 @@ int FrameState::extract() {
 
 
 int FrameState::extractInit() {
-    ORB_SLAM::ORBextractor ORBextractor(Config::iFeatureNum*2, Config::dScaleFactor, Config::dScaleLevel,1,20);
+    ORB_SLAM::ORBextractor ORBextractor(/*Config::iFeatureNum*4*/4000, Config::dScaleFactor, Config::dScaleLevel,1,20);
     ORBextractor(mImage,cv::Mat(),mvKeyPoint,mDescriptor);
 
     int nKP = mvKeyPoint.size();

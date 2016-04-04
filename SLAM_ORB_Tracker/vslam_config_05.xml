@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <opencv_storage>
-<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/00/image_0/%06d.png</sPathImageLoad>
+<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/05/image_0/%06d.png</sPathImageLoad>
 <iImageBeginIdx>0</iImageBeginIdx>
-<iImageEndIdx>4540</iImageEndIdx>
+<iImageEndIdx>2760</iImageEndIdx>
 <sPathVocabulary>/tmp/ORBvoc.txt</sPathVocabulary>
 <iFeatureNum>1000</iFeatureNum>
 <dDrawFrameStep>20.</dDrawFrameStep>
@@ -11,9 +11,9 @@
   <cols>3</cols>
   <dt>d</dt>
   <data>
-    7.1885599999999999e+02 0. 6.0719280000000003e+02 0.
-    7.1885599999999999e+02 1.8521570000000000e+02 0. 0. 1.</data></mCameraParameter>
+    7.0709119999999996e+02 0. 6.0188729999999998e+02 0.
+    7.0709119999999996e+02 1.8311040000000000e+02 0. 0. 1.</data></mCameraParameter>
 <dOpticalFlowThreshold>1.</dOpticalFlowThreshold>
 <dScaleLevel>8</dScaleLevel>
-<dScaleFactor>1.2000000e+00</dScaleFactor>
+<dScaleFactor>1.2000000000000000e+00</dScaleFactor>
 </opencv_storage>

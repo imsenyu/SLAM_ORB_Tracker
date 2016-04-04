@@ -31,6 +31,7 @@ int main(int argc, char * argv[]) {
     // vocabulary initialize
     Vocabulary vocabulary;
     Config::time("voc");
+    std::cout<<"voc loading: "<<Config::sPathVocabulary<<std::endl;
     bool isVocLoaded =  vocabulary.loadFromTextFile(Config::sPathVocabulary);
     Config::timeEnd("voc");
     

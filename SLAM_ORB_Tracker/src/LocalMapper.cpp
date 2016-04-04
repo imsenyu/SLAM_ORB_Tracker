@@ -23,10 +23,10 @@ void LocalMapper::createNewMapPoint() {
 
 }
 
-int LocalMapper::processKeyFrameLoop() {
+int LocalMapper::processKeyFrameLoop(bool bBA) {
 
     // detect whether new KeyFrame inserted
-    if ( mBuffer.hasNext() == false ) return -1;
+    if (mBuffer.hasNext() == false) return -1;
 
     // take it
     // compute BoW
@@ -34,17 +34,14 @@ int LocalMapper::processKeyFrameLoop() {
     mpCurKeyFrame->getBoW();
 
     // add (tracked MapPoint is in this KeyFrame) to Map
-    vector<shared_ptr<MapPoint>> vpMapPointMatch = mpCurKeyFrame->GetMapPointMatch();
+    vector <shared_ptr<MapPoint>> vpMapPointMatch = mpCurKeyFrame->GetMapPointMatch();
     //int numMatch = 0;
-    if( true ) //This operations are already done in the tracking for the first two keyframes
+    if (true) //This operations are already done in the tracking for the first two keyframes
     {
-        for(size_t i=0; i<vpMapPointMatch.size(); i++)
-        {
-            shared_ptr<MapPoint> pMP = vpMapPointMatch[i];
-            if(pMP)
-            {
-                if(!pMP->isBad())
-                {
+        for (size_t i = 0; i < vpMapPointMatch.size(); i++) {
+            shared_ptr <MapPoint> pMP = vpMapPointMatch[i];
+            if (pMP) {
+                if (!pMP->isBad()) {
                     //numMatch ++;
                     pMP->setKeyFrame(mpCurKeyFrame, i);
                     //pMP->AddObservation(mpCurrentKeyFrame, i);
@@ -54,13 +51,10 @@ int LocalMapper::processKeyFrameLoop() {
             }
         }
     }
-    if(mpCurKeyFrame->mId==1)
-    {
-        for(size_t i=0; i<vpMapPointMatch.size(); i++)
-        {
-            shared_ptr<MapPoint> pMP = vpMapPointMatch[i];
-            if(pMP)
-            {
+    if (mpCurKeyFrame->mId == 1) {
+        for (size_t i = 0; i < vpMapPointMatch.size(); i++) {
+            shared_ptr <MapPoint> pMP = vpMapPointMatch[i];
+            if (pMP) {
                 mlpRecentAddedMapPoints.push_back(pMP);
             }
         }
@@ -81,22 +75,23 @@ int LocalMapper::processKeyFrameLoop() {
 
     // according to computed mT2w, searchForTriangle with neighbour KeyFrame
     int numMatch = triangleNewMapPoint();
-    std::cout<<"triangle mapPoint size"<< numMatch<<std::endl;
+    std::cout << "triangle mapPoint size" << numMatch << std::endl;
 
     // TODO: process duplicated MapPoint
     removeDuplicatedMapPoint();
 
-    Config::time("LocalBundleAdjustment");
-    Optimizer::LocalBundleAdjustment(mpCurKeyFrame,false);
-    Config::timeEnd("LocalBundleAdjustment");
-
+    if (bBA) {
+        Config::time("LocalBundleAdjustment");
+        Optimizer::LocalBundleAdjustment(mpCurKeyFrame, false);
+        Config::timeEnd("LocalBundleAdjustment");
+    }
     mpCurKeyFrame = shared_ptr<KeyFrameState>(NULL);
 
     return 0;
 }
 
 int LocalMapper::run() {
-    while(true) processKeyFrameLoop();
+    while(true) processKeyFrameLoop(true);
     return 0;
 }
 
@@ -123,7 +118,7 @@ int LocalMapper::triangleNewMapPoint() {
     const float invfx1 = 1.0f/fx1;
     const float invfy1 = 1.0f/fy1;
 
-    const float ratioFactor = 1.5f* 1.2;//mpCurKeyFrame->GetScaleFactor();
+    const float ratioFactor = 1.5f* Config::dScaleFactor;//mpCurKeyFrame->GetScaleFactor();
 
     // Search matches with epipolar restriction and triangulate
     int numMatchMP = 0;

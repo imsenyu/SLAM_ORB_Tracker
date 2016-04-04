@@ -36,7 +36,7 @@ public:
     // pop one and use this KeyFrame and its neighbour to create MapPoint
     void createNewMapPoint();
 
-    int processKeyFrameLoop();
+    int processKeyFrameLoop(bool bBA);
 
     int run();
 

@@ -96,6 +96,7 @@ private:
     cv::Mat mVelocity;
     void createKeyFrame();
     int mLastMapperId;
+    int mLastBundleAdjustmentId;
 public:
     Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper);
     ~Tracker();

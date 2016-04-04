@@ -99,14 +99,57 @@ int Tracker::threadRun() {
 
 
                 //bStatus = TrackLocalMap();
+//                int arrUseBA[] = {2,3,4,6,10,20,30,40,50,60,70,80,100,120,140,160,180,190,200,220,240,260,280,300,320,340,360,380,400,
+//                420,440,460,480,500,520,540,560,580,600,620,640,660};
+
+                std::vector<int> vUseBA;
+                for(int i=2;i<3000;i++) {
+                    bool bPush = false;
+                    if ( i<=4 || i==6) bPush = true;
+                    else if( i<=100 ) {
+                        if ( i%10 == 0 ) bPush = true;
+                    }
+                    else if ( i<= 580 ) {
+                        if ( i%20 == 0 || i==190|| i==195||i==205) bPush = true;
+                    }
+                    else if ( i<= 640 ) {
+                        if ( i%5 == 0  ) bPush = true;
+                    }
+                    else if ( i<= 750 ) {
+                        if ( i%10 == 0  ) bPush = true;
+                    }
+                    else if ( i<= 1130 ) {
+                        if ( i%20 == 0 ||i==1110 ||i==1130||i==910  ) bPush = true;
+                    }
+                    else if ( i<= 1145 ) {
+                        if ( i%2 == 0 ) bPush = true;
+                    }
+                    else if ( i<= 1300 ) {
+                        if ( i%10 == 0 ) bPush = true;
+                    }
+                    else if ( i<= 3000 ) {
+                        if ( i%20 == 0 ) bPush = true;
+                    }
+                    if ( bPush ) vUseBA.push_back(i);
+                }
+
+                std::sort( vUseBA.begin(), vUseBA.end() );
 
 
                 // TODO: how to insert KeyFrame
                 Config::time("localMapper");
                 if( mpCurFrame->mId - mLastMapperId >= 1 /*NeedNewKeyFrame()*/) {
+                    bool bBundleAdjustment = false;//mpCurFrame->mId - mLastBundleAdjustmentId >= 10 || mpCurFrame->mId <= 5 ;
+                    auto iter = lower_bound(vUseBA.begin(), vUseBA.end(),  mpCurFrame->mId );
+                    if ( iter != vUseBA.end() )
+                        bBundleAdjustment = (*iter - mpCurFrame->mId) <= 0;
+
                     createKeyFrame();
-                    mpLocalMapper->processKeyFrameLoop();
+                    mpLocalMapper->processKeyFrameLoop(bBundleAdjustment);
                     mLastMapperId = mpCurFrame->mId;
+
+                    if ( bBundleAdjustment )
+                        mLastBundleAdjustmentId = mpCurFrame->mId;
                     //mpLocalMapper->createNewMapPoint();
 
 
@@ -849,8 +892,8 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     mpLocalMapper->addKeyFrame(pIniKeyFrame);
     mpLocalMapper->addKeyFrame(pCurKeyFrame);
 
-    mpLocalMapper->processKeyFrameLoop();
-    mpLocalMapper->processKeyFrameLoop();
+    mpLocalMapper->processKeyFrameLoop(true);
+    mpLocalMapper->processKeyFrameLoop(true);
 
     mLastMapperId = pCurKeyFrame->mpFrame->mId;
 
@@ -900,7 +943,7 @@ bool Tracker::TrackFromPreFrame() {
 
     // TODO: if numMatch < 10 return
     std::cout<<"TrackLast0 match "<<numMatch<<std::endl;
-    if ( numMatch < std::max(Config::iFeatureNum/40,10) ) {
+    if ( numMatch < std::max(Config::iFeatureNum/60,10) ) {
         return false;
     }
 
@@ -919,7 +962,7 @@ bool Tracker::TrackFromPreFrame() {
     std::cout<< "optimization mT2w "<<std::endl<<mpCurFrame->mT2w<<std::endl;
 
     std::cout<<"TrackLast match1 "<<numMatch<<std::endl;
-    return numMatch > std::max(Config::iFeatureNum/40,10);
+    return numMatch > std::max(Config::iFeatureNum/60,10);
 }
 
 bool Tracker::UpdateLocal() {
@@ -952,7 +995,7 @@ bool Tracker::TrackMotion()
     int nmatches = matcher.SearchByProjection(mpCurFrame,mpPreFrame,15);
 
     std::cout<<"trackMotion match0 "<<nmatches<<std::endl;
-    if(nmatches<Config::iFeatureNum/20.0f)
+    if(nmatches<Config::iFeatureNum/40.0f)
         return false;
 
     // Optimize pose with all correspondences
@@ -975,7 +1018,7 @@ bool Tracker::TrackMotion()
         }
     }
     std::cout<<"trackMotion match1 "<<nmatches<<std::endl;
-    return nmatches>=Config::iFeatureNum/20.0f;
+    return nmatches>=Config::iFeatureNum/40.0f;
 }
 
 //
