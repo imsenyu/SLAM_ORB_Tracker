@@ -56,9 +56,9 @@ PoseState PoseState::move(MotionState& _motion) {
     //如果不考虑y轴影响,则要重新把 模长置为1
     if (true) {
         cv::Mat tT = _motion.mMatT.clone();
-        tT.at<double>(1, 0) = 0.0f;
+        tT.at<float>(1, 0) = 0.0f;
 
-        if(fabs(tT.at<double>(0, 0))+fabs(tT.at<double>(2, 0))>0.0f) tT *= 1.0f / cv::norm(tT);
+        if(fabs(tT.at<float>(0, 0))+fabs(tT.at<float>(2, 0))>0.0f) tT *= 1.0f / cv::norm(tT);
         matLocalPos = matLocalPos + mDir3 * tT;// *  1.65f / motion.getScale();
     }
     else {
@@ -71,18 +71,18 @@ PoseState PoseState::move(MotionState& _motion) {
     if (true) {
         cv::Mat matRC = _motion.mMatR * Const::mat31_001;
         
-        matRC.at<double>(1, 0) = 0.0f;
+        matRC.at<float>(1, 0) = 0.0f;
         matRC = matRC / cv::norm(matRC);
         
         Utils::getRodriguesRotation(matRC, matRC);
         
         matLocalDir = matRC * matLocalDir;
-        matLocalDir.at<double>(1, 0) = 0.0f;
+        matLocalDir.at<float>(1, 0) = 0.0f;
         matLocalDir = matLocalDir / cv::norm(matLocalDir);
     
         mDir3 = mDir3 * matRC;
         matRC = mDir3 * Const::mat31_001;
-        matRC.at<double>(1, 0) = 0.0f;
+        matRC.at<float>(1, 0) = 0.0f;
         Utils::getRodriguesRotation(matRC, matRC);
         mDir3 = matRC.clone();
         

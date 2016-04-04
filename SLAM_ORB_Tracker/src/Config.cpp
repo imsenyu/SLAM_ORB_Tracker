@@ -80,7 +80,7 @@ int Config::loadConfig(std::string cfgPath) {
 
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
-    
+
     fs << "sPathImageLoad"			<< sPathImageLoad;
     fs << "iImageBeginIdx"			<< iImageLoadBegin;
     fs << "iImageEndIdx"			<< iImageLoadEnd;
@@ -109,10 +109,10 @@ int Config::loadConfig(std::string cfgPath) {
         vInvLevelSigma2[i]=1.0f/vLevelSigma2[i];
     }
 
-    dFx = mCameraParameter.at<double>(0,0);
-    dFy = mCameraParameter.at<double>(1,1);
-    dCx = mCameraParameter.at<double>(0,2);
-    dCy = mCameraParameter.at<double>(1,2);
+    dFx = mCameraParameter.at<float>(0,0);
+    dFy = mCameraParameter.at<float>(1,1);
+    dCx = mCameraParameter.at<float>(0,2);
+    dCy = mCameraParameter.at<float>(1,2);
 
     return !opened;
 }

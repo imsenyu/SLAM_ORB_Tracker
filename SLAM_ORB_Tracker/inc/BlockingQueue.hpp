@@ -25,7 +25,7 @@ class BlockingQueue {
     
 public:
     
-    BlockingQueue(int _capacity = 1000):
+    BlockingQueue(int _capacity = 5000):
     capacity(_capacity), mSemMutex(1), mSemFull(0), mSemEmpty(_capacity)  {
         
     }

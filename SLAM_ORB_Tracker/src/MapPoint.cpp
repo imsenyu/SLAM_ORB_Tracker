@@ -36,7 +36,7 @@ void MapPoint::UpdateNormalAndDepth()
         Pos = mPos.clone();
     }
 
-    cv::Mat normal = cv::Mat::zeros(3,1,CV_64FC1);
+    cv::Mat normal = cv::Mat::zeros(3,1,CV_32FC1);
     int n=0;
     for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
     {

@@ -53,7 +53,7 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
     vDepths.reserve(vpMapPoints.size());
     cv::Mat Rcw2 = Tcw_.row(2).colRange(0,3);
     Rcw2 = Rcw2.t();
-    float zcw = Tcw_.at<double>(2,3);
+    float zcw = Tcw_.at<float>(2,3);
     for(size_t i=0; i<vpMapPoints.size(); i++)
     {
         if(vpMapPoints[i])

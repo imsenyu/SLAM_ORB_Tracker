@@ -1074,12 +1074,12 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
         cv::Mat p3Dc = Rcw*p3Dw + tcw;
 
         // Depth must be positive
-        if(p3Dc.at<double>(2)<0.0f)
+        if(p3Dc.at<float>(2)<0.0f)
             continue;
 
-        const float invz = 1/p3Dc.at<double>(2);
-        const float x = p3Dc.at<double>(0)*invz;
-        const float y = p3Dc.at<double>(1)*invz;
+        const float invz = 1/p3Dc.at<float>(2);
+        const float x = p3Dc.at<float>(0)*invz;
+        const float y = p3Dc.at<float>(1)*invz;
 
         const float u = fx*x+cx;
         const float v = fy*y+cy;
@@ -1561,9 +1561,9 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> CurrentFrame, shared_p
                 cv::Mat x3Dw = pMP->mPos;
                 cv::Mat x3Dc = Rcw*x3Dw+tcw;
 
-                const float xc = x3Dc.at<double>(0);
-                const float yc = x3Dc.at<double>(1);
-                const float invzc = 1.0/x3Dc.at<double>(2);
+                const float xc = x3Dc.at<float>(0);
+                const float yc = x3Dc.at<float>(1);
+                const float invzc = 1.0/x3Dc.at<float>(2);
 
                 //float u = CurrentFrame.fx*xc*invzc+CurrentFrame.cx;
                 float u = Config::dFx*xc*invzc+Config::dCx;

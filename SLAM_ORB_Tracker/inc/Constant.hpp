@@ -9,10 +9,10 @@
 namespace Const{
 
 	/** \var 3,1矩阵初始化数组 */
-	extern double arr31_001000[];
+	extern float arr31_001000[];
 	/** \var Matrix(3,3)矩阵初始化数组 */
-	extern double arr33[];
-	extern double arr44[];
+	extern float arr33[];
+	extern float arr44[];
 
 	/** \var Matrix(3,1)[0,0,1]^T */
 	extern const cv::Mat mat31_001;

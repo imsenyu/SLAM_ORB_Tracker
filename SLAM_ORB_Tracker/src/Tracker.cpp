@@ -105,27 +105,30 @@ int Tracker::threadRun() {
                 std::vector<int> vUseBA;
                 for(int i=2;i<3000;i++) {
                     bool bPush = false;
-                    if ( i<=4 || i==6) bPush = true;
+                    if ( i<=4 || i==6|| i==8) bPush = true;
                     else if( i<=100 ) {
                         if ( i%10 == 0 ) bPush = true;
                     }
                     else if ( i<= 580 ) {
-                        if ( i%20 == 0 || i==190|| i==195||i==205) bPush = true;
+                        if ( i%20 == 0 || i==190|| i==195||i==205||i==480) bPush = true;
                     }
                     else if ( i<= 640 ) {
-                        if ( i%5 == 0  ) bPush = true;
+                        if ( i%10 == 0  ) bPush = true;
                     }
                     else if ( i<= 750 ) {
-                        if ( i%10 == 0  ) bPush = true;
+                        if ( i%15 == 0  ) bPush = true;
                     }
                     else if ( i<= 1130 ) {
                         if ( i%20 == 0 ||i==1110 ||i==1130||i==910  ) bPush = true;
                     }
                     else if ( i<= 1145 ) {
-                        if ( i%2 == 0 ) bPush = true;
+                        if ( i%4 == 0 ) bPush = true;
                     }
                     else if ( i<= 1300 ) {
-                        if ( i%10 == 0 ) bPush = true;
+                        if ( i%15 == 0 ) bPush = true;
+                    }
+                    else if ( i<= 1500 ) {
+                        if ( i%20 == 0  || i==1351||i==1355||i==1347) bPush = true;
                     }
                     else if ( i<= 3000 ) {
                         if ( i%20 == 0 ) bPush = true;
@@ -176,7 +179,7 @@ int Tracker::threadRun() {
                 {
                     cv::Mat LastRwc = mpPreFrame->mT2w.rowRange(0,3).colRange(0,3).t();
                     cv::Mat Lasttwc = -LastRwc*mpPreFrame->mT2w.rowRange(0,3).col(3);
-                    cv::Mat LastTwc = cv::Mat::eye(4,4,CV_64F);
+                    cv::Mat LastTwc = cv::Mat::eye(4,4,CV_32F);
                     LastRwc.copyTo(LastTwc.rowRange(0,3).colRange(0,3));
                     Lasttwc.copyTo(LastTwc.rowRange(0,3).col(3));
                     mVelocity = mpCurFrame->mT2w*LastTwc;
@@ -258,7 +261,7 @@ void Tracker::initPose() {
     mCurPose.mPos = Const::pnt3d_000;
     mCurPose.mDir3 = Const::mat33_111.clone();
 
-    mpIniFrame->mT2w = cv::Mat::eye(4,4,CV_64FC1);
+    mpIniFrame->mT2w = cv::Mat::eye(4,4,CV_32FC1);
     mCurPose.mDir3.copyTo( mpIniFrame->mT2w.rowRange(0,3).colRange(0,3) );
     //mCurPose.mPos.copyTo( mpIniFrame->mT2w.rowRange(0,3).col(3) );
 }
@@ -762,21 +765,21 @@ bool Tracker::initStepSecondKeyFrame() {
             //}
         }
 
-        mMotion.mMatR = cv::Mat(3,3,CV_64FC1);//Rcw.clone();
-        mMotion.mMatT = cv::Mat(3,1,CV_64FC1);//tcw.clone();
+        mMotion.mMatR = cv::Mat(3,3,CV_32FC1);//Rcw.clone();
+        mMotion.mMatT = cv::Mat(3,1,CV_32FC1);//tcw.clone();
         //meMode = WorkMode::Normal;
 
-        Rcw.convertTo(mMotion.mMatR, CV_64FC1 );
+        Rcw.convertTo(mMotion.mMatR, CV_32FC1 );
 //        for(int i=0;i<3;i++)
 //            for(int j=0;j<3;j++)
 //                mMotion.mMatR.at<double>(i,j) = Rcw.at<float>(i,j);
 
-        tcw.convertTo(mMotion.mMatT, CV_64FC1);
+        tcw.convertTo(mMotion.mMatT, CV_32FC1);
 //        for(int i=0;i<3;i++)
 //            mMotion.mMatT.at<double>(i) = tcw.at<float>(i);
 
         //confirm direction forward
-        if ( mMotion.mMatT.at<double>(2) > 0.0f ) {
+        if ( mMotion.mMatT.at<float>(2) > 0.0f ) {
             mMotion.mMatT = - mMotion.mMatT;
         }
   //          mMotion.mMatT = -mMotion.mMatR.inv() * mMotion.mMatT;
@@ -806,11 +809,11 @@ bool Tracker::initStepSecondKeyFrame() {
 
 bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D) {
     mpIniFrame->mT2w = Const::mat44_1111;
-    mpCurFrame->mT2w = cv::Mat(4,4,CV_64FC1);
+    mpCurFrame->mT2w = cv::Mat(4,4,CV_32FC1);
 
     initMotion.mMatR.copyTo( mpCurFrame->mT2w.rowRange(0,3).colRange(0,3) );
     initMotion.mMatT.copyTo( mpCurFrame->mT2w.rowRange(0,3).col(3) );
-    mpCurFrame->mT2w.at<double>(3,3) = 1.0f;
+    mpCurFrame->mT2w.at<float>(3,3) = 1.0f;
 
     //init KeyFrame;
     shared_ptr<KeyFrameState> pIniKeyFrame = shared_ptr<KeyFrameState>( new KeyFrameState(mpIniFrame, mpVocabulary) );

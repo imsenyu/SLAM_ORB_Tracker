@@ -53,10 +53,10 @@ cv::Point3d Utils::convertToPoint3d(const cv::Mat &mat31) {
 }
 
 cv::Mat Utils::convertToCvMat31(const cv::Point3f p3) {
-    cv::Mat ret(3, 1, CV_64FC1);
-    ret.at<double>(0,0) = p3.x;
-    ret.at<double>(1,0) = p3.y;
-    ret.at<double>(2,0) = p3.z;
+    cv::Mat ret(3, 1, CV_32FC1);
+    ret.at<float>(0,0) = p3.x;
+    ret.at<float>(1,0) = p3.y;
+    ret.at<float>(2,0) = p3.z;
     return ret;
 }
 
@@ -110,26 +110,26 @@ cv::Mat Utils::convertToCvMat44(const g2o::SE3Quat &SE3)
 
 cv::Mat Utils::convertToCvMat44(const Eigen::Matrix<double, 4, 4> &m)
 {
-    cv::Mat cvMat(4,4,CV_64FC1);
+    cv::Mat cvMat(4,4,CV_32FC1);
     for(int i=0;i<4;i++)
         for(int j=0; j<4; j++)
-            cvMat.at<double>(i,j)=m(i,j);
+            cvMat.at<float>(i,j)=m(i,j);
 
     return cvMat.clone();
 }
 
 cv::Mat Utils::convertToCvMat31(const Eigen::Matrix<double,3,1> &m)
 {
-    cv::Mat cvMat(3,1,CV_64FC1);
+    cv::Mat cvMat(3,1,CV_32FC1);
     for(int i=0;i<3;i++)
-        cvMat.at<double>(i)=m(i);
+        cvMat.at<float>(i)=m(i);
 
     return cvMat.clone();
 }
 
 cv::Mat Utils::convectToSymmetricMatrix(const cv::Mat &v)
 {
-    cv::Mat_<double> ret(3,3);
+    cv::Mat_<float> ret(3,3);
     if ( v.type() == CV_32FC1 ) {
         ret << 0.0f, -v.at<float>(2), v.at<float>(1),
             v.at<float>(2),               0,-v.at<float>(0),

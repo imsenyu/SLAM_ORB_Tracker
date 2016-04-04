@@ -9,7 +9,7 @@
 <mCameraParameter type_id="opencv-matrix">
   <rows>3</rows>
   <cols>3</cols>
-  <dt>d</dt>
+  <dt>f</dt>
   <data>
     7.1885599999999999e+02 0. 6.0719280000000003e+02 0.
     7.1885599999999999e+02 1.8521570000000000e+02 0. 0. 1.</data></mCameraParameter>

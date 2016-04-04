@@ -33,10 +33,7 @@ namespace ORB_SLAM
 Initializer::Initializer(shared_ptr<FrameState> ReferenceFrame, float sigma, int iterations)
 {
 
-    mK = cv::Mat(3,3,CV_32FC1);
-    for(int i=0;i<3;i++)
-        for(int j=0;j<3;j++)
-            mK.at<float>(i,j) = Config::mCameraParameter.at<double>(i,j);
+    mK = Config::mCameraParameter.clone();
 
     mvKeys1 = ReferenceFrame->mvKeyPoint;
 

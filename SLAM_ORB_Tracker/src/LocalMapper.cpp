@@ -106,7 +106,7 @@ int LocalMapper::triangleNewMapPoint() {
     cv::Mat Rcw1 = mpCurKeyFrame->getMatR2w();
     cv::Mat Rwc1 = Rcw1.t();
     cv::Mat tcw1 = mpCurKeyFrame->getMatt2w();
-    cv::Mat Tcw1(3,4,CV_64FC1);
+    cv::Mat Tcw1(3,4,CV_32FC1);
     Rcw1.copyTo(Tcw1.colRange(0,3));
     tcw1.copyTo(Tcw1.col(3));
     cv::Mat Ow1 = mpCurKeyFrame->getMatO2w();
@@ -151,7 +151,7 @@ int LocalMapper::triangleNewMapPoint() {
         cv::Mat Rcw2 = pKF2->getMatR2w();
         cv::Mat Rwc2 = Rcw2.t();
         cv::Mat tcw2 = pKF2->getMatt2w();
-        cv::Mat Tcw2(3,4,CV_64FC1);
+        cv::Mat Tcw2(3,4,CV_32FC1);
         Rcw2.copyTo(Tcw2.colRange(0,3));
         tcw2.copyTo(Tcw2.col(3));
 
@@ -179,8 +179,8 @@ int LocalMapper::triangleNewMapPoint() {
 
             // Check parallax between rays
             // TODO: rewrite float to double in cv::Mat
-            cv::Mat_<double>  xn1(3,1);
-            cv::Mat_<double>  xn2(3,1);
+            cv::Mat_<float>  xn1(3,1);
+            cv::Mat_<float>  xn2(3,1);
 
 
             xn1 << (kp1.pt.x-cx1)*invfx1, (kp1.pt.y-cy1)*invfy1, 1.0f;
@@ -199,11 +199,11 @@ int LocalMapper::triangleNewMapPoint() {
 
             // Linear Triangulation Method
             //cv::Mat A(4,4,CV_32F);
-            cv::Mat A(4,4,CV_64FC1);
-            A.row(0) = xn1.at<double>(0)*Tcw1.row(2)-Tcw1.row(0);
-            A.row(1) = xn1.at<double>(1)*Tcw1.row(2)-Tcw1.row(1);
-            A.row(2) = xn2.at<double>(0)*Tcw2.row(2)-Tcw2.row(0);
-            A.row(3) = xn2.at<double>(1)*Tcw2.row(2)-Tcw2.row(1);
+            cv::Mat A(4,4,CV_32FC1);
+            A.row(0) = xn1.at<float>(0)*Tcw1.row(2)-Tcw1.row(0);
+            A.row(1) = xn1.at<float>(1)*Tcw1.row(2)-Tcw1.row(1);
+            A.row(2) = xn2.at<float>(0)*Tcw2.row(2)-Tcw2.row(0);
+            A.row(3) = xn2.at<float>(1)*Tcw2.row(2)-Tcw2.row(1);
 
             cv::Mat w,u,vt;
             cv::SVD::compute(A,w,u,vt,cv::SVD::MODIFY_A| cv::SVD::FULL_UV);
@@ -211,23 +211,23 @@ int LocalMapper::triangleNewMapPoint() {
             cv::Mat x3D = vt.row(3).t();
 
 
-            if(x3D.at<double>(3)==0){
+            if(x3D.at<float>(3)==0){
                 cnt[1]++;
                 continue;
             }
 
             // Euclidean coordinates
-            x3D = x3D.rowRange(0,3)/x3D.at<double>(3);
+            x3D = x3D.rowRange(0,3)/x3D.at<float>(3);
             cv::Mat x3Dt = x3D.t();
 
             //Check triangulation in front of cameras
-            float z1 = Rcw1.row(2).dot(x3Dt)+tcw1.at<double>(2);
+            float z1 = Rcw1.row(2).dot(x3Dt)+tcw1.at<float>(2);
             if(z1<=0){
                 cnt[2]++;
                 continue;
             }
 
-            float z2 = Rcw2.row(2).dot(x3Dt)+tcw2.at<double>(2);
+            float z2 = Rcw2.row(2).dot(x3Dt)+tcw2.at<float>(2);
             if(z2<=0){
                 cnt[3]++;
                 continue;
@@ -236,8 +236,8 @@ int LocalMapper::triangleNewMapPoint() {
             //Check reprojection error in first keyframe
 
             float sigmaSquare1 = Config::vLevelSigma2[kp1.octave];
-            float x1 = Rcw1.row(0).dot(x3Dt)+tcw1.at<double>(0);
-            float y1 = Rcw1.row(1).dot(x3Dt)+tcw1.at<double>(1);
+            float x1 = Rcw1.row(0).dot(x3Dt)+tcw1.at<float>(0);
+            float y1 = Rcw1.row(1).dot(x3Dt)+tcw1.at<float>(1);
             float invz1 = 1.0/z1;
             float u1 = fx1*x1*invz1+cx1;
             float v1 = fy1*y1*invz1+cy1;
@@ -250,8 +250,8 @@ int LocalMapper::triangleNewMapPoint() {
 
             //Check reprojection error in second keyframe
             float sigmaSquare2 = Config::vLevelSigma2[kp2.octave];
-            float x2 = Rcw2.row(0).dot(x3Dt)+tcw2.at<double>(0);
-            float y2 = Rcw2.row(1).dot(x3Dt)+tcw2.at<double>(1);
+            float x2 = Rcw2.row(0).dot(x3Dt)+tcw2.at<float>(0);
+            float y2 = Rcw2.row(1).dot(x3Dt)+tcw2.at<float>(1);
             float invz2 = 1.0/z2;
             float u2 = fx2*x2*invz2+cx2;
             float v2 = fy2*y2*invz2+cy2;
