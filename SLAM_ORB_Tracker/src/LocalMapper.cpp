@@ -432,11 +432,11 @@ void LocalMapper::MapPointCulling()
         {
             lit = mlpRecentAddedMapPoints.erase(lit);
         }
-//        else if(pMP->GetFoundRatio()<0.25f )
-//        {
-//            pMP->SetBadFlag();
-//            lit = mlpRecentAddedMapPoints.erase(lit);
-//        }
+        else if(pMP->GetFoundRatio()<0.25f )
+        {
+            pMP->SetBadFlag();
+            lit = mlpRecentAddedMapPoints.erase(lit);
+        }
 //        else if((nCurrentKFid-pMP->mIdFromKeyFrame)>=2 && pMP->msKeyFrame2FeatureId.size()<=2)
 //        {
 //

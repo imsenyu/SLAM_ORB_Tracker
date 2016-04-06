@@ -87,16 +87,25 @@ private:
     bool TrackFromPreFrame();
     bool UpdateLocal();
 
-//    bool TrackLocalMap();
-//    void UpdateReferenceKeyFrames();
-//    void UpdateReferencePoints();
-//    void SearchReferencePointsInFrustum();
+    int mnMatchesInliers;
+    std::vector<shared_ptr<KeyFrameState>> mvpLocalKeyFrames;
+    std::vector<shared_ptr<MapPoint>> mvpLocalMapPoints;
+    shared_ptr<KeyFrameState> mpReferenceKF;
+    bool TrackLocalMap();
+    void UpdateReferenceKeyFrames();
+    void UpdateReferencePoints();
+    void SearchReferencePointsInFrustum();
 
     bool TrackMotion();
     cv::Mat mVelocity;
     void createKeyFrame();
     int mLastMapperId;
     int mLastBundleAdjustmentId;
+
+
+
+    std::vector<shared_ptr<KeyFrameState>> mvpAllKeyFrame;
+    std::vector<shared_ptr<MapPoint>> mvpAllMapPoint;
 public:
     Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper);
     ~Tracker();

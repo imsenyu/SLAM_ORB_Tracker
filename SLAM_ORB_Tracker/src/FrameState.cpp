@@ -17,7 +17,7 @@ int FrameState::mnMaxX;
 int FrameState::mnMinY;
 int FrameState::mnMaxY;
 
-FrameState::FrameState(int _id): mId(_id), mLoaded(false) {
+FrameState::FrameState(int _id, const std::string& _load): mId(_id), mLoaded(false), mLoadFormat(_load) {
     loadImage(mId);
 }
 
@@ -54,7 +54,7 @@ FrameState::FrameState(const FrameState* _pFS) {
 bool FrameState::loadImage(int _id) {
     if (_id < 0) return false;
     mId = _id;
-    std::string imgPath = cv::format(Config::sPathImageLoad.c_str(), mId);
+    std::string imgPath = cv::format(mLoadFormat.c_str(), mId);
     mImage = cv::imread(imgPath, CV_LOAD_IMAGE_GRAYSCALE);
     
     // image load error
@@ -247,4 +247,67 @@ std::vector<size_t> FrameState::getFeaturesInArea(const float &x, const float &y
 
     return vIndices;
 
+}
+
+bool FrameState::isInFrustum(shared_ptr<MapPoint> pMP, float viewingCosLimit)
+{
+    pMP->mbTrackInView = false;
+
+    // 3D in absolute coordinates
+    cv::Mat P = pMP->mPos.clone();
+
+    // 3D in camera coordinates
+    const cv::Mat Pc = mMatR*P+mMatT;
+    const float PcX = Pc.at<float>(0);
+    const float PcY= Pc.at<float>(1);
+    const float PcZ = Pc.at<float>(2);
+
+    // Check positive depth
+    if(PcZ<0.0)
+        return false;
+
+    // Project in image and check it is not outside
+    const float invz = 1.0/PcZ;
+    const float u=Config::dFx*PcX*invz+Config::dCx;
+    const float v=Config::dFy*PcY*invz+Config::dCy;
+
+    if(u<mnMinX || u>mnMaxX)
+        return false;
+    if(v<mnMinY || v>mnMaxY)
+        return false;
+
+    // Check distance is in the scale invariance region of the MapPoint
+    const float maxDistance = pMP->GetMaxDistanceInvariance();
+    const float minDistance = pMP->GetMinDistanceInvariance();
+    const cv::Mat PO = P-mO2w;
+    const float dist = cv::norm(PO);
+
+    if(dist<minDistance || dist>maxDistance)
+        return false;
+
+    // Check viewing angle
+    cv::Mat Pn = pMP->GetNormal();
+
+    float viewCos = PO.dot(Pn)/dist;
+
+    if(viewCos<viewingCosLimit)
+        return false;
+
+    // Predict scale level acording to the distance
+    float ratio = dist/minDistance;
+
+    vector<double>::iterator it = std::lower_bound(Config::vScaleFactors.begin(), Config::vScaleFactors.end(), ratio);
+    int nPredictedLevel = it-Config::vScaleFactors.begin();
+
+    if(nPredictedLevel>=Config::dScaleLevel)
+        nPredictedLevel = Config::dScaleLevel -1;
+
+    // Data used by the tracking
+    pMP->mbTrackInView = true;
+    pMP->mTrackProjX = u;
+    pMP->mTrackProjY = v;
+    pMP->mnTrackScaleLevel= nPredictedLevel;
+    pMP->mTrackViewCos = viewCos;
+
+    return true;
 }

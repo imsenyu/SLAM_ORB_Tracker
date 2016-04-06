@@ -11,7 +11,9 @@ int MapPoint::_counterId = 1;
 MapPoint::MapPoint(cv::Mat _matMapPointPos, shared_ptr<KeyFrameState> _pKFS, int nP, Map *_pMap) :
     mpRefKF(_pKFS),
     mbBad(false),
-    mpMap(_pMap)
+    mpMap(_pMap),
+    mnVisible(0),
+    mnFound(0)
 {
     mPos = _matMapPointPos.clone();
     mIdFromKeyFrame = nP;

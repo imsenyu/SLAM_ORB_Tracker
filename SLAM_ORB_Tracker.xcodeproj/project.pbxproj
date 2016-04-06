@@ -149,6 +149,7 @@
 /* Begin PBXFileReference section */
 		68424086D3C909E0A07B35B2 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Initializer.h; sourceTree = "<group>"; };
 		684242E68BAF5C4D3A113229 /* vslam_config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config.xml; sourceTree = "<group>"; };
+		68424359A74CDA8313469CCC /* vslam_config_07.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_07.xml; sourceTree = "<group>"; };
 		6842436352005E2720FD4CFD /* ORBmatcher.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBmatcher.cc; sourceTree = "<group>"; };
 		68424467DD87F16F6CF96645 /* TemplatedVocabulary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TemplatedVocabulary.h; sourceTree = "<group>"; };
 		6842448CAB6464C237ED57EC /* Initializer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Initializer.cc; sourceTree = "<group>"; };
@@ -522,6 +523,7 @@
 				684242E68BAF5C4D3A113229 /* vslam_config.xml */,
 				68424A2E1DF0FAAAB3C566EA /* vslam_config_04.xml */,
 				68424B39E73E39D432BD5342 /* vslam_config_03.xml */,
+				68424359A74CDA8313469CCC /* vslam_config_07.xml */,
 			);
 			path = SLAM_ORB_Tracker;
 			sourceTree = "<group>";

@@ -30,6 +30,7 @@ private:
 public:
     int mId;
     bool mLoaded;
+    std::string mLoadFormat;
     cv::Mat mImage;
     cv::Mat mT2w;
     cv::Mat mMatR;
@@ -43,6 +44,13 @@ public:
 
         mO2w = - mMatR.t() * mMatT;
     }
+    void updatePose() {
+
+        mMatR = mT2w.rowRange(0,3).colRange(0,3);
+        mMatT = mT2w.rowRange(0,3).col(3);
+
+        mO2w = - mMatR.t() * mMatT;
+    }
     std::vector<cv::KeyPoint> mvKeyPoint;
     std::vector<uchar>  mvMatchMask;
     std::vector<uchar>  mvbOutlier;
@@ -50,7 +58,7 @@ public:
     std::vector<shared_ptr<MapPoint>> mvpMapPoint;
     int mnTrackedType;
 
-    FrameState(int _id);
+    FrameState(int _id, const std::string& _load = Config::sPathImageLoad);
     FrameState(const FrameState& _FS);
     FrameState(const FrameState* _pFS);
     ~FrameState();
@@ -76,6 +84,7 @@ public:
     {
         return (x>=mnMinX && x<mnMaxX && y>=mnMinY && y<mnMaxY);
     }
+    bool isInFrustum(shared_ptr<MapPoint> pMP, float viewingCosLimit);
 };
 
 #endif /* FrameState_hpp */

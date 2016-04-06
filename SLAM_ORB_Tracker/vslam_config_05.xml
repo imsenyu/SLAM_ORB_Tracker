@@ -3,7 +3,7 @@
 <sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/05/image_0/%06d.png</sPathImageLoad>
 <iImageBeginIdx>0</iImageBeginIdx>
 <iImageEndIdx>2760</iImageEndIdx>
-<sPathVocabulary>/tmp/ORBvoc.bin</sPathVocabulary>
+<sPathVocabulary>/tmp/kitti_05.L6.bin</sPathVocabulary>
 <iFeatureNum>1000</iFeatureNum>
 <dDrawFrameStep>20.</dDrawFrameStep>
 <mCameraParameter type_id="opencv-matrix">

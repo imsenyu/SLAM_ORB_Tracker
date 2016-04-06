@@ -44,6 +44,7 @@ public:
     int mnBAFixedForKF;
     int mnBALocalForKF;
     int mnFuseTargetForKF;
+    int mnTrackReferenceForFrame;
     bool isBad() {return false;}
 
     void getBoW();

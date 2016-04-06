@@ -64,6 +64,29 @@ public:
         else
             return -1;
     }
+    int mnVisible;
+    int mnFound;
+    void IncreaseVisible()
+    {
+        mnVisible++;
+    }
+
+    void IncreaseFound()
+    {
+        mnFound++;
+    }
+
+    float GetFoundRatio()
+    {
+        return ((float)(mnFound))/mnVisible;
+    }
+    int mnLastFrameSeen;
+    bool mbTrackInView;
+    float mTrackProjX;
+    float mTrackProjY;
+    int mnTrackScaleLevel;
+    float mTrackViewCos;
+    int mnTrackReferenceForFrame;
 };
 
 
