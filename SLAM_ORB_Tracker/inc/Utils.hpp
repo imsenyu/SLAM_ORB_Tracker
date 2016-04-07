@@ -28,7 +28,7 @@ namespace Utils {
     cv::Mat convertToCvMat44(const Eigen::Matrix<double, 4, 4> &m);
     cv::Mat convectToSymmetricMatrix(const cv::Mat &v);
     cv::Mat convertToCvMat31(const Eigen::Matrix<double,3,1> &m);
-
+    std::string timenow();
 };
 
 

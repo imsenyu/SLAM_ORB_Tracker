@@ -38,6 +38,7 @@ namespace Config {
     
     extern std::string sPathConfigFile; /** \var string:配置文件读取路径 */
     extern std::string sPathImageLoad; /** \var string:数据集图像序列读取路径 {idx:%06d} */
+    extern std::string sProjectName;
     extern int iImageLoadBegin; /** \var int:读取图像起始标号 */
     extern int iImageLoadEnd; /** \var int:读取图像结束标号 */
     extern std::string sPathVocabulary; /** \var string:词典*/
@@ -54,6 +55,8 @@ namespace Config {
     extern double dFy;
     extern double dCx;
     extern double dCy;
+    extern std::string tLaunchTime;
+    extern std::string sPathOutput;
 
 };
 

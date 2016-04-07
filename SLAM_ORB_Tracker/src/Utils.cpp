@@ -146,3 +146,8 @@ cv::Mat Utils::convectToSymmetricMatrix(const cv::Mat &v)
 
     return ret;
 }
+
+std::string  Utils::timenow() {
+    namespace pt = boost::posix_time;
+    return pt::to_iso_string(pt::second_clock::local_time());
+}

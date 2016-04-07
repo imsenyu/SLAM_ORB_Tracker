@@ -28,7 +28,9 @@ double Config::dFx;
 double Config::dFy;
 double Config::dCx;
 double Config::dCy;
-
+std::string Config::sProjectName;
+std::string Config::tLaunchTime;
+std::string Config::sPathOutput;
 
 int Config::parse(int argc, char * argv[]) {
     namespace po = boost::program_options;
@@ -77,7 +79,8 @@ int Config::loadConfig(std::string cfgPath) {
     dOpticalFlowThreshold   = getDefault<double>(1.0f, fs["dOpticalFlowThreshold"]);
     dScaleLevel             = getDefault<int>(8, fs["dScaleLevel"]);
     dScaleFactor            = getDefault<double>(1.2f, fs["dScaleFactor"]);
-
+    sProjectName            = getDefault<std::string>("tmp", fs["sProjectName"]);
+    sPathOutput             = getDefault<std::string>("/tmp/", fs["sPathOutput"]);
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
 
@@ -91,6 +94,8 @@ int Config::loadConfig(std::string cfgPath) {
     fs << "dOpticalFlowThreshold"   << dOpticalFlowThreshold;
     fs << "dScaleLevel"             << dScaleLevel;
     fs << "dScaleFactor"            << dScaleFactor;
+    fs << "sProjectName"            << sProjectName;
+    fs << "sPathOutput"             << sPathOutput;
     fs.release();
 
     // do some MATH
@@ -113,6 +118,8 @@ int Config::loadConfig(std::string cfgPath) {
     dFy = mCameraParameter.at<float>(1,1);
     dCx = mCameraParameter.at<float>(0,2);
     dCy = mCameraParameter.at<float>(1,2);
+
+    tLaunchTime = Utils::timenow();
 
     return !opened;
 }
