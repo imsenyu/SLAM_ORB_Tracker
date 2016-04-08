@@ -433,7 +433,7 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
     }
 
     optimizer.initializeOptimization();
-    optimizer.optimize(5);
+    optimizer.optimize(3);
 
     // Check inlier observations
     for(int i=0, iend=vpEdges.size(); i<iend;i++)
@@ -470,14 +470,14 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
     {
         shared_ptr<MapPoint> pMP = *lit;
         g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->getUID()+maxKFid+1));
-        pMP->mPos = Utils::convertToCvMat31(vPoint->estimate() );
+        pMP->setMPos( Utils::convertToCvMat31(vPoint->estimate() ) );
         pMP->UpdateNormalAndDepth();
     }
 
     // Optimize again without the outliers
 
     optimizer.initializeOptimization();
-    optimizer.optimize(10);
+    optimizer.optimize(5);
 
     // Check inlier observations
     for(int i=0, iend=vpEdges.size(); i<iend;i++)
@@ -516,8 +516,124 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
     {
         shared_ptr<MapPoint> pMP = *lit;
         g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->getUID()+maxKFid+1));
-        pMP->mPos = Utils::convertToCvMat31(vPoint->estimate());
+        pMP->setMPos( Utils::convertToCvMat31(vPoint->estimate()) );
         pMP->UpdateNormalAndDepth();
     }
 }
 
+
+void Optimizer::GlobalBundleAdjustemnt(Map* pMap, int nIterations, bool bStopFlag)
+{
+    std::vector<shared_ptr<KeyFrameState>> vpKFs = std::vector<shared_ptr<KeyFrameState>>(pMap->mspKeyFrame.begin(), pMap->mspKeyFrame.end());  //pMap->mspKeyFrame;
+    std::vector<shared_ptr<MapPoint>> vpMP = std::vector<shared_ptr<MapPoint>>(pMap->mspMapPoint.begin(), pMap->mspMapPoint.end());   //pMap->mspMapPoint;
+    BundleAdjustment(vpKFs,vpMP,nIterations,bStopFlag);
+}
+
+
+void Optimizer::BundleAdjustment(const vector<shared_ptr<KeyFrameState>> &vpKFs, const vector<shared_ptr<MapPoint>> &vpMP, int nIterations, bool bStopFlag)
+{
+    g2o::SparseOptimizer optimizer;
+    g2o::BlockSolverX::LinearSolverType * linearSolver;
+
+    linearSolver = new g2o::LinearSolverEigen<g2o::BlockSolverX::PoseMatrixType>();
+
+    g2o::BlockSolverX * solver_ptr = new g2o::BlockSolverX(linearSolver);
+
+    g2o::OptimizationAlgorithmLevenberg* solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+    optimizer.setAlgorithm(solver);
+    optimizer.setVerbose(true);
+    //if(pbStopFlag)
+    //    optimizer.setForceStopFlag(pbStopFlag);
+
+    long unsigned int maxKFid = 0;
+
+    // SET KEYFRAME VERTICES
+    for(size_t i=0, iend=vpKFs.size(); i<iend; i++)
+    {
+        shared_ptr<KeyFrameState> pKF = vpKFs[i];
+        if(pKF->isBad())
+            continue;
+        g2o::VertexSE3Expmap * vSE3 = new g2o::VertexSE3Expmap();
+        vSE3->setEstimate(Utils::convertToSE3Quat(pKF->getMatT2w()));
+        vSE3->setId(pKF->mId);
+        vSE3->setFixed(pKF->mId==0);
+        optimizer.addVertex(vSE3);
+        if(pKF->mId>maxKFid)
+            maxKFid=pKF->mId;
+    }
+
+
+    const float thHuber = sqrt(5.991);
+
+    // SET MAP POINT VERTICES
+    for(size_t i=0, iend=vpMP.size(); i<iend;i++)
+    {
+        shared_ptr<MapPoint> pMP = vpMP[i];
+        if(pMP->isBad())
+            continue;
+        g2o::VertexSBAPointXYZ* vPoint = new g2o::VertexSBAPointXYZ();
+        vPoint->setEstimate(Utils::convertToEigenMat31(pMP->mPos));
+        int id = pMP->getUID()+maxKFid+1;
+        vPoint->setId(id);
+        vPoint->setMarginalized(true);
+        optimizer.addVertex(vPoint);
+
+        map<shared_ptr<KeyFrameState>,int> observations = pMP->msKeyFrame2FeatureId;
+
+        //SET EDGES
+        for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
+        {
+            shared_ptr<KeyFrameState> pKF = mit->first;
+            if(pKF->isBad())
+                continue;
+            Eigen::Matrix<double,2,1> obs;
+            cv::KeyPoint kpUn = pKF->GetKeyPoint(mit->second);
+            obs << kpUn.pt.x, kpUn.pt.y;
+
+            g2o::EdgeSE3ProjectXYZ* e = new g2o::EdgeSE3ProjectXYZ();
+
+            e->setVertex(0, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(id)));
+            e->setVertex(1, dynamic_cast<g2o::OptimizableGraph::Vertex*>(optimizer.vertex(pKF->mId)));
+            e->setMeasurement(obs);
+            float invSigma2 = Config::vInvLevelSigma2[kpUn.octave];
+            e->setInformation(Eigen::Matrix2d::Identity()*invSigma2);
+
+            g2o::RobustKernelHuber* rk = new g2o::RobustKernelHuber;
+            e->setRobustKernel(rk);
+            rk->setDelta(thHuber);
+
+            e->fx = Config::dFx;
+            e->fy = Config::dFy;
+            e->cx = Config::dCx;
+            e->cy = Config::dCy;
+
+            optimizer.addEdge(e);
+        }
+    }
+
+    // Optimize!
+
+    optimizer.initializeOptimization();
+    optimizer.optimize(nIterations);
+
+    // Recover optimized data
+
+    //Keyframes
+    for(size_t i=0, iend=vpKFs.size(); i<iend; i++)
+    {
+        shared_ptr<KeyFrameState> pKF = vpKFs[i];
+        g2o::VertexSE3Expmap* vSE3 = static_cast<g2o::VertexSE3Expmap*>(optimizer.vertex(pKF->mId));
+        g2o::SE3Quat SE3quat = vSE3->estimate();
+        pKF->updatePose(Utils::convertToCvMat44(SE3quat));
+    }
+
+    //Points
+    for(size_t i=0, iend=vpMP.size(); i<iend;i++)
+    {
+        shared_ptr<MapPoint> pMP = vpMP[i];
+        g2o::VertexSBAPointXYZ* vPoint = static_cast<g2o::VertexSBAPointXYZ*>(optimizer.vertex(pMP->getUID()+maxKFid+1));
+        pMP->setMPos(Utils::convertToCvMat31(vPoint->estimate()));
+        pMP->UpdateNormalAndDepth();
+    }
+
+}

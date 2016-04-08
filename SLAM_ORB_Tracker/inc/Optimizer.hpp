@@ -66,6 +66,8 @@ public:
 
     static int PoseOptimization(shared_ptr<FrameState> _pFrame);
     static void LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStopFlag = false);
+    static void GlobalBundleAdjustemnt(Map* pMap, int nIterations, bool bStopFlag = false);
+    static void BundleAdjustment(const vector<shared_ptr<KeyFrameState>> &vpKFs, const vector<shared_ptr<MapPoint>> &vpMP, int nIterations, bool bStopFlag = false);
 };
 
 
