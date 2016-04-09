@@ -46,92 +46,92 @@ ORBmatcher::ORBmatcher(float nnratio, bool checkOri): mfNNratio(nnratio), mbChec
 {
 }
 
-//int ORBmatcher::SearchByProjection(FrameState &F, const vector<MapPoint*> &vpMapPoints, const float th)
-//{
-//    int nmatches=0;
-//
-//    const bool bFactor = th!=1.0;
-//
-//    for(size_t iMP=0; iMP<vpMapPoints.size(); iMP++)
-//    {
-//        MapPoint* pMP = vpMapPoints[iMP];
-//        if(!pMP->mbTrackInView)
-//            continue;
-//
-//        if(pMP->isBad())
-//            continue;
-//
-//        const int &nPredictedLevel = pMP->mnTrackScaleLevel;
-//
-//        // The size of the window will depend on the viewing direction
-//        float r = RadiusByViewingCos(pMP->mTrackViewCos);
-//
-//        if(bFactor)
-//            r*=th;
-//
-//        vector<size_t> vNearIndices =
-//                F.getFeaturesInArea(pMP->mTrackProjX,pMP->mTrackProjY,r*F.mvScaleFactors[nPredictedLevel],nPredictedLevel-1,nPredictedLevel);
-//
-//        if(vNearIndices.empty())
-//            continue;
-//
-//        cv::Mat MPdescriptor = pMP->GetDescriptor();
-//
-//        int bestDist=INT_MAX;
-//        int bestLevel= -1;
-//        int bestDist2=INT_MAX;
-//        int bestLevel2 = -1;
-//        int bestIdx =-1 ;
-//
-//        // Get best and second matches with near keypoints
-//        for(vector<size_t>::iterator vit=vNearIndices.begin(), vend=vNearIndices.end(); vit!=vend; vit++)
-//        {
-//            size_t idx = *vit;
-//
-//            if(F.mvpMapPoints[idx])
-//                continue;
-//
-//            cv::Mat d=F.mDescriptors.row(idx);
-//
-//            const int dist = DescriptorDistance(MPdescriptor,d);
-//
-//            if(dist<bestDist)
-//            {
-//                bestDist2=bestDist;
-//                bestDist=dist;
-//                bestLevel2 = bestLevel;
-//                bestLevel = F.mvKeysUn[idx].octave;
-//                bestIdx=idx;
-//            }
-//            else if(dist<bestDist2)
-//            {
-//                bestLevel2 = F.mvKeysUn[idx].octave;
-//                bestDist2=dist;
-//            }
-//        }
-//
-//        // Apply ratio to second match (only if best and second are in the same scale level)
-//        if(bestDist<=TH_HIGH)
-//        {
-//            if(bestLevel==bestLevel2 && bestDist>mfNNratio*bestDist2)
-//                continue;
-//
-//            F.mvpMapPoints[bestIdx]=pMP;
-//            nmatches++;
-//        }
-//    }
-//
-//    return nmatches;
-//}
-//
-//float ORBmatcher::RadiusByViewingCos(const float &viewCos)
-//{
-//    if(viewCos>0.998)
-//        return 2.5;
-//    else
-//        return 4.0;
-//}
-//
+int ORBmatcher::SearchByProjection(shared_ptr<FrameState> pF, const vector<shared_ptr<MapPoint>> &vpMapPoints, const float th)
+{
+    int nmatches=0;
+
+    const bool bFactor = th!=1.0;
+
+    for(size_t iMP=0; iMP<vpMapPoints.size(); iMP++)
+    {
+        shared_ptr<MapPoint> pMP = vpMapPoints[iMP];
+        if(!pMP->mbTrackInView)
+            continue;
+
+        if(pMP->isBad())
+            continue;
+
+        const int &nPredictedLevel = pMP->mnTrackScaleLevel;
+
+        // The size of the window will depend on the viewing direction
+        float r = RadiusByViewingCos(pMP->mTrackViewCos);
+
+        if(bFactor)
+            r*=th;
+
+        vector<size_t> vNearIndices =
+                pF->getFeaturesInArea(pMP->mTrackProjX,pMP->mTrackProjY,r* Config::vScaleFactors[nPredictedLevel],nPredictedLevel-1,nPredictedLevel);
+
+        if(vNearIndices.empty())
+            continue;
+
+        cv::Mat MPdescriptor = pMP->GetDescriptor();
+
+        int bestDist=INT_MAX;
+        int bestLevel= -1;
+        int bestDist2=INT_MAX;
+        int bestLevel2 = -1;
+        int bestIdx =-1 ;
+
+        // Get best and second matches with near keypoints
+        for(vector<size_t>::iterator vit=vNearIndices.begin(), vend=vNearIndices.end(); vit!=vend; vit++)
+        {
+            size_t idx = *vit;
+
+            if(pF->mvpMapPoint[idx])
+                continue;
+
+            cv::Mat d=pF->mDescriptor.row(idx);
+
+            const int dist = DescriptorDistance(MPdescriptor,d);
+
+            if(dist<bestDist)
+            {
+                bestDist2=bestDist;
+                bestDist=dist;
+                bestLevel2 = bestLevel;
+                bestLevel = pF->mvKeyPoint[idx].octave;
+                bestIdx=idx;
+            }
+            else if(dist<bestDist2)
+            {
+                bestLevel2 = pF->mvKeyPoint[idx].octave;
+                bestDist2=dist;
+            }
+        }
+
+        // Apply ratio to second match (only if best and second are in the same scale level)
+        if(bestDist<=TH_HIGH)
+        {
+            if(bestLevel==bestLevel2 && bestDist>mfNNratio*bestDist2)
+                continue;
+
+            pF->mvpMapPoint[bestIdx]=pMP;
+            nmatches++;
+        }
+    }
+
+    return nmatches;
+}
+
+float ORBmatcher::RadiusByViewingCos(const float &viewCos)
+{
+    if(viewCos>0.998)
+        return 2.5;
+    else
+        return 4.0;
+}
+
 
 bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoint &kp2,const cv::Mat &F12,const shared_ptr<KeyFrameState> pKF2)
 {
@@ -162,11 +162,11 @@ bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoin
     return dsqr<3.84*  Config::vLevelSigma2[kp2.octave];//  pKF2->GetSigma2(kp2.octave);
 }
 
-//int ORBmatcher::SearchByBoW(KeyFrameState* pKF,FrameState &F, vector<MapPoint*> &vpMapPointMatches)
+//int ORBmatcher::SearchByBoW(KeyFrameState* pKF,FrameState &F, vector<shared_ptr<MapPoint>> &vpMapPointMatches)
 //{
-//    vector<MapPoint*> vpMapPointsKF = pKF->GetMapPointMatches();
+//    vector<shared_ptr<MapPoint>> vpMapPointsKF = pKF->GetMapPointMatches();
 //
-//    vpMapPointMatches = vector<MapPoint*>(F.mvpMapPoints.size(),static_cast<MapPoint*>(NULL));
+//    vpMapPointMatches = vector<shared_ptr<MapPoint>>(F.mvpMapPoints.size(),static_cast<shared_ptr<MapPoint>>(NULL));
 //
 //    DBoW2::FeatureVector vFeatVecKF = pKF->GetFeatureVector();
 //
@@ -194,7 +194,7 @@ bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoin
 //            {
 //                const unsigned int realIdxKF = vIndicesKF[iKF];
 //
-//                MapPoint* pMP = vpMapPointsKF[realIdxKF];
+//                shared_ptr<MapPoint> pMP = vpMapPointsKF[realIdxKF];
 //
 //                if(!pMP)
 //                    continue;
@@ -293,7 +293,7 @@ bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoin
 //    return nmatches;
 //}
 //
-//int ORBmatcher::SearchByProjection(KeyFrameState* pKF, cv::Mat Scw, const vector<MapPoint*> &vpPoints, vector<MapPoint*> &vpMatched, int th)
+//int ORBmatcher::SearchByProjection(KeyFrameState* pKF, cv::Mat Scw, const vector<shared_ptr<MapPoint>> &vpPoints, vector<shared_ptr<MapPoint>> &vpMatched, int th)
 //{
 //    // Get Calibration Parameters for later projection
 //    const float fx = pKF->fx;
@@ -312,7 +312,7 @@ bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoin
 //    cv::Mat Ow = -Rcw.t()*tcw;
 //
 //    // Set of MapPoints already found in the KeyFrameState
-//    set<MapPoint*> spAlreadyFound(vpMatched.begin(), vpMatched.end());
+//    set<shared_ptr<MapPoint>> spAlreadyFound(vpMatched.begin(), vpMatched.end());
 //    spAlreadyFound.erase(NULL);
 //
 //    int nmatches=0;
@@ -320,7 +320,7 @@ bool ORBmatcher::CheckDistEpipolarLine(const cv::KeyPoint &kp1,const cv::KeyPoin
 //    // For each Candidate MapPoint Project and Match
 //    for(int iMP=0, iendMP=vpPoints.size(); iMP<iendMP; iMP++)
 //    {
-//        MapPoint* pMP = vpPoints[iMP];
+//        shared_ptr<MapPoint> pMP = vpPoints[iMP];
 //
 //        // Discard Bad MapPoints and already found
 //        if(pMP->isBad() || spAlreadyFound.count(pMP))
@@ -548,7 +548,7 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> pF1, shared_ptr<FrameS
         cv::KeyPoint kp1 = pF1->mvKeyPoint[i1];
         int level1 = kp1.octave;
 
-        cv::Mat x3Dw = pMP1->mPos;
+        cv::Mat x3Dw = pMP1->mPos.clone();
         cv::Mat x3Dc2 = Rc2w*x3Dw+tc2w;
 
         float xc2;
@@ -742,15 +742,15 @@ int ORBmatcher::SearchForInitialization(shared_ptr<FrameState> pF1, shared_ptr<F
 //{
 //    vector<cv::KeyPoint> vKeysUn1 = pKF1->GetKeyPointsUn();
 //    DBoW2::FeatureVector vFeatVec1 = pKF1->GetFeatureVector();
-//    vector<MapPoint*> vpMapPoints1 = pKF1->GetMapPointMatches();
+//    vector<shared_ptr<MapPoint>> vpMapPoints1 = pKF1->GetMapPointMatches();
 //    cv::Mat Descriptors1 = pKF1->GetDescriptors();
 //
 //    vector<cv::KeyPoint> vKeysUn2 = pKF2->GetKeyPointsUn();
 //    DBoW2::FeatureVector vFeatVec2 = pKF2->GetFeatureVector();
-//    vector<MapPoint*> vpMapPoints2 = pKF2->GetMapPointMatches();
+//    vector<shared_ptr<MapPoint>> vpMapPoints2 = pKF2->GetMapPointMatches();
 //    cv::Mat Descriptors2 = pKF2->GetDescriptors();
 //
-//    vpMatches12 = vector<MapPoint*>(vpMapPoints1.size(),static_cast<MapPoint*>(NULL));
+//    vpMatches12 = vector<shared_ptr<MapPoint>>(vpMapPoints1.size(),static_cast<shared_ptr<MapPoint>>(NULL));
 //    vector<bool> vbMatched2(vpMapPoints2.size(),false);
 //
 //    vector<int> rotHist[HISTO_LENGTH];
@@ -774,7 +774,7 @@ int ORBmatcher::SearchForInitialization(shared_ptr<FrameState> pF1, shared_ptr<F
 //                {
 //                    size_t idx1 = f1it->second[i1];
 //
-//                    MapPoint* pMP1 = vpMapPoints1[idx1];
+//                    shared_ptr<MapPoint> pMP1 = vpMapPoints1[idx1];
 //                    if(!pMP1)
 //                        continue;
 //                    if(pMP1->isBad())
@@ -790,7 +790,7 @@ int ORBmatcher::SearchForInitialization(shared_ptr<FrameState> pF1, shared_ptr<F
 //                    {
 //                        size_t idx2 = f2it->second[i2];
 //
-//                        MapPoint* pMP2 = vpMapPoints2[idx2];
+//                        shared_ptr<MapPoint> pMP2 = vpMapPoints2[idx2];
 //
 //                        if(vbMatched2[idx2] || !pMP2)
 //                            continue;
@@ -1070,7 +1070,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
         if(pMP->isBad() || pMP->msKeyFrame2FeatureId.count(pKF)  /*pMP->IsInKeyFrameState(pKF)*/)
             continue;
 
-        cv::Mat p3Dw = pMP->mPos;
+        cv::Mat p3Dw = pMP->mPos.clone();
         cv::Mat p3Dc = Rcw*p3Dw + tcw;
 
         // Depth must be positive
@@ -1181,7 +1181,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //    cv::Mat Ow = -Rcw.t()*tcw;
 //
 //    // Set of MapPoints already found in the KeyFrameState
-//    set<MapPoint*> spAlreadyFound = pKF->GetMapPoints();
+//    set<shared_ptr<MapPoint>> spAlreadyFound = pKF->GetMapPoints();
 //
 //    const int nMaxLevel = pKF->GetScaleLevels()-1;
 //    vector<float> vfScaleFactors = pKF->GetScaleFactors();
@@ -1191,7 +1191,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //    // For each candidate MapPoint project and match
 //    for(size_t iMP=0, iendMP=vpPoints.size(); iMP<iendMP; iMP++)
 //    {
-//        MapPoint* pMP = vpPoints[iMP];
+//        shared_ptr<MapPoint> pMP = vpPoints[iMP];
 //
 //        // Discard Bad MapPoints and already found
 //        if(pMP->isBad() || spAlreadyFound.count(pMP))
@@ -1276,7 +1276,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //        // If there is already a MapPoint replace otherwise add new measurement
 //        if(bestDist<=TH_LOW)
 //        {
-//            MapPoint* pMPinKF = pKF->GetMapPoint(bestIdx);
+//            shared_ptr<MapPoint> pMPinKF = pKF->GetMapPoint(bestIdx);
 //            if(pMPinKF)
 //            {
 //                if(!pMPinKF->isBad())
@@ -1296,7 +1296,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //
 //}
 //
-//int ORBmatcher::SearchBySim3(KeyFrameState *pKF1, KeyFrameState *pKF2, vector<MapPoint*> &vpMatches12,
+//int ORBmatcher::SearchBySim3(KeyFrameState *pKF1, KeyFrameState *pKF2, vector<shared_ptr<MapPoint>> &vpMatches12,
 //                                   const float &s12, const cv::Mat &R12, const cv::Mat &t12, float th)
 //{
 //    const float fx = pKF1->fx;
@@ -1320,13 +1320,13 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //    const int nMaxLevel1 = pKF1->GetScaleLevels()-1;
 //    vector<float> vfScaleFactors1 = pKF1->GetScaleFactors();
 //
-//    vector<MapPoint*> vpMapPoints1 = pKF1->GetMapPointMatches();
+//    vector<shared_ptr<MapPoint>> vpMapPoints1 = pKF1->GetMapPointMatches();
 //    const int N1 = vpMapPoints1.size();
 //
 //    const int nMaxLevel2 = pKF2->GetScaleLevels()-1;
 //    vector<float> vfScaleFactors2 = pKF2->GetScaleFactors();
 //
-//    vector<MapPoint*> vpMapPoints2 = pKF2->GetMapPointMatches();
+//    vector<shared_ptr<MapPoint>> vpMapPoints2 = pKF2->GetMapPointMatches();
 //    const int N2 = vpMapPoints2.size();
 //
 //    vector<bool> vbAlreadyMatched1(N1,false);
@@ -1334,7 +1334,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //
 //    for(int i=0; i<N1; i++)
 //    {
-//        MapPoint* pMP = vpMatches12[i];
+//        shared_ptr<MapPoint> pMP = vpMatches12[i];
 //        if(pMP)
 //        {
 //            vbAlreadyMatched1[i]=true;
@@ -1350,7 +1350,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //    // Transform from KF1 to KF2 and search
 //    for(int i1=0; i1<N1; i1++)
 //    {
-//        MapPoint* pMP = vpMapPoints1[i1];
+//        shared_ptr<MapPoint> pMP = vpMapPoints1[i1];
 //
 //        if(!pMP || vbAlreadyMatched1[i1])
 //            continue;
@@ -1433,7 +1433,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
 //    // Transform from KF2 to KF2 and search
 //    for(int i2=0; i2<N2; i2++)
 //    {
-//        MapPoint* pMP = vpMapPoints2[i2];
+//        shared_ptr<MapPoint> pMP = vpMapPoints2[i2];
 //
 //        if(!pMP || vbAlreadyMatched2[i2])
 //            continue;
@@ -1558,7 +1558,7 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> CurrentFrame, shared_p
             if(!LastFrame->mvbOutlier[i])
             {
                 // Project
-                cv::Mat x3Dw = pMP->mPos;
+                cv::Mat x3Dw = pMP->mPos.clone();
                 cv::Mat x3Dc = Rcw*x3Dw+tcw;
 
                 const float xc = x3Dc.at<float>(0);
@@ -1653,7 +1653,7 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> CurrentFrame, shared_p
    return nmatches;
 }
 //
-//int ORBmatcher::SearchByProjection(FrameState &CurrentFrame, KeyFrameState *pKF, const set<MapPoint*> &sAlreadyFound, float th ,int ORBdist)
+//int ORBmatcher::SearchByProjection(FrameState &CurrentFrame, KeyFrameState *pKF, const set<shared_ptr<MapPoint>> &sAlreadyFound, float th ,int ORBdist)
 //{
 //    int nmatches = 0;
 //
@@ -1667,11 +1667,11 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> CurrentFrame, shared_p
 //        rotHist[i].reserve(500);
 //    const float factor = 1.0f/HISTO_LENGTH;
 //
-//    vector<MapPoint*> vpMPs = pKF->GetMapPointMatches();
+//    vector<shared_ptr<MapPoint>> vpMPs = pKF->GetMapPointMatches();
 //
 //    for(size_t i=0, iend=vpMPs.size(); i<iend; i++)
 //    {
-//        MapPoint* pMP = vpMPs[i];
+//        shared_ptr<MapPoint> pMP = vpMPs[i];
 //
 //        if(pMP)
 //        {

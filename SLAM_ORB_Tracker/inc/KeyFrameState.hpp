@@ -45,7 +45,7 @@ public:
     int mnBALocalForKF;
     int mnFuseTargetForKF;
     int mnTrackReferenceForFrame;
-    bool isBad() {return false;}
+    bool isBad() {return mbBad;}
 
     void getBoW();
     void insertMapPoint(shared_ptr<MapPoint> pMp, int nP);
@@ -64,11 +64,12 @@ public:
     int GetKeyPointScaleLevel(const size_t &idx) const;
 
     cv::Mat GetDescriptor(const size_t &idx);
-
+    cv::KeyPoint GetKeyPoint(int i);
     shared_ptr<MapPoint> GetMapPoint(const size_t &idx);
 
     std::vector<shared_ptr<MapPoint>> GetMapPointMatch();
 
+    void EraseConnection(shared_ptr<KeyFrameState> pKF);
     void EraseMapPointMatch(shared_ptr<MapPoint> pMP);
     void EraseMapPointMatch(const size_t &idx);
 
@@ -81,6 +82,16 @@ public:
     cv::Mat getMatR2w();
     cv::Mat getMatt2w();
     cv::Mat getMatO2w();
+
+
+    bool mbBad;
+    bool mbNotErase;
+    bool mbToBeErased;
+    void SetBadFlag();
+
+    bool isPainted();
+    void setPainted(bool _b = true);
+
 };
 
 

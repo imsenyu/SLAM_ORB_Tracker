@@ -10,7 +10,12 @@
 
 KeyFrameState::KeyFrameState(shared_ptr<FrameState> _pFrame, Vocabulary *_pVocabulary):
     mpFrame( _pFrame ), mpVocabulary(_pVocabulary),
-    /*mvpMapPoint( _pFrame->mvpMapPoint ),*/ mId(_pFrame->mId)
+    /*mvpMapPoint( _pFrame->mvpMapPoint ),*/ mId(_pFrame->mId),
+    mbNotErase(true), mbToBeErased(false), mbBad(false),
+    mnBAFixedForKF(0),
+    mnBALocalForKF(0),
+    mnFuseTargetForKF(0),
+    mnTrackReferenceForFrame(0)
 {
 
     updatePose(_pFrame->mT2w);
@@ -59,7 +64,7 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
         if(vpMapPoints[i])
         {
             shared_ptr<MapPoint> pMP = vpMapPoints[i];
-            cv::Mat x3Dw = pMP->mPos;
+            cv::Mat x3Dw = pMP->mPos.clone();
             float z = Rcw2.dot(x3Dw)+zcw;
             vDepths.push_back(z);
         }
@@ -243,7 +248,9 @@ shared_ptr<MapPoint> KeyFrameState::GetMapPoint(const size_t &idx)
 {
     return mpFrame->mvpMapPoint[idx];
 }
-
+cv::KeyPoint KeyFrameState::GetKeyPoint(int i) {
+    return mpFrame->mvKeyPoint[i];
+}
 void KeyFrameState::EraseMapPointMatch(shared_ptr<MapPoint> pMP)
 {
     int idx = -1;
@@ -278,4 +285,61 @@ cv::Mat KeyFrameState::getMatt2w() {
 
 cv::Mat KeyFrameState::getMatO2w() {
     return mpFrame->mO2w.clone();
+}
+
+void KeyFrameState::SetBadFlag()
+{
+    {
+
+        if(mId==0)
+            return;
+        else if(mbNotErase)
+        {
+            mbToBeErased = true;
+            return;
+        }
+    }
+
+    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit = mConnectedKeyFrameWeights.begin(), mend=mConnectedKeyFrameWeights.end(); mit!=mend; mit++)
+        mit->first->EraseConnection(shared_from_this());
+
+    for(size_t i=0; i<mpFrame->mvpMapPoint.size(); i++)
+        if(mpFrame->mvpMapPoint[i])
+            mpFrame->mvpMapPoint[i]->EraseObservation(shared_from_this());
+    {
+
+
+        mConnectedKeyFrameWeights.clear();
+        mvpOrderedConnectedKeyFrames.clear();
+
+        mbBad = true;
+    }
+
+
+    //mpMap->EraseKeyFrame(this);
+    //mpKeyFrameDB->erase(this);
+}
+
+void KeyFrameState::EraseConnection(shared_ptr<KeyFrameState> pKF)
+{
+    bool bUpdate = false;
+    {
+
+        if(mConnectedKeyFrameWeights.count(pKF))
+        {
+            mConnectedKeyFrameWeights.erase(pKF);
+            bUpdate=true;
+        }
+    }
+
+    if(bUpdate)
+        UpdateBestCovisibles();
+}
+
+bool KeyFrameState::isPainted() {
+    return mpFrame->isPainted();
+}
+
+void KeyFrameState::setPainted(bool _b) {
+    mpFrame->setPainted(_b);
 }

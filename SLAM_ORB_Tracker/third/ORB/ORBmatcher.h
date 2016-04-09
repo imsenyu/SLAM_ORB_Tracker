@@ -45,7 +45,7 @@ public:
 //
 //    // Search matches between Frame keypoints and projected MapPoints. Returns number of matches
 //    // Used to track the local map (Tracking)
-//    int SearchByProjection(FrameState &F, const std::vector<shared_ptr<MapPoint>> &vpMapPoints, const float th=3);
+    int SearchByProjection(shared_ptr<FrameState> F, const std::vector<shared_ptr<MapPoint>> &vpMapPoints, const float th=3);
 //
 //    // Project MapPoints tracked in last frame into the current frame and search matches.
 //    // Used to track from previous frame (Tracking)
@@ -98,7 +98,7 @@ protected:
 
     bool CheckDistEpipolarLine(const cv::KeyPoint &kp1, const cv::KeyPoint &kp2, const cv::Mat &F12, const shared_ptr<KeyFrameState> pKF);
 //
-//    float RadiusByViewingCos(const float &viewCos);
+    float RadiusByViewingCos(const float &viewCos);
 //
     void ComputeThreeMaxima(std::vector<int>* histo, const int L, int &ind1, int &ind2, int &ind3);
 

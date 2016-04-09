@@ -12,12 +12,21 @@ MapPoint::MapPoint(cv::Mat _matMapPointPos, shared_ptr<KeyFrameState> _pKFS, int
     mpRefKF(_pKFS),
     mbBad(false),
     mpMap(_pMap),
-    mnVisible(0),
-    mnFound(0)
+    mnVisible(1),
+    mnFound(1),
+    mnTrackReferenceForFrame(0),
+    mnLastFrameSeen(0),
+    mnBALocalForKF(0),
+    mfMinDistance(0),
+    mfMaxDistance(0),
+    mnTrackScaleLevel(Config::dScaleLevel),
+    mbPainted(false)
+
 {
     mPos = _matMapPointPos.clone();
     mIdFromKeyFrame = nP;
     mId = _counterId++;
+    mNormalVector = Const::mat31_000.clone();
 }
 
 int MapPoint::getUID() {
@@ -62,6 +71,7 @@ void MapPoint::UpdateNormalAndDepth()
         //mfMaxDistance = scaleFactor*dist * pRefKF->GetScaleFactor(nLevels-1-level);
         mfMaxDistance = scaleFactor*dist * Config::vScaleFactors[nLevels-1-level];
         mNormalVector = normal/n;
+        mnTrackScaleLevel = level;
     }
 }
 

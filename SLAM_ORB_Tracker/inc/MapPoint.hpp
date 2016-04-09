@@ -33,6 +33,11 @@ public:
     int getUID();
     cv::Mat mPos;
 
+    void setMPos(cv::Mat mat) {
+        mPos = mat.clone();
+        setPainted(false);
+    }
+
     int mnFuseCandidateForKF;
     int mnBALocalForKF;
     bool isBad() {
@@ -87,6 +92,17 @@ public:
     int mnTrackScaleLevel;
     float mTrackViewCos;
     int mnTrackReferenceForFrame;
+
+    boost::mutex mMutexPainted;
+    bool mbPainted;
+    void setPainted(bool _b = true) {
+        boost::mutex::scoped_lock lock(mMutexPainted);
+        mbPainted = _b;
+    }
+    bool isPainted() {
+        boost::mutex::scoped_lock lock(mMutexPainted);
+        return mbPainted;
+    }
 };
 
 
