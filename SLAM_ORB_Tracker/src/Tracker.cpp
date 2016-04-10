@@ -91,10 +91,6 @@ int Tracker::threadRun() {
             }
             Config::timeEnd("TrackFromPreFrame");
 
-//            if ( !bStatus && mpCurFrame->mId > 2) {
-//                return -1;
-//            }
-
             if ( bStatus ) {
 
 
@@ -118,24 +114,24 @@ int Tracker::threadRun() {
                         if(mpReferenceKF->GetMapPoint(i) )
                             nRefMatches++;
                     }
-                    bNeedKeyFrame = mnMatchesInliers<nRefMatches*0.6 || mnMatchesInliers < 50 ;
-                    bNeedKeyFrame = bNeedKeyFrame && mnMatchesInliers < 140;
+                    bNeedKeyFrame = mnMatchesInliers<nRefMatches*0.6 || mnMatchesInliers < 70 ;
+                    bNeedKeyFrame = bNeedKeyFrame && mnMatchesInliers < 200;
                     bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId < 5;
+                    bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId - mLastMapperId > 10;
                     // TODO:  should not > 100 ,if > 100, continue;
                     printf("========need %d %f\n",mnMatchesInliers, nRefMatches*0.6);
                 }
+
+
                 if( bNeedKeyFrame /*mpCurFrame->mId - mLastMapperId >= localMapStep*/ /*NeedNewKeyFrame()*/) {
-                    bool bBundleAdjustment = true;//mpCurFrame->mId - mLastBundleAdjustmentId >= 10 || mpCurFrame->mId <= 5 ;
-                    //auto iter = lower_bound(vUseBA.begin(), vUseBA.end(),  mpCurFrame->mId );
-                    //if ( iter != vUseBA.end() )
-                    //    bBundleAdjustment = (*iter - mpCurFrame->mId) <= localMapStep-1;
+                    bool bBundleAdjustment = true;
 
                     createKeyFrame();
                     mpLocalMapper->processKeyFrameLoop(bBundleAdjustment);
-                    mLastMapperId = mpCurFrame->mId;
 
-                    if ( bBundleAdjustment )
-                        mLastBundleAdjustmentId = mpCurFrame->mId;
+                    //if ( bBundleAdjustment )
+                    mLastBundleAdjustmentId = bBundleAdjustment;
+                    mLastMapperId = mpCurFrame->mId;
 
                     for(size_t i=0; i<mpCurFrame->mvbOutlier.size();i++)
                     {
@@ -143,34 +139,18 @@ int Tracker::threadRun() {
                             mpCurFrame->mvpMapPoint[i]=shared_ptr<MapPoint>(NULL);
                     }
 
-
-/*                    std::cout<< "map estimation mT2w "<<std::endl<<mpCurFrame->mT2w<<std::endl;
-                    Optimizer::PoseOptimization(mpCurFrame);
-                    std::cout<< "map optimization mT2w "<<std::endl<<mpCurFrame->mT2w<<std::endl;
-
-                    // Discard outliers
-                    for(size_t i =0; i<mpCurFrame->mvpMapPoint.size(); i++)
-                    {
-                        if(mpCurFrame->mvpMapPoint[i])
-                        {
-                            if(mpCurFrame->mvbOutlier[i])
-                            {
-                                mpCurFrame->mvpMapPoint[i]=shared_ptr<MapPoint>(NULL);
-                                mpCurFrame->mvbOutlier[i]=false;
-                            }
-                        }
-                    }*/
                 }
                 Config::timeEnd("localMapper");
 
                 if ( mpPreFrame->mT2w.empty() == false )
                 {
                     cv::Mat LastRwc = mpPreFrame->mT2w.rowRange(0,3).colRange(0,3).t();
-                    cv::Mat Lasttwc = -LastRwc*mpPreFrame->mT2w.rowRange(0,3).col(3);
+                    cv::Mat Lasttwc = -LastRwc*mpPreFrame->mT2w.rowRange(0,3).col(3) ;
                     cv::Mat LastTwc = cv::Mat::eye(4,4,CV_32F);
                     LastRwc.copyTo(LastTwc.rowRange(0,3).colRange(0,3));
                     Lasttwc.copyTo(LastTwc.rowRange(0,3).col(3));
                     mVelocity = mpCurFrame->mT2w*LastTwc;
+                    //mVelocity.rowRange(0,3).col(3) *= 0.8f;
                     std::cout<<"Velocity"<< mVelocity<<std::endl;
                 }
 
@@ -736,21 +716,12 @@ bool Tracker::initStepSecondKeyFrame() {
     if ( bInited) {
         for(size_t i=0, iend=mvMatchPair12.size(); i<iend;i++)
         {
-//            if ( mvMatchPair12[i]<0 ) {
-//                mvMatchMask12[i] = false;
-//            }
-
             if(mvMatchPair12[i]>=0 && !vbTriangulated[i])
             {
                 mvMatchPair12[i]=-1;
-                //mvMatchMask12[i]=false;
-
                 numMatch--;
             }
 
-            //if ( mvMatchMask12[i] ) {
-            //    mpCurFrame->mvMatchMask[  mvMatchPair12[i] ] = true;
-            //}
         }
 
         mMotion.mMatR = cv::Mat(3,3,CV_32FC1);//Rcw.clone();
@@ -758,18 +729,14 @@ bool Tracker::initStepSecondKeyFrame() {
         //meMode = WorkMode::Normal;
 
         Rcw.convertTo(mMotion.mMatR, CV_32FC1 );
-//        for(int i=0;i<3;i++)
-//            for(int j=0;j<3;j++)
-//                mMotion.mMatR.at<double>(i,j) = Rcw.at<float>(i,j);
-
         tcw.convertTo(mMotion.mMatT, CV_32FC1);
-//        for(int i=0;i<3;i++)
-//            mMotion.mMatT.at<double>(i) = tcw.at<float>(i);
 
         //confirm direction forward
         if ( mMotion.mMatT.at<float>(2) > 0.0f ) {
             mMotion.mMatT = - mMotion.mMatT;
         }
+
+
   //          mMotion.mMatT = -mMotion.mMatR.inv() * mMotion.mMatT;
  //           mMotion.mMatR = mMotion.mMatR.inv();
 
@@ -842,10 +809,10 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
 
     }
 
-    // TODO: should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
+    //  should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
     pIniKeyFrame->UpdateConnections();
     pCurKeyFrame->UpdateConnections();
-    // TODO: Optimizer::GlobalBundleAdjustemnt(mpMap,20);
+    Optimizer::GlobalBundleAdjustemnt(mpMap,10);
 
 
 
@@ -874,7 +841,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
         {
             std::cout<<"MapPoint["<<iMP<<"] "<< vpAllMapPoints[iMP]->mPos <<std::endl;
             shared_ptr<MapPoint> pMP = vpAllMapPoints[iMP];
-            pMP->mPos = pMP->mPos*invMedianDepth;
+            pMP->setMPos( pMP->mPos*invMedianDepth );
         }
     }
 
@@ -883,7 +850,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     mpLocalMapper->addKeyFrame(pIniKeyFrame);
     mpLocalMapper->addKeyFrame(pCurKeyFrame);
 
-    mpLocalMapper->processKeyFrameLoop(true);
+    mpLocalMapper->processKeyFrameLoop(false);
     mpLocalMapper->processKeyFrameLoop(true);
 
     mLastMapperId = pCurKeyFrame->mpFrame->mId;
@@ -1175,7 +1142,7 @@ void Tracker::SearchReferencePointsInFrustum()
         {
             if(pMP->isBad())
             {
-                *vit = NULL;
+                *vit =shared_ptr<MapPoint>( NULL);
             }
             else
             {
@@ -1214,6 +1181,6 @@ void Tracker::SearchReferencePointsInFrustum()
         // If the camera has been relocalised recently, perform a coarser search
 //        if(mpCurFrame->mId<mnLastRelocFrameId+2)
 //            th=5;
-        // TODO: matcher.SearchByProjection(mpCurFrame,mvpLocalMapPoints,th);
+        matcher.SearchByProjection(mpCurFrame,mvpLocalMapPoints,th);
     }
 }

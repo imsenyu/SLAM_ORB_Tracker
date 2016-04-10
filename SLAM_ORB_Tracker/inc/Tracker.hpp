@@ -28,6 +28,8 @@
 #include "ORBmatcher.h"
 #include "ORBextractor.h"
 
+class MapDrawer;
+
 class Tracker {
 private:
     
@@ -88,8 +90,7 @@ private:
     bool UpdateLocal();
 
     int mnMatchesInliers;
-    std::vector<shared_ptr<KeyFrameState>> mvpLocalKeyFrames;
-    std::vector<shared_ptr<MapPoint>> mvpLocalMapPoints;
+
     shared_ptr<KeyFrameState> mpReferenceKF;
     bool TrackLocalMap();
     void UpdateReferenceKeyFrames();
@@ -111,7 +112,8 @@ public:
     ~Tracker();
     
     int run();
-
+    std::vector<shared_ptr<KeyFrameState>> mvpLocalKeyFrames;
+    std::vector<shared_ptr<MapPoint>> mvpLocalMapPoints;
     
 };
 

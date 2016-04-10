@@ -45,6 +45,8 @@ public:
     int removeDuplicatedMapPoint();
 
     void MapPointCulling();
+
+    void KeyFrameCulling();
 };
 
 #endif /* LocalMapper_hpp */

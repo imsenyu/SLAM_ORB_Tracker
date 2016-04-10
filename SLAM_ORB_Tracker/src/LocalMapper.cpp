@@ -84,6 +84,8 @@ int LocalMapper::processKeyFrameLoop(bool bBA) {
         Config::time("LocalBundleAdjustment");
         Optimizer::LocalBundleAdjustment(mpCurKeyFrame, false);
         Config::timeEnd("LocalBundleAdjustment");
+
+        KeyFrameCulling();
     }
     mpCurKeyFrame = shared_ptr<KeyFrameState>(NULL);
 
@@ -101,7 +103,7 @@ int LocalMapper::triangleNewMapPoint() {
     // Take neighbor keyframes in covisibility graph
     std::vector<shared_ptr<KeyFrameState>> vpNeighKFs = mpCurKeyFrame->GetBestCovisibilityKeyFrames(20);
 
-    ORB_SLAM::ORBmatcher matcher(0.6,false);
+    ORB_SLAM::ORBmatcher matcher(0.7,true);
 
     cv::Mat Rcw1 = mpCurKeyFrame->getMatR2w();
     cv::Mat Rwc1 = Rcw1.t();
@@ -447,5 +449,61 @@ void LocalMapper::MapPointCulling()
             lit = mlpRecentAddedMapPoints.erase(lit);
         else
             lit++;
+    }
+}
+
+void LocalMapper::KeyFrameCulling()
+{
+    // Check redundant keyframes (only local keyframes)
+    // A keyframe is considered redundant if the 90% of the MapPoints it sees, are seen
+    // in at least other 3 keyframes (in the same or finer scale)
+    std::vector<shared_ptr<KeyFrameState>> vpLocalKeyFrames = mpCurKeyFrame->GetVectorCovisibleKeyFrames();
+
+    for(vector<shared_ptr<KeyFrameState>>::iterator vit=vpLocalKeyFrames.begin(), vend=vpLocalKeyFrames.end(); vit!=vend; vit++)
+    {
+        shared_ptr<KeyFrameState> pKF = *vit;
+        if(pKF->mId==0)
+            continue;
+        vector<shared_ptr<MapPoint>> vpMapPoints = pKF->GetMapPointMatch();
+
+        int nRedundantObservations=0;
+        int nMPs=0;
+        for(size_t i=0, iend=vpMapPoints.size(); i<iend; i++)
+        {
+            shared_ptr<MapPoint> pMP = vpMapPoints[i];
+            if(pMP)
+            {
+                if(!pMP->isBad())
+                {
+                    nMPs++;
+                    if(pMP->msKeyFrame2FeatureId.size()>3)
+                    {
+                        int scaleLevel = pKF->GetKeyPoint(i).octave;
+                        std::map<shared_ptr<KeyFrameState>, int> observations = pMP->msKeyFrame2FeatureId;
+                        int nObs=0;
+                        for(std::map<shared_ptr<KeyFrameState>, int>::iterator mit=observations.begin(), mend=observations.end(); mit!=mend; mit++)
+                        {
+                            shared_ptr<KeyFrameState> pKFi = mit->first;
+                            if(pKFi==pKF)
+                                continue;
+                            int scaleLeveli = pKFi->GetKeyPoint(mit->second).octave;
+                            if(scaleLeveli<=scaleLevel+1)
+                            {
+                                nObs++;
+                                if(nObs>=3)
+                                    break;
+                            }
+                        }
+                        if(nObs>=3)
+                        {
+                            nRedundantObservations++;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(nRedundantObservations>0.9*nMPs)
+            pKF->SetBadFlag();
     }
 }
