@@ -16,4 +16,6 @@
 <dOpticalFlowThreshold>1.</dOpticalFlowThreshold>
 <dScaleLevel>8</dScaleLevel>
 <dScaleFactor>1.2000000000000000e+00</dScaleFactor>
+<sProjectName>kitti00</sProjectName>
+<sPathOutput>/tmp/</sPathOutput>
 </opencv_storage>
