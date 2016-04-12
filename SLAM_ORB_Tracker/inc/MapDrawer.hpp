@@ -13,10 +13,14 @@
 #include "PoseState.hpp"
 #include "MotionState.hpp"
 #include "BlockingQueue.hpp"
+#include "Tracker.hpp"
 #include "Map.hpp"
 
 #include <opencv2/viz/viz3d.hpp>
 #include <opencv2/viz/vizcore.hpp>
+#include <boost/thread/pthread/mutex.hpp>
+
+class Tracker;
 
 class MapDrawer {
 private:
@@ -26,9 +30,11 @@ private:
     cv::viz::Viz3d* mpVizWin;
     cv::Affine3f mCamPose;
     Map* mpMap;
+    Tracker* mpTracker;
 
+    std::ofstream fsout;
     void initViz();
-    void drawViz();
+    int drawViz();
     
     PoseState mPrePose;
     PoseState mCurPose;
@@ -41,12 +47,23 @@ private:
     BlockingQueue<shared_ptr<FrameState>> mBuffer;
     void take();
     bool inited;
+
+
+    boost::mutex mMutexGUI;
+    boost::mutex mMutexPathCanvasWithDir;
+    boost::mutex mMutexVizWin;
+
+
+    void drawMapPoint();
+
 public:
     MapDrawer(Map *_pMap);
     
     void update(shared_ptr<FrameState> pFS);
     void show();
 
+    void threadRun();
+    void setTracker(Tracker* _pTracker);
 };
 
 #endif /* MapDrawer_hpp */

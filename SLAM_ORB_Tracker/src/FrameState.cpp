@@ -17,7 +17,7 @@ int FrameState::mnMaxX;
 int FrameState::mnMinY;
 int FrameState::mnMaxY;
 
-FrameState::FrameState(int _id, const std::string& _load): mId(_id), mLoaded(false), mLoadFormat(_load) {
+FrameState::FrameState(int _id, const std::string& _load): mId(_id), mLoaded(false), mLoadFormat(_load),mbPainted(false) {
     loadImage(mId);
 }
 

@@ -22,14 +22,11 @@
 
 int main(int argc, char * argv[]) {
 
-
-
     // initialize Config for config load
     Config::parse(argc, argv);
     Config::loadConfig(Config::sPathConfigFile);
 
-    // vocabulary initialize
-    Vocabulary vocabulary(10,6);
+
 
 
 //
@@ -78,11 +75,14 @@ int main(int argc, char * argv[]) {
 //    }
 //
 
+
     // initialize InputBuffer for image read
     InputBuffer inputBuffer(Config::sPathImageLoad, Config::iImageLoadBegin, Config::iImageLoadEnd);
     boost::thread inputBufferThread( boost::bind(&InputBuffer::run, &inputBuffer) );
 
+    // vocabulary initialize
     Config::time("voc");
+    Vocabulary vocabulary(10,6);
     std::cout<<"voc loading: "<<Config::sPathVocabulary<<std::endl;
     //bool isVocLoaded =  vocabulary.loadFromTextFile(Config::sPathVocabulary);
     bool isVocLoaded =  vocabulary.loadBinary(Config::sPathVocabulary);
@@ -92,16 +92,19 @@ int main(int argc, char * argv[]) {
         std::cerr << "vocabulary not loaded" << std::endl;
         exit(1);
     }
-    //vocabulary.saveBinary("/tmp/ORBvoc.bin");
+
 
     // initialize Tracker for localization
     Map map;
     FrameDrawer frameDrawer;
     MapDrawer mapDrawer(&map);
+
     LocalMapper localMapper(&map);
     Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer, &vocabulary, &map, &localMapper);
+    mapDrawer.setTracker(&tracker);
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
-    
+    boost::thread mapDrawerThread( boost::bind(&MapDrawer::threadRun, &mapDrawer) );
+
     
     
     while(1) {

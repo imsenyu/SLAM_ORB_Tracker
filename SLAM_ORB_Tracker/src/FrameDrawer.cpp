@@ -59,7 +59,7 @@ void FrameDrawer::show() {
     }
 
 
-    cv::waitKey(10);
+    //cv::waitKey(10);
     
 }
 

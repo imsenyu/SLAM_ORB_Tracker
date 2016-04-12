@@ -9,9 +9,22 @@
 
 #include "MapDrawer.hpp"
 
-MapDrawer::MapDrawer(Map *_pMap) : inited(false), mpVizWin(NULL), mpMap(_pMap) {
+MapDrawer::MapDrawer(Map *_pMap) : inited(false), mpVizWin(NULL), mpMap(_pMap), mpTracker(NULL)
+{
     initCanvas();
     initViz();
+    std::string outputFilePath =
+        cv::format("%s/%s_%s.txt",
+            Config::sPathOutput.c_str(),
+            Config::sProjectName.c_str(),
+            Config::tLaunchTime.c_str(),
+            ".txt");
+    fsout = std::ofstream(outputFilePath);
+    cv::waitKey(10);
+}
+
+void MapDrawer::setTracker(Tracker* _pTracker) {
+    mpTracker = _pTracker;
 }
 
 void MapDrawer::update(shared_ptr<FrameState> pFS) {
@@ -22,27 +35,36 @@ void MapDrawer::update(shared_ptr<FrameState> pFS) {
 
 void MapDrawer::show() {
 
-    if ( mBuffer.hasNext() ) {
-        take();
-        if (false == inited) {
-            std::cout << "firstshow"<<mCurPose << std::endl;
-            mPrePose = mCurPose;
-            inited = true;
-        }
-        else {
-            //std::cout << "show" <<mCurPose << std::endl;
-            drawCanvas();
-            drawViz();
-            cv::imshow("Map", mPathCanvasWithDir);
+//    if ( mBuffer.hasNext() ) {
+//        take();
+//        if (false == inited) {
+//            std::cout << "firstshow"<<mCurPose << std::endl;
+//            mPrePose = mCurPose;
+//            inited = true;
+//        }
+//        else {
+//            //std::cout << "show" <<mCurPose << std::endl;
+//            drawCanvas();
+//            drawViz();
+//            cv::imshow("Map", mPathCanvasWithDir);
+//
+//            //更新 gPose到新的坐标
+//            mPrePose = mCurPose;
+//        }
+//    }
 
-            //更新 gPose到新的坐标
-            mPrePose = mCurPose;
-        }
+
+    {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexPathCanvasWithDir);
+        cv::waitKey(10);
+    }
+    if ( mpVizWin != NULL )  {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        mpVizWin->spinOnce(10, true);
     }
 
-    cv::waitKey(10);
-    if ( mpVizWin != NULL )
-        mpVizWin->spinOnce(10, true);
     
 }
 
@@ -61,7 +83,8 @@ void MapDrawer::take() {
     mCurPose.mDir3 = R;
     mCurPose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
 
-    //std::cout<<"------------draw---------"<<std::endl<<mCurPose.mPos<<mCurPose.mDir<<std::endl;
+    fsout << cv::format("%d\t%f\t%f\t%f",mpCurFrame->mId,mCurPose.mPos.x,mCurPose.mPos.y,mCurPose.mPos.z) << std::endl;
+    fsout.flush();
 }
 
 void MapDrawer::initCanvas() {
@@ -92,12 +115,34 @@ void MapDrawer::drawCanvas(){
     
     
     //克隆一下 matCanvas 画一下方向
-    mPathCanvasWithDir = mPathCanvas.clone();
-    cv::line(mPathCanvasWithDir,
+    cv::Mat _PathCanvasWithDir = mPathCanvas.clone();
+
+    cv::line(_PathCanvasWithDir,
              mDrawBase + Config::dDrawFrameStep*cv::Point2f(mCurPose.mPos.x, -mCurPose.mPos.z),
              mDrawBase + Config::dDrawFrameStep*cv::Point2f(mCurPose.mPos.x, -mCurPose.mPos.z) + 1.0f*Config::dDrawFrameStep * cv::Point2f(mCurPose.mDir.x, -mCurPose.mDir.z),
              cv::Scalar(255, 0, 0));
 
+    Config::time("SHOW2");
+    std::set<shared_ptr<KeyFrameState>> spKF = mpMap->mspKeyFrame;
+    for(auto iter=spKF.begin();iter!=spKF.end();iter++) {
+        shared_ptr<KeyFrameState> pKF = *iter;
+        PoseState pose;
+
+        cv::Mat pop = pKF->getMatT2w();
+        cv::Mat R = pop.rowRange(0,3).colRange(0,3);
+        cv::Mat t = pop.rowRange(0,3).col(3);
+
+        t = -R.inv() * t;
+        R = R.inv();
+        pose.mPos = Utils::convertToPoint3d(t);
+        pose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
+        cv::circle(_PathCanvasWithDir, mDrawBase + Config::dDrawFrameStep* cv::Point2f(pose.mPos.x, -pose.mPos.z), 1, cv::Scalar(0,0,255));
+    }
+
+
+    mPathCanvasWithDir = _PathCanvasWithDir.clone();
+
+    Config::timeEnd("SHOW2");
 
 }
 
@@ -129,31 +174,161 @@ cv::viz::Color getColor(shared_ptr<FrameState> mpCurFrame) {
     return cv::viz::Color::green();
 }
 
-void MapDrawer::drawViz() {
-    cv::viz::WPlane curPlane(mCurPose.mPos*20, mCurPose.mDir*20, cv::Point3d(0,1.0f,0), cv::Size2d(2.0f, 1.0f), getColor(mpCurFrame)      );
-    cv::viz::WArrow curArrow(mCurPose.mPos*20, mCurPose.mPos*20+mCurPose.mDir*0.5f, 0.1f, cv::viz::Color::red());
-    mpVizWin->showWidget(cv::format("id-%d",mCurPose.mId), curPlane);
-    mpVizWin->showWidget(cv::format("id2-%d",mCurPose.mId), curArrow);
+int MapDrawer::drawViz() {
+    if ( mpCurFrame->isPainted() == false ) {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        cv::viz::WPlane curPlane(mCurPose.mPos*20, mCurPose.mDir*20, cv::Point3d(0,1.0f,0), cv::Size2d(2.0f, 1.0f), getColor(mpCurFrame)      );
+        mpVizWin->showWidget(cv::format("id-%d",mCurPose.mId), curPlane);
+    }
+    {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        cv::viz::WArrow curArrow(mCurPose.mPos * 20, mCurPose.mPos * 20 + mCurPose.mDir * 0.5f, 0.1f, cv::viz::Color::red());
+        mpVizWin->showWidget(cv::format("id2-%d", mCurPose.mId), curArrow);
+    }
 
     double cameraHeight = 50.0f;
     cv::Point3d cam_y_dir(0.0f,0.0f,-1.0f);
-    cv::Point3d cam_pos = mCurPose.mPos*20 + cv::Point3d(0.0f, -cameraHeight, 0.0f);
-    cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.1f, 0.0f);
+    cv::Point3d cam_pos = mCurPose.mPos*20 + cv::Point3d(0.0f, -cameraHeight, -cameraHeight);
+    cv::Point3d cam_focal_point = cam_pos + cv::Point3d(0.0f, cameraHeight*0.00001f, cameraHeight*0.00001f);
     mCamPose = cv::viz::makeCameraPose(cam_pos, cam_focal_point, cam_y_dir);
 
-    mpVizWin->setViewerPose(mCamPose);
 
-//    std::set<shared_ptr<MapPoint>> spMapPoint = mpMap->mspMapPoint;
-//    auto iter = spMapPoint.begin();
-//    for(; iter!=spMapPoint.end(); iter++) {
-//        shared_ptr<MapPoint> pMP = *iter;
-//        cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos*20);
-//
-//        // -2.0  ->  0.5;
-//        float radio = (pos.y - (-2.0f))/2.5f;
-//        radio = radio > 1.0f ? 1.0f : radio;
-//        radio = radio < 0.0f ? 0.0f : radio;
-//        cv::viz::WSphere curPoint(pos,0.10f, 10, cv::viz::Color(255*radio,0,255*(1.0f-radio)));
-//        mpVizWin->showWidget( cv::format("mp-%d", pMP->getUID()), curPoint );
-//    }
+    int ret = 0;
+    std::set<shared_ptr<KeyFrameState>> spKF = mpMap->mspKeyFrame;
+    {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        Config::time("SHOW");
+        int numUpdateKeyFrame = 0;
+        for(auto iter=spKF.begin();iter!=spKF.end();iter++) {
+            shared_ptr<KeyFrameState> pKF = *iter;
+            if ( pKF->isPainted() )
+                continue;
+
+            PoseState pose;
+
+            cv::Mat pop = pKF->getMatT2w();
+            cv::Mat R = pop.rowRange(0,3).colRange(0,3);
+            cv::Mat t = pop.rowRange(0,3).col(3);
+
+            t = -R.inv() * t;
+            R = R.inv();
+            pose.mPos = Utils::convertToPoint3d(t);
+            pose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
+            cv::viz::WPlane curPlane(pose.mPos*20, pose.mDir*20, cv::Point3d(0,1.0f,0), cv::Size2d(2.0f, 1.0f), cv::viz::Color::green()  );
+            std::string name = cv::format("id-%d",pKF->mId);
+
+            mpVizWin->showWidget(name,curPlane);
+
+            pKF->setPainted();
+            numUpdateKeyFrame++;
+        }
+        printf("====mpFrame=== %d updateKeyFrame %d\n", mpCurFrame->mId, numUpdateKeyFrame);
+        Config::timeEnd("SHOW");
+        ret = numUpdateKeyFrame;
+    }
+
+    {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        mpVizWin->setViewerPose(mCamPose);
+    }
+
+    return ret;
+}
+
+void MapDrawer::threadRun() {
+
+    while(true){
+
+        if ( mBuffer.hasNext() ) {
+
+            take();
+            if (false == inited) {
+                std::cout << "firstshow"<<mCurPose << std::endl;
+                mPrePose = mCurPose;
+                inited = true;
+            }
+            else {
+                //std::cout << "show" <<mCurPose << std::endl;
+                drawCanvas();
+
+
+                int ret = drawViz();
+                if ( ret ) drawMapPoint();
+
+                {
+                    boost::mutex::scoped_lock lock(mMutexPathCanvasWithDir);
+                    cv::imshow("Map", mPathCanvasWithDir);
+                }
+                //更新 gPose到新的坐标
+                mPrePose = mCurPose;
+            }
+
+        }
+    }
+
+//    cv::waitKey(10);
+//    if ( mpVizWin != NULL )
+//        mpVizWin->spinOnce(10, true);
+}
+
+void MapDrawer::drawMapPoint() {
+    std::set<shared_ptr<MapPoint>> spMP = mpMap->mspMapPoint;
+
+    std::vector<shared_ptr<MapPoint>> vpLocalMP = mpTracker->mvpLocalMapPoints;
+    std::set<shared_ptr<MapPoint>> spLocalMP = std::set<shared_ptr<MapPoint>>(vpLocalMP.begin(), vpLocalMP.end());
+    printf("MapPoint_ALL %d\n", spMP.size());
+    printf("MapPoint_Local %d\n", spLocalMP.size());
+    {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        Config::time("MapPoint_ALL");
+        int numUpdateMapPoint = 0;
+        for(auto iter=spMP.begin();iter!=spMP.end();iter++) {
+            shared_ptr<MapPoint> pMP = *iter;
+            if ( pMP->isPainted() )
+                continue;
+            if ( pMP->isBad() )
+                continue;
+            if ( spLocalMP.count( pMP ) )
+                continue;
+
+            cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos*20);
+
+
+            cv::viz::WSphere curPoint(pos,0.10f, 1, cv::viz::Color(0,0,0));
+            mpVizWin->showWidget( cv::format("mp-%d", pMP->getUID()), curPoint );
+
+            pMP->setPainted();
+            numUpdateMapPoint++;
+        }
+        printf("===Frame %d MapPoint_ALL %d\n", mpCurFrame->mId,numUpdateMapPoint );
+        Config::timeEnd("MapPoint_ALL");
+    }
+    {
+        boost::mutex::scoped_lock lockUI(mMutexGUI);
+        boost::mutex::scoped_lock lock(mMutexVizWin);
+        int numUpdateMapPoint = 0;
+        Config::time("MapPoint_Local");
+        for(auto iter=spLocalMP.begin();iter!=spLocalMP.end();iter++) {
+            shared_ptr<MapPoint> pMP = *iter;
+            if ( pMP->isPainted() )
+                continue;
+            if ( pMP->isBad() )
+                continue;
+
+            cv::Point3f pos = Utils::convertToPoint3d(pMP->mPos*20);
+
+            cv::viz::WSphere curPoint(pos,0.20f, 6, cv::viz::Color(0,0,255));
+            mpVizWin->showWidget( cv::format("mp-%d", pMP->getUID()), curPoint );
+
+            pMP->setPainted();
+            numUpdateMapPoint++;
+        }
+        printf("===Frame %d MapPoint_Local %d\n", mpCurFrame->mId,numUpdateMapPoint );
+        Config::timeEnd("MapPoint_Local");
+    }
 }

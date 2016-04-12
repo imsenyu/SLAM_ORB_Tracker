@@ -9,6 +9,7 @@
 #ifndef FrameState_hpp
 #define FrameState_hpp
 
+
 #include "stdafx.hpp"
 #include "MapPoint.hpp"
 
@@ -38,18 +39,15 @@ public:
     cv::Mat mO2w;
     void updatePose(cv::Mat _mT) {
         mT2w = _mT.clone();
-
-        mMatR = mT2w.rowRange(0,3).colRange(0,3);
-        mMatT = mT2w.rowRange(0,3).col(3);
-
-        mO2w = - mMatR.t() * mMatT;
+        updatePose();
     }
     void updatePose() {
 
         mMatR = mT2w.rowRange(0,3).colRange(0,3);
         mMatT = mT2w.rowRange(0,3).col(3);
-
         mO2w = - mMatR.t() * mMatT;
+
+        setPainted(false);
     }
     std::vector<cv::KeyPoint> mvKeyPoint;
     std::vector<uchar>  mvMatchMask;
@@ -85,6 +83,17 @@ public:
         return (x>=mnMinX && x<mnMaxX && y>=mnMinY && y<mnMaxY);
     }
     bool isInFrustum(shared_ptr<MapPoint> pMP, float viewingCosLimit);
+
+    boost::mutex mMutexPainted;
+    bool mbPainted;
+    bool isPainted() {
+        boost::mutex::scoped_lock lock(mMutexPainted);
+        return mbPainted;
+    }
+    void setPainted(bool _b = true) {
+        boost::mutex::scoped_lock lock(mMutexPainted);
+        mbPainted = _b;
+    }
 };
 
 #endif /* FrameState_hpp */
