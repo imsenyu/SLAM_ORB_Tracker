@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:OpenGLUI/OpenGLUI.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:SLAM_ORB_Tracker/third/DBoW2/DBoW2.xcodeproj">
    </FileRef>
    <FileRef
