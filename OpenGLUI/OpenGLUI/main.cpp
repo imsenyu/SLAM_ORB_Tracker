@@ -19,10 +19,13 @@ int main(int argc, char **argv)
 
     //thread();
     GLWindow g;
-    Tick t(20);
+    Tick t(5);
     boost::thread loop( boost::bind(&GLWindow::thread, &g) );
+
     while( t.tick() ) {
+
         g.updateMainThread();
+
     }
     
     return 0; // this is just to keep the compiler happy
