@@ -20,6 +20,8 @@
 #include <opencv2/viz/vizcore.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 
+#include "GLWindow.hpp"
+
 int main(int argc, char * argv[]) {
 
     // initialize Config for config load
@@ -105,11 +107,15 @@ int main(int argc, char * argv[]) {
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
     boost::thread mapDrawerThread( boost::bind(&MapDrawer::threadRun, &mapDrawer) );
 
-    
+    GLWindow g;
     
     while(1) {
         frameDrawer.show();
         mapDrawer.show();
+
+        cv::waitKey(10);
+
+        g.loopOnce();
     }
     
     // wait for quit

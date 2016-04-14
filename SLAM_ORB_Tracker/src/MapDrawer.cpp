@@ -12,7 +12,7 @@
 MapDrawer::MapDrawer(Map *_pMap) : inited(false), mpVizWin(NULL), mpMap(_pMap), mpTracker(NULL)
 {
     initCanvas();
-    initViz();
+    //initViz();
     std::string outputFilePath =
         cv::format("%s/%s_%s.txt",
             Config::sPathOutput.c_str(),
@@ -20,7 +20,7 @@ MapDrawer::MapDrawer(Map *_pMap) : inited(false), mpVizWin(NULL), mpMap(_pMap), 
             Config::tLaunchTime.c_str(),
             ".txt");
     fsout = std::ofstream(outputFilePath);
-    cv::waitKey(10);
+    //cv::waitKey(10);
 }
 
 void MapDrawer::setTracker(Tracker* _pTracker) {
@@ -55,15 +55,14 @@ void MapDrawer::show() {
 
 
     {
-        boost::mutex::scoped_lock lockUI(mMutexGUI);
         boost::mutex::scoped_lock lock(mMutexPathCanvasWithDir);
-        cv::waitKey(10);
+        cv::imshow("Map", mPathCanvasWithDir);
     }
-    if ( mpVizWin != NULL )  {
-        boost::mutex::scoped_lock lockUI(mMutexGUI);
-        boost::mutex::scoped_lock lock(mMutexVizWin);
-        mpVizWin->spinOnce(10, true);
-    }
+//    if ( mpVizWin != NULL )  {
+//        boost::mutex::scoped_lock lockUI(mMutexGUI);
+//        boost::mutex::scoped_lock lock(mMutexVizWin);
+//        //mpVizWin->spinOnce(10, true);
+//    }
 
     
 }
@@ -93,11 +92,11 @@ void MapDrawer::initCanvas() {
     // 画布相关定义,行车路径(x,-z)轴
     mPathCanvas.create(cv::Size(800, 800), CV_8UC3);
     mPathCanvas = cv::Scalar(255, 255, 255);
-    
+    mPathCanvasWithDir = mPathCanvas.clone();
 
     //设定画布绘制偏移
     mDrawBase = cv::Point2f(400, 500);
-    
+    cv::namedWindow("Map", CV_GUI_NORMAL | CV_WINDOW_AUTOSIZE );
 }
 
 
@@ -256,13 +255,10 @@ void MapDrawer::threadRun() {
                 drawCanvas();
 
 
-                int ret = drawViz();
-                if ( ret ) drawMapPoint();
+//                int ret = drawViz();
+//                if ( ret ) drawMapPoint();
 
-                {
-                    boost::mutex::scoped_lock lock(mMutexPathCanvasWithDir);
-                    cv::imshow("Map", mPathCanvasWithDir);
-                }
+
                 //更新 gPose到新的坐标
                 mPrePose = mCurPose;
             }

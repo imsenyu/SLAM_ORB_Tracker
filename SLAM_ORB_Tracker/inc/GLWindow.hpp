@@ -9,59 +9,15 @@
 #ifndef GLWindow_hpp
 #define GLWindow_hpp
 
-#include <cstdio>
+#include "stdafx.hpp"
+
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/glu.h>
 #include <GL/freeglut.h>
 
-#include <boost/thread.hpp>
-#include <boost/interprocess/sync/interprocess_semaphore.hpp>
-
-#include <opencv2/opencv.hpp>
-#include <opencv2/features2d/features2d.hpp>
-#include <opencv2/nonfree/features2d.hpp>
-#include <opencv2/legacy/legacy.hpp>
-#include <opencv2/calib3d/calib3d.hpp>
-#include <opencv2/highgui/highgui.hpp>
-
-
 
 #define ESC 27
-
-
-class Tick {
-private:
-
-    time_t mtStart;
-    time_t mtEnd;
-    double step;
-    double fps;
-    bool inited;
-
-public:
-    Tick(double _fps): fps(_fps), inited(false) {
-        fps = fabs(fps);
-        if ( fps < 0.01 ) fps = 0.01;
-        step = 1.0f/fps;
-    }
-
-    bool tick() {
-        if ( !inited ) {
-            mtStart = clock();
-            inited = true;
-        }
-        else {
-            mtEnd = clock();
-            double duration = (mtEnd - mtStart) / ((double) CLOCKS_PER_SEC);
-            if ( step > duration ) {
-                boost::this_thread::sleep(boost::posix_time::milliseconds(  1000*(step - duration)  ));
-            }
-            mtStart = clock();
-        }
-        return true;
-    }
-};
 
 class GLWindow {
 private:

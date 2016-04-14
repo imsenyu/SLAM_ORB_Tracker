@@ -9,7 +9,7 @@
 #include "FrameDrawer.hpp"
 
 FrameDrawer::FrameDrawer() {
-    
+    cv::namedWindow("FeaturedFrame", CV_GUI_NORMAL | CV_WINDOW_AUTOSIZE );
 }
 
 void FrameDrawer::update(shared_ptr<FrameState> _pFS ) {
