@@ -812,7 +812,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     //  should construct  the connection from this KeyFrame to other KeyFrame by covisible MapPoint
     pIniKeyFrame->UpdateConnections();
     pCurKeyFrame->UpdateConnections();
-    Optimizer::GlobalBundleAdjustemnt(mpMap,10);
+    Optimizer::GlobalBundleAdjustemnt(mpMap,5);
 
 
 
@@ -854,13 +854,18 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     mpLocalMapper->processKeyFrameLoop(true);
 
     mLastMapperId = pCurKeyFrame->mpFrame->mId;
-
-    mvpLocalKeyFrames.push_back(pCurKeyFrame);
-    mvpLocalKeyFrames.push_back(pIniKeyFrame);
-    mvpLocalMapPoints=std::vector<shared_ptr<MapPoint>>(mpMap->mspMapPoint.begin(), mpMap->mspMapPoint.end());
+    {
+        boost::mutex::scoped_lock lock(mMutexLKF);
+        mvpLocalKeyFrames.push_back(pCurKeyFrame);
+        mvpLocalKeyFrames.push_back(pIniKeyFrame);
+    }
+    {
+        boost::mutex::scoped_lock lock(mMutexLMP);
+        mvpLocalMapPoints = mpMap->getAllVectorMapPoint();
+    }
     mpReferenceKF = pCurKeyFrame;
 
-    std::cout<< "Init Map's MapPoint size"<<mpMap->mspMapPoint.size()<<std::endl;
+    std::cout<< "Init Map's MapPoint size"<<mvpLocalMapPoints.size()<<std::endl;
 
     return true;
 }
@@ -1044,8 +1049,10 @@ void Tracker::UpdateReferenceKeyFrames()
 
     int max=0;
     shared_ptr<KeyFrameState> pKFmax= shared_ptr<KeyFrameState>(NULL);
-
-    mvpLocalKeyFrames.clear();
+    {
+        boost::mutex::scoped_lock lock(mMutexLKF);
+        mvpLocalKeyFrames.clear();
+    }
     //mvpLocalKeyFrames.reserve(3*keyframeCounter.size());
 
     // All keyframes that observe a map point are included in the local map. Also check which keyframe shares most points
@@ -1061,8 +1068,10 @@ void Tracker::UpdateReferenceKeyFrames()
             max=it->second;
             pKFmax=pKF;
         }
-
-        mvpLocalKeyFrames.push_back(it->first);
+        {
+            boost::mutex::scoped_lock lock(mMutexLKF);
+            mvpLocalKeyFrames.push_back(it->first);
+        }
         pKF->mnTrackReferenceForFrame = mpCurFrame->mId;
     }
 
@@ -1100,15 +1109,20 @@ void Tracker::UpdateReferenceKeyFrames()
         }
 
     }
-
-    mvpLocalKeyFrames = std::vector<shared_ptr<KeyFrameState>>( sKF.begin(), sKF.end() );
+    {
+        boost::mutex::scoped_lock lock(mMutexLKF);
+        mvpLocalKeyFrames = std::vector<shared_ptr<KeyFrameState>>( sKF.begin(), sKF.end() );
+    }
 
     mpReferenceKF = pKFmax;
 }
 
 void Tracker::UpdateReferencePoints()
 {
-    mvpLocalMapPoints.clear();
+    {
+        boost::mutex::scoped_lock lock(mMutexLMP);
+        mvpLocalMapPoints.clear();
+    }
 
     for(std::vector<shared_ptr<KeyFrameState>>::iterator itKF=mvpLocalKeyFrames.begin(), itEndKF=mvpLocalKeyFrames.end(); itKF!=itEndKF; itKF++)
     {
@@ -1124,7 +1138,10 @@ void Tracker::UpdateReferencePoints()
                 continue;
             if(!pMP->isBad())
             {
-                mvpLocalMapPoints.push_back(pMP);
+                {
+                    boost::mutex::scoped_lock lock(mMutexLMP);
+                    mvpLocalMapPoints.push_back(pMP);
+                }
                 pMP->mnTrackReferenceForFrame=mpCurFrame->mId;
             }
         }
@@ -1183,4 +1200,24 @@ void Tracker::SearchReferencePointsInFrustum()
 //            th=5;
         matcher.SearchByProjection(mpCurFrame,mvpLocalMapPoints,th);
     }
+}
+
+std::set<shared_ptr<MapPoint>> Tracker::getAllSetLocalMapPoint() {
+    boost::mutex::scoped_lock lock(mMutexLMP);
+    return std::set<shared_ptr<MapPoint>>(mvpLocalMapPoints.begin(), mvpLocalMapPoints.end());
+}
+
+std::vector<shared_ptr<MapPoint>> Tracker::getAllVectorLocalMapPoint() {
+    boost::mutex::scoped_lock lock(mMutexLMP);
+    return mvpLocalMapPoints;
+}
+
+std::set<shared_ptr<KeyFrameState>> Tracker::getAllSetLocalKeyFrame() {
+    boost::mutex::scoped_lock lock(mMutexLKF);
+    return std::set<shared_ptr<KeyFrameState>>(mvpLocalKeyFrames.begin(), mvpLocalKeyFrames.end());
+}
+
+std::vector<shared_ptr<KeyFrameState>> Tracker::getAllVectorLocalKeyFrame() {
+    boost::mutex::scoped_lock lock(mMutexLKF);
+    return mvpLocalKeyFrames;
 }

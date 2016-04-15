@@ -107,15 +107,22 @@ int main(int argc, char * argv[]) {
     boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
     boost::thread mapDrawerThread( boost::bind(&MapDrawer::threadRun, &mapDrawer) );
 
-    GLWindow g;
-    
-    while(1) {
+    GLWindow glWindow3D("3D");
+    glWindow3D.setMap(&map);
+    glWindow3D.setMapDrawer(&mapDrawer);
+    glWindow3D.setTracker(&tracker);
+    mapDrawer.setGLWindow(&glWindow3D);
+
+    Tick tGUI(20);
+    while( tGUI.tock() ) {
         frameDrawer.show();
         mapDrawer.show();
 
         cv::waitKey(10);
 
-        g.loopOnce();
+        Config::time("gl_render");
+        glWindow3D.loopOnce();
+        Config::timeEnd("gl_render");
     }
     
     // wait for quit

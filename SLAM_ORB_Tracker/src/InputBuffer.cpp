@@ -21,7 +21,8 @@ mBuffer(200) {
 
 int InputBuffer::threadRun() {
     cv::Mat matImage;
-    for(mCurIdx = mBeginIdx; mCurIdx < mEndIdx; mCurIdx+=1 ) {
+    Tick tInput(20);
+    for(mCurIdx = mBeginIdx; mCurIdx < mEndIdx && tInput.tock() ; mCurIdx+=1 ) {
 
         shared_ptr<FrameState> ptrFrame(new FrameState(mCurIdx, mLoadFormat));
         put(ptrFrame);

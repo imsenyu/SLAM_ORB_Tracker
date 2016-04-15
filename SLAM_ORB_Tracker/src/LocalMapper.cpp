@@ -93,7 +93,9 @@ int LocalMapper::processKeyFrameLoop(bool bBA) {
 }
 
 int LocalMapper::run() {
-    while(true) processKeyFrameLoop(true);
+    Tick tLocalMapper(10);
+    while( tLocalMapper.tock() )
+        processKeyFrameLoop(true);
     return 0;
 }
 

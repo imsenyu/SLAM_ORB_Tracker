@@ -151,3 +151,26 @@ std::string  Utils::timenow() {
     namespace pt = boost::posix_time;
     return pt::to_iso_string(pt::second_clock::local_time());
 }
+
+
+Tick::Tick(double _fps): fps(_fps), inited(false) {
+    fps = fabs(fps);
+    if ( fps < 0.01 ) fps = 0.01;
+    step = 1.0f/fps;
+}
+
+bool Tick::tock() {
+    if ( !inited ) {
+        mtStart = clock();
+        inited = true;
+    }
+    else {
+        mtEnd = clock();
+        double duration = (mtEnd - mtStart) / ((double) CLOCKS_PER_SEC);
+        if ( step > duration ) {
+            boost::this_thread::sleep(boost::posix_time::milliseconds(  1000*(step - duration)  ));
+        }
+        mtStart = clock();
+    }
+    return true;
+}

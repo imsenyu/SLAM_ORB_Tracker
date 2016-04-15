@@ -15,12 +15,15 @@
 #include "BlockingQueue.hpp"
 #include "Tracker.hpp"
 #include "Map.hpp"
+#include "GLWindow.hpp"
 
 #include <opencv2/viz/viz3d.hpp>
 #include <opencv2/viz/vizcore.hpp>
 #include <boost/thread/pthread/mutex.hpp>
 
 class Tracker;
+
+class GLWindow;
 
 class MapDrawer {
 private:
@@ -33,8 +36,8 @@ private:
     Tracker* mpTracker;
 
     std::ofstream fsout;
-    void initViz();
-    int drawViz();
+//    void initViz();
+//    int drawViz();
     
     PoseState mPrePose;
     PoseState mCurPose;
@@ -45,6 +48,7 @@ private:
 
     shared_ptr<FrameState> mpCurFrame;
     BlockingQueue<shared_ptr<FrameState>> mBuffer;
+
     void take();
     bool inited;
 
@@ -53,9 +57,12 @@ private:
     boost::mutex mMutexPathCanvasWithDir;
     boost::mutex mMutexVizWin;
 
+//
+//    void drawMapPoint();
 
-    void drawMapPoint();
-
+    GLWindow* mpGLWin;
+    std::set<shared_ptr<FrameState>> mspFrame;
+    boost::mutex mMutexFrame;
 public:
     MapDrawer(Map *_pMap);
     
@@ -64,6 +71,10 @@ public:
 
     void threadRun();
     void setTracker(Tracker* _pTracker);
+    void setGLWindow(GLWindow* _p);
+
+    std::set<shared_ptr<FrameState>> getAllSetFrame();
+    std::vector<shared_ptr<FrameState>> getAllVectorFrame();
 };
 
 #endif /* MapDrawer_hpp */

@@ -14,22 +14,32 @@ class MapPoint;
 class KeyFrameState;
 
 class Map {
-public:
+private:
     std::set<shared_ptr<MapPoint>> mspMapPoint;
     std::set<shared_ptr<KeyFrameState>> mspKeyFrame;
+
+    boost::mutex mMutexMP;
+    boost::mutex mMutexKF;
+
+
 public:
     Map();
 
-    void insertKeyFrame(shared_ptr<KeyFrameState> _pKeyFrame) {
-        mspKeyFrame.insert( _pKeyFrame );
-    }
-    void insertMapPoint(shared_ptr<MapPoint> _pMapPoint) {
-        mspMapPoint.insert( _pMapPoint );
-    }
-    void EraseMapPoint(shared_ptr<MapPoint> pMP)
-    {
-        mspMapPoint.erase(pMP);
-    }
+    void insertKeyFrame(shared_ptr<KeyFrameState> _pKeyFrame);
+
+    void insertMapPoint(shared_ptr<MapPoint> _pMapPoint);
+
+    void EraseMapPoint(shared_ptr<MapPoint> pMP);
+
+    // origin copy
+    std::set<shared_ptr<MapPoint>> getAllSetMapPoint();
+    std::set<shared_ptr<KeyFrameState>> getAllSetKeyFrame();
+    std::vector<shared_ptr<MapPoint>> getAllVectorMapPoint();
+    std::vector<shared_ptr<KeyFrameState>> getAllVectorKeyFrame();
+
+
+
+
 };
 
 

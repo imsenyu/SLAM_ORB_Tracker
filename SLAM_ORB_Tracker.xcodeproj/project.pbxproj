@@ -219,7 +219,7 @@
 		EB361E2F1C9EC58600883F14 /* Vocabulary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vocabulary.hpp; sourceTree = "<group>"; };
 		EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KeyFrameState.cpp; sourceTree = "<group>"; };
 		EB98C3591CBF5C8E006110BA /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		EB98C35B1CBF5CD2006110BA /* libglut.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.dylib; path = ../../../../../../../usr/local/Cellar/freeglut/2.8.1/lib/libglut.3.dylib; sourceTree = "<group>"; };
+		EB98C35B1CBF5CD2006110BA /* libglut.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglut.3.dylib; path = /usr/local/Cellar/freeglut/2.8.1/lib/libglut.3.dylib; sourceTree = "<absolute>"; };
 		EBAB8D901CA18B64009A0ED4 /* libopencv_calib3d.2.4.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.12.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.12/lib/libopencv_calib3d.2.4.12.dylib; sourceTree = "<group>"; };
 		EBAB8D911CA18B64009A0ED4 /* libopencv_contrib.2.4.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_contrib.2.4.12.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.12/lib/libopencv_contrib.2.4.12.dylib; sourceTree = "<group>"; };
 		EBAB8D921CA18B64009A0ED4 /* libopencv_core.2.4.12.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_core.2.4.12.dylib; path = ../../../../../../../usr/local/Cellar/opencv/2.4.12/lib/libopencv_core.2.4.12.dylib; sourceTree = "<group>"; };
@@ -503,10 +503,17 @@
 			name = DBoW2;
 			sourceTree = "<group>";
 		};
-		EBFE5B5A1C9D9FD300E6DA0B = {
+		EB98C3601CBF926D006110BA /* freeglut */ = {
 			isa = PBXGroup;
 			children = (
 				EB98C35B1CBF5CD2006110BA /* libglut.3.dylib */,
+			);
+			name = freeglut;
+			sourceTree = "<group>";
+		};
+		EBFE5B5A1C9D9FD300E6DA0B = {
+			isa = PBXGroup;
+			children = (
 				EBFE5B7B1C9DA68D00E6DA0B /* lib */,
 				EBFE5B651C9D9FD300E6DA0B /* SLAM_ORB_Tracker */,
 				EBFE5B641C9D9FD300E6DA0B /* Products */,
@@ -594,6 +601,7 @@
 		EBFE5B7B1C9DA68D00E6DA0B /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				EB98C3601CBF926D006110BA /* freeglut */,
 				EB98C3591CBF5C8E006110BA /* OpenGL.framework */,
 				EB301C1D1C9F946B00F685EE /* g2o */,
 				EB361F701C9EEEAF00883F14 /* DBoW2 */,

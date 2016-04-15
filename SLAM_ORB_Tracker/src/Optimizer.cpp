@@ -524,8 +524,8 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
 
 void Optimizer::GlobalBundleAdjustemnt(Map* pMap, int nIterations, bool bStopFlag)
 {
-    std::vector<shared_ptr<KeyFrameState>> vpKFs = std::vector<shared_ptr<KeyFrameState>>(pMap->mspKeyFrame.begin(), pMap->mspKeyFrame.end());  //pMap->mspKeyFrame;
-    std::vector<shared_ptr<MapPoint>> vpMP = std::vector<shared_ptr<MapPoint>>(pMap->mspMapPoint.begin(), pMap->mspMapPoint.end());   //pMap->mspMapPoint;
+    std::vector<shared_ptr<KeyFrameState>> vpKFs = pMap->getAllVectorKeyFrame();  //pMap->mspKeyFrame;
+    std::vector<shared_ptr<MapPoint>> vpMP = pMap->getAllVectorMapPoint();   //pMap->mspMapPoint;
     BundleAdjustment(vpKFs,vpMP,nIterations,bStopFlag);
 }
 

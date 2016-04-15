@@ -104,9 +104,10 @@ private:
     int mLastBundleAdjustmentId;
 
 
-
     std::vector<shared_ptr<KeyFrameState>> mvpAllKeyFrame;
     std::vector<shared_ptr<MapPoint>> mvpAllMapPoint;
+    boost::mutex mMutexLMP;
+    boost::mutex mMutexLKF;
 public:
     Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper);
     ~Tracker();
@@ -114,7 +115,13 @@ public:
     int run();
     std::vector<shared_ptr<KeyFrameState>> mvpLocalKeyFrames;
     std::vector<shared_ptr<MapPoint>> mvpLocalMapPoints;
-    
+
+
+    std::set<shared_ptr<MapPoint>> getAllSetLocalMapPoint();
+    std::vector<shared_ptr<MapPoint>> getAllVectorLocalMapPoint();
+
+    std::set<shared_ptr<KeyFrameState>> getAllSetLocalKeyFrame();
+    std::vector<shared_ptr<KeyFrameState>> getAllVectorLocalKeyFrame();
 };
 
 #endif /* Tracker_hpp */

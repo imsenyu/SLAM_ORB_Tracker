@@ -33,7 +33,6 @@ namespace Utils {
 
 class Tick {
 private:
-
     time_t mtStart;
     time_t mtEnd;
     double step;
@@ -41,26 +40,8 @@ private:
     bool inited;
 
 public:
-    Tick(double _fps): fps(_fps), inited(false) {
-        fps = fabs(fps);
-        if ( fps < 0.01 ) fps = 0.01;
-        step = 1.0f/fps;
-    }
+    Tick(double _fps);
 
-    bool tick() {
-        if ( !inited ) {
-            mtStart = clock();
-            inited = true;
-        }
-        else {
-            mtEnd = clock();
-            double duration = (mtEnd - mtStart) / ((double) CLOCKS_PER_SEC);
-            if ( step > duration ) {
-                boost::this_thread::sleep(boost::posix_time::milliseconds(  1000*(step - duration)  ));
-            }
-            mtStart = clock();
-        }
-        return true;
-    }
+    bool tock();
 };
 #endif /* Utils_hpp */
