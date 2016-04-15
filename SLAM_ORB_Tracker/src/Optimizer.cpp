@@ -164,7 +164,8 @@ int Optimizer::PoseOptimization(shared_ptr<FrameState> pFrame) {
 //            Config::dCy) )<<std::endl<<std::endl;
 
             g2o::VertexSBAPointXYZ* vPoint = new g2o::VertexSBAPointXYZ();
-            vPoint->setEstimate(Utils::convertToEigenMat31(pMP->mPos));
+            // read-write same-thread, use ref for speed
+            vPoint->setEstimate(Utils::convertToEigenMat31(pMP->getMPosRef()));
             vPoint->setId(i+1);
             vPoint->setFixed(true);
             optimizer.addVertex(vPoint);
@@ -381,7 +382,7 @@ void Optimizer::LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStop
     {
         shared_ptr<MapPoint> pMP = *lit;
         g2o::VertexSBAPointXYZ* vPoint = new g2o::VertexSBAPointXYZ();
-        vPoint->setEstimate(Utils::convertToEigenMat31(pMP->mPos));
+        vPoint->setEstimate(Utils::convertToEigenMat31(pMP->getMPos()));
         int id = pMP->getUID()+maxKFid+1;
         vPoint->setId(id);
         vPoint->setMarginalized(true);
@@ -572,7 +573,7 @@ void Optimizer::BundleAdjustment(const vector<shared_ptr<KeyFrameState>> &vpKFs,
         if(pMP->isBad())
             continue;
         g2o::VertexSBAPointXYZ* vPoint = new g2o::VertexSBAPointXYZ();
-        vPoint->setEstimate(Utils::convertToEigenMat31(pMP->mPos));
+        vPoint->setEstimate(Utils::convertToEigenMat31(pMP->getMPos()));
         int id = pMP->getUID()+maxKFid+1;
         vPoint->setId(id);
         vPoint->setMarginalized(true);

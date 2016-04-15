@@ -19,6 +19,9 @@ private:
     int mId;
     bool mbBad;
 
+    boost::mutex mMutexMPos;
+    cv::Mat mPos;
+
 public:
     std::map<shared_ptr<KeyFrameState>, int> msKeyFrame2FeatureId;
     shared_ptr<KeyFrameState> mpRefKF;
@@ -31,12 +34,12 @@ public:
         msKeyFrame2FeatureId[_pKFS] = nP;
     }
     int getUID();
-    cv::Mat mPos;
 
-    void setMPos(cv::Mat mat) {
-        mPos = mat.clone();
-        setPainted(false);
-    }
+
+    void lockMutexMPos(bool toLock = 0);
+    cv::Mat getMPos() ;
+    cv::Mat& getMPosRef() ;
+    void setMPos( cv::Mat mat);
 
     int mnFuseCandidateForKF;
     int mnBALocalForKF;

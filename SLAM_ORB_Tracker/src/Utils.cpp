@@ -174,3 +174,19 @@ bool Tick::tock() {
     }
     return true;
 }
+
+bool Tick::try_tock() {
+    if ( !inited ) {
+        mtStart = clock();
+        inited = true;
+    }
+    else {
+        mtEnd = clock();
+        double duration = (mtEnd - mtStart) / ((double) CLOCKS_PER_SEC);
+        if ( step > duration ) {
+            return false;
+        }
+        mtStart = clock();
+    }
+    return true;
+}

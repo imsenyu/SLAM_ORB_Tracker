@@ -548,7 +548,7 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> pF1, shared_ptr<FrameS
         cv::KeyPoint kp1 = pF1->mvKeyPoint[i1];
         int level1 = kp1.octave;
 
-        cv::Mat x3Dw = pMP1->mPos.clone();
+        cv::Mat x3Dw = pMP1->getMPos();
         cv::Mat x3Dc2 = Rc2w*x3Dw+tc2w;
 
         float xc2;
@@ -1070,7 +1070,7 @@ int ORBmatcher::Fuse(shared_ptr<KeyFrameState> pKF, vector<shared_ptr<MapPoint>>
         if(pMP->isBad() || pMP->msKeyFrame2FeatureId.count(pKF)  /*pMP->IsInKeyFrameState(pKF)*/)
             continue;
 
-        cv::Mat p3Dw = pMP->mPos.clone();
+        cv::Mat p3Dw = pMP->getMPos();
         cv::Mat p3Dc = Rcw*p3Dw + tcw;
 
         // Depth must be positive
@@ -1558,7 +1558,7 @@ int ORBmatcher::SearchByProjection(shared_ptr<FrameState> CurrentFrame, shared_p
             if(!LastFrame->mvbOutlier[i])
             {
                 // Project
-                cv::Mat x3Dw = pMP->mPos.clone();
+                cv::Mat x3Dw = pMP->getMPos();
                 cv::Mat x3Dc = Rcw*x3Dw+tcw;
 
                 const float xc = x3Dc.at<float>(0);

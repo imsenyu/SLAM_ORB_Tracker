@@ -5,7 +5,10 @@
 
 #include "Map.hpp"
 
-Map::Map() {
+Map::Map():
+    cache_mbMP(false),
+    cache_mtMP(5)
+{
 
 }
 
@@ -16,10 +19,14 @@ void Map::insertKeyFrame(shared_ptr<KeyFrameState> _pKeyFrame) {
 }
 void Map::insertMapPoint(shared_ptr<MapPoint> _pMapPoint) {
     boost::mutex::scoped_lock lock(mMutexMP);
+    cache_mbMP = true;
     mspMapPoint.insert( _pMapPoint );
 }
 void Map::EraseMapPoint(shared_ptr<MapPoint> pMP) {
     boost::mutex::scoped_lock lock(mMutexMP);
+    cache_mbMP = true;
+    // ptrMapPoint has been setted to bad
+    // non need to release or release delay
     mspMapPoint.erase(pMP);
 }
 
@@ -42,4 +49,30 @@ std::vector<shared_ptr<MapPoint>> Map::getAllVectorMapPoint() {
 std::vector<shared_ptr<KeyFrameState>> Map::getAllVectorKeyFrame() {
     boost::mutex::scoped_lock lock(mMutexKF);
     return std::vector<shared_ptr<KeyFrameState>>( mspKeyFrame.begin(), mspKeyFrame.end() );
+}
+
+std::set<shared_ptr<MapPoint>> Map::cacheCopyGetAllSetMapPoint() {
+    return cacheRefGetAllSetMapPoint();
+}
+
+std::vector<shared_ptr<MapPoint>> Map::cacheCopyGetAllVectorMapPoint() {
+    return cacheRefGetAllVectorMapPoint();
+}
+
+std::set<shared_ptr<MapPoint>> &Map::cacheRefGetAllSetMapPoint() {
+    if ( cache_mbMP ) {
+        boost::mutex::scoped_lock lock(mMutexMP);
+        cache_mspMapPoint = mspMapPoint;
+        cache_mbMP = false;
+    }
+    return cache_mspMapPoint;
+}
+
+std::vector<shared_ptr<MapPoint>> &Map::cacheRefGetAllVectorMapPoint() {
+    if ( cache_mbMP ) {
+        boost::mutex::scoped_lock lock(mMutexMP);
+        cache_mvpMapPoint = std::vector<shared_ptr<MapPoint>>( mspMapPoint.begin(), mspMapPoint.end() );
+        cache_mbMP = false;
+    }
+    return cache_mvpMapPoint;
 }

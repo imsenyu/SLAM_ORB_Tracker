@@ -839,9 +839,9 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     {
         if(vpAllMapPoints[iMP])
         {
-            std::cout<<"MapPoint["<<iMP<<"] "<< vpAllMapPoints[iMP]->mPos <<std::endl;
+            std::cout<<"MapPoint["<<iMP<<"] "<< vpAllMapPoints[iMP]->getMPos() <<std::endl;
             shared_ptr<MapPoint> pMP = vpAllMapPoints[iMP];
-            pMP->setMPos( pMP->mPos*invMedianDepth );
+            pMP->setMPos(pMP->getMPos() * invMedianDepth);
         }
     }
 

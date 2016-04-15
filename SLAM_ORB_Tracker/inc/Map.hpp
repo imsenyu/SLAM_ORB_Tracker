@@ -21,6 +21,10 @@ private:
     boost::mutex mMutexMP;
     boost::mutex mMutexKF;
 
+    bool cache_mbMP;
+    Tick cache_mtMP;
+    std::set<shared_ptr<MapPoint>> cache_mspMapPoint;
+    std::vector<shared_ptr<MapPoint>> cache_mvpMapPoint;
 
 public:
     Map();
@@ -37,6 +41,14 @@ public:
     std::vector<shared_ptr<MapPoint>> getAllVectorMapPoint();
     std::vector<shared_ptr<KeyFrameState>> getAllVectorKeyFrame();
 
+    // cache copy
+    std::set<shared_ptr<MapPoint>> cacheCopyGetAllSetMapPoint();
+    std::vector<shared_ptr<MapPoint>> cacheCopyGetAllVectorMapPoint();
+
+
+    // cache reference
+    std::set<shared_ptr<MapPoint>>& cacheRefGetAllSetMapPoint();
+    std::vector<shared_ptr<MapPoint>>& cacheRefGetAllVectorMapPoint();
 
 
 

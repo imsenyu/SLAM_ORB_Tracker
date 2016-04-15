@@ -43,5 +43,6 @@ public:
     Tick(double _fps);
 
     bool tock();
+    bool try_tock();
 };
 #endif /* Utils_hpp */

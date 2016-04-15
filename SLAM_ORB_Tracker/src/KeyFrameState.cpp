@@ -64,7 +64,7 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
         if(vpMapPoints[i])
         {
             shared_ptr<MapPoint> pMP = vpMapPoints[i];
-            cv::Mat x3Dw = pMP->mPos.clone();
+            cv::Mat x3Dw = pMP->getMPos();
             float z = Rcw2.dot(x3Dw)+zcw;
             vDepths.push_back(z);
         }

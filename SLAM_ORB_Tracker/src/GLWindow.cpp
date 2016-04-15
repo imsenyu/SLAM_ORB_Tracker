@@ -133,31 +133,43 @@ void GLWindow::drawAllElement() {
         if ( !pKF ) continue;
         drawFrameOnce(pKF->getMatT2w(),mfDrawScale, cv::Scalar(0,128,0), cv::Scalar(0,0,0) );
     }
-    std::set<shared_ptr<MapPoint>>  spMP = mpMap->getAllSetMapPoint();
+
     std::set<shared_ptr<MapPoint>> spLMP = mpTracker->getAllSetLocalMapPoint();
+    std::set<shared_ptr<MapPoint>>&  spMP = mpMap->cacheRefGetAllSetMapPoint();
     glPushMatrix();
 
     glPointSize(2.0f);
     glColor3f( 0,0,0 ); // Let it be blue
     glBegin(GL_POINTS);
     for(auto iter=spMP.begin();iter!=spMP.end();iter++) {
+
         shared_ptr<MapPoint> pMP = *iter;
         if ( !pMP ) continue;
         if ( pMP->isBad() )
             continue;
         if ( spLMP.count(pMP) ) continue;
-        drawPointOnce( pMP->mPos.clone() , mfDrawScale );
+        // for using of mPos, should lock it or maybe Work-thread write to it and CRASH.
+        pMP->lockMutexMPos(0);
+            drawPointOnce( pMP->getMPosRef() , mfDrawScale );
+        pMP->lockMutexMPos(1);
+
     }
     glEnd();
+
 
     glColor3f( 255,0,0 ); // Let it be blue
     glBegin(GL_POINTS);
     for(auto iter=spLMP.begin();iter!=spLMP.end();iter++) {
+
         shared_ptr<MapPoint> pMP = *iter;
-        if ( !pMP ) continue;
-        if ( pMP->isBad() )
+        if (!pMP) continue;
+        if (pMP->isBad())
             continue;
-        drawPointOnce( pMP->mPos.clone() , mfDrawScale );
+        // for using of mPos, should lock it or maybe Work-thread write to it and CRASH.
+        pMP->lockMutexMPos(0);
+            drawPointOnce( pMP->getMPosRef() , mfDrawScale );
+        pMP->lockMutexMPos(1);
+
     }
     glEnd();
     glPopMatrix();

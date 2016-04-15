@@ -254,7 +254,7 @@ bool FrameState::isInFrustum(shared_ptr<MapPoint> pMP, float viewingCosLimit)
     pMP->mbTrackInView = false;
 
     // 3D in absolute coordinates
-    cv::Mat P = pMP->mPos.clone();
+    cv::Mat P = pMP->getMPos();
 
     // 3D in camera coordinates
     const cv::Mat Pc = mMatR*P+mMatT;

@@ -44,7 +44,7 @@ void MapPoint::UpdateNormalAndDepth()
             return;
         observations = msKeyFrame2FeatureId;
         pRefKF=mpRefKF;
-        Pos = mPos.clone();
+        Pos = getMPos();
     }
 
     cv::Mat normal = cv::Mat::zeros(3,1,CV_32FC1);
@@ -53,7 +53,11 @@ void MapPoint::UpdateNormalAndDepth()
     {
         shared_ptr<KeyFrameState> pKF = mit->first;
         cv::Mat Owi = pKF->getMatO2w();
-        cv::Mat normali = mPos - Owi;
+        cv::Mat normali;
+        {
+            boost::mutex::scoped_lock lock(mMutexMPos);
+            normali = mPos - Owi;
+        }
         normal = normal + normali/cv::norm(normali);
         n++;
     }
@@ -228,4 +232,28 @@ void MapPoint::EraseObservation(shared_ptr<KeyFrameState> pKF)
 
     if(bBad)
         SetBadFlag();
+}
+
+
+
+cv::Mat MapPoint::getMPos() {
+    boost::mutex::scoped_lock lock(mMutexMPos);
+    return mPos.clone();
+}
+
+cv::Mat& MapPoint::getMPosRef() {
+    return mPos;
+}
+
+void MapPoint::setMPos(cv::Mat mat) {
+    boost::mutex::scoped_lock lock(mMutexMPos);
+    mPos = mat.clone();
+    setPainted(false);
+}
+
+void MapPoint::lockMutexMPos(bool toLock)  {
+    if ( toLock == 0 )
+        mMutexMPos.lock();
+    else
+        mMutexMPos.unlock();
 }
