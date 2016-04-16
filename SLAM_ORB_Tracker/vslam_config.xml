@@ -4,7 +4,7 @@
 <iImageBeginIdx>0</iImageBeginIdx>
 <iImageEndIdx>4540</iImageEndIdx>
 <sPathVocabulary>/tmp/ORBvoc.bin</sPathVocabulary>
-<iFeatureNum>1000</iFeatureNum>
+<iFeatureNum>1500</iFeatureNum>
 <dDrawFrameStep>20.</dDrawFrameStep>
 <mCameraParameter type_id="opencv-matrix">
   <rows>3</rows>

@@ -114,7 +114,7 @@ int Tracker::threadRun() {
                         if(mpReferenceKF->GetMapPoint(i) )
                             nRefMatches++;
                     }
-                    bNeedKeyFrame = mnMatchesInliers<nRefMatches*0.6 || mnMatchesInliers < 70 ;
+                    bNeedKeyFrame = mnMatchesInliers<nRefMatches*0.6 || mnMatchesInliers < 90 ;
                     bNeedKeyFrame = bNeedKeyFrame && mnMatchesInliers < 200;
                     bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId < 5;
                     bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId - mLastMapperId > 10;
