@@ -12,7 +12,12 @@ Tracker::Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabula
     mpInputBuffer(_pIB), mpFrameDrawer(_pFD), mpMapDrawer(_pMD),
     meMode(Tracker::WorkMode::InitStep0), meLastMode(Tracker::WorkMode::Start),
     mpIniter(NULL),mpVocabulary(_pVocabulary), mpMap(_pMap),
-    mpLocalMapper(_pLocalMapper){
+    mpLocalMapper(_pLocalMapper),
+
+    cache_mbLMP(false),
+    cache_mtLMP(10)
+
+{
     
 }
 
@@ -862,6 +867,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
     {
         boost::mutex::scoped_lock lock(mMutexLMP);
         mvpLocalMapPoints = mpMap->getAllVectorMapPoint();
+        cache_mbLMP = true;
     }
     mpReferenceKF = pCurKeyFrame;
 
@@ -1122,6 +1128,7 @@ void Tracker::UpdateReferencePoints()
     {
         boost::mutex::scoped_lock lock(mMutexLMP);
         mvpLocalMapPoints.clear();
+        cache_mbLMP = true;
     }
 
     for(std::vector<shared_ptr<KeyFrameState>>::iterator itKF=mvpLocalKeyFrames.begin(), itEndKF=mvpLocalKeyFrames.end(); itKF!=itEndKF; itKF++)
@@ -1141,6 +1148,7 @@ void Tracker::UpdateReferencePoints()
                 {
                     boost::mutex::scoped_lock lock(mMutexLMP);
                     mvpLocalMapPoints.push_back(pMP);
+                    cache_mbLMP = true;
                 }
                 pMP->mnTrackReferenceForFrame=mpCurFrame->mId;
             }
@@ -1202,22 +1210,31 @@ void Tracker::SearchReferencePointsInFrustum()
     }
 }
 
-std::set<shared_ptr<MapPoint>> Tracker::getAllSetLocalMapPoint() {
-    boost::mutex::scoped_lock lock(mMutexLMP);
-    return std::set<shared_ptr<MapPoint>>(mvpLocalMapPoints.begin(), mvpLocalMapPoints.end());
-}
+//std::set<shared_ptr<MapPoint>> Tracker::getAllSetLocalMapPoint() {
+//    boost::mutex::scoped_lock lock(mMutexLMP);
+//    return std::set<shared_ptr<MapPoint>>(mvpLocalMapPoints.begin(), mvpLocalMapPoints.end());
+//}
 
 std::vector<shared_ptr<MapPoint>> Tracker::getAllVectorLocalMapPoint() {
     boost::mutex::scoped_lock lock(mMutexLMP);
     return mvpLocalMapPoints;
 }
-
-std::set<shared_ptr<KeyFrameState>> Tracker::getAllSetLocalKeyFrame() {
-    boost::mutex::scoped_lock lock(mMutexLKF);
-    return std::set<shared_ptr<KeyFrameState>>(mvpLocalKeyFrames.begin(), mvpLocalKeyFrames.end());
-}
+//
+//std::set<shared_ptr<KeyFrameState>> Tracker::getAllSetLocalKeyFrame() {
+//    boost::mutex::scoped_lock lock(mMutexLKF);
+//    return std::set<shared_ptr<KeyFrameState>>(mvpLocalKeyFrames.begin(), mvpLocalKeyFrames.end());
+//}
 
 std::vector<shared_ptr<KeyFrameState>> Tracker::getAllVectorLocalKeyFrame() {
     boost::mutex::scoped_lock lock(mMutexLKF);
     return mvpLocalKeyFrames;
+}
+
+std::vector<shared_ptr<MapPoint>> &Tracker::cacheRefGetAllVectorLocalMapPoint() {
+    if ( cache_mbLMP && cache_mtLMP.try_tock() ) {
+        boost::mutex::scoped_lock lock(mMutexLMP);
+        cache_mvpLocalMapPoints = mvpLocalMapPoints;
+        cache_mbLMP = false;
+    }
+    return cache_mvpLocalMapPoints;
 }

@@ -115,25 +115,25 @@ void drawPointOnce( cv::Mat mPos, float mfDrawScale ) {
 void GLWindow::drawAllElement() {
 
 
-    std::set<shared_ptr<FrameState>> spF = mpMapDrawer->getAllSetFrame();
+    std::set<shared_ptr<FrameState>>& spF = mpMapDrawer->cacheRefGetAllSetFrame();
 
     for(auto iter=spF.begin();iter!=spF.end();iter++) {
         shared_ptr<FrameState> pF = *iter;
         if ( !pF ) continue;
         drawFrameOnce(pF ,mfDrawScale, cv::Scalar(128,128,255), cv::Scalar(128,128,255) );
     }
-    std::set<shared_ptr<KeyFrameState>> spKF = mpMap->getAllSetKeyFrame();
+    std::set<shared_ptr<KeyFrameState>>& spKF = mpMap->cacheRefGetAllSetKeyFrame();
     for(auto iter=spKF.begin();iter!=spKF.end();iter++) {
         shared_ptr<KeyFrameState> pKF = *iter;
         if ( !pKF ) continue;
         drawFrameOnce(pKF->mpFrame,mfDrawScale, cv::Scalar(0,128,0), cv::Scalar(0,0,0) );
     }
 
-    std::set<shared_ptr<MapPoint>> spLMP = mpTracker->getAllSetLocalMapPoint();
+    std::vector<shared_ptr<MapPoint>>& vpLMP = mpTracker->cacheRefGetAllVectorLocalMapPoint();
     std::set<shared_ptr<MapPoint>>&  spMP = mpMap->cacheRefGetAllSetMapPoint();
     glPushMatrix();
 
-    glPointSize(2.0f);
+    glPointSize(1.5f);
     glColor3f( 0,0,0 ); // Let it be blue
     glBegin(GL_POINTS);
     for(auto iter=spMP.begin();iter!=spMP.end();iter++) {
@@ -142,7 +142,7 @@ void GLWindow::drawAllElement() {
         if ( !pMP ) continue;
         if ( pMP->isBad() )
             continue;
-        if ( spLMP.count(pMP) ) continue;
+        //if ( spLMP.count(pMP) ) continue;
         // for using of mPos, should lock it or maybe Work-thread write to it and CRASH.
         pMP->lockMutexMPos(0);
             drawPointOnce( pMP->getMPosRef() , mfDrawScale );
@@ -152,9 +152,10 @@ void GLWindow::drawAllElement() {
     glEnd();
 
 
+    glPointSize(2.0f);
     glColor3f( 255,0,0 ); // Let it be blue
     glBegin(GL_POINTS);
-    for(auto iter=spLMP.begin();iter!=spLMP.end();iter++) {
+    for(auto iter=vpLMP.begin();iter!=vpLMP.end();iter++) {
 
         shared_ptr<MapPoint> pMP = *iter;
         if (!pMP) continue;

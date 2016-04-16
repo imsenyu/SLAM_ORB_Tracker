@@ -14,7 +14,10 @@ MapDrawer::MapDrawer(Map *_pMap) :
     mpVizWin(NULL),
     mpMap(_pMap),
     mpTracker(NULL),
-    mpGLWin(NULL)
+    mpGLWin(NULL),
+
+    cache_mbFrame(false),
+    cache_mtFrame(5)
 {
     initCanvas();
     //initViz();
@@ -77,6 +80,7 @@ void MapDrawer::take() {
     {
         boost::mutex::scoped_lock lock(mMutexFrame);
         mspFrame.insert( mpCurFrame );
+        cache_mbFrame = true;
     }
     cv::Mat pop = mpCurFrame->mT2w.clone();
     //std::cout<<"show take "<<pop<<std::endl;
@@ -352,4 +356,13 @@ std::set<shared_ptr<FrameState>> MapDrawer::getAllSetFrame() {
 std::vector<shared_ptr<FrameState>> MapDrawer::getAllVectorFrame() {
     boost::mutex::scoped_lock lock(mMutexFrame);
     return std::vector<shared_ptr<FrameState>>( mspFrame.begin(), mspFrame.end() );
+}
+
+std::set<shared_ptr<FrameState>> &MapDrawer::cacheRefGetAllSetFrame() {
+    if ( cache_mbFrame && cache_mtFrame.try_tock() ) {
+        boost::mutex::scoped_lock lock(mMutexFrame);
+        cache_mspFrame = mspFrame;
+        cache_mbFrame = false;
+    }
+    return cache_mspFrame;
 }

@@ -61,8 +61,14 @@ private:
 //    void drawMapPoint();
 
     GLWindow* mpGLWin;
-    std::set<shared_ptr<FrameState>> mspFrame;
+
+
     boost::mutex mMutexFrame;
+    std::set<shared_ptr<FrameState>> mspFrame;
+    bool cache_mbFrame;
+    Tick cache_mtFrame;
+    std::set<shared_ptr<FrameState>> cache_mspFrame;
+
 public:
     MapDrawer(Map *_pMap);
     
@@ -75,6 +81,8 @@ public:
 
     std::set<shared_ptr<FrameState>> getAllSetFrame();
     std::vector<shared_ptr<FrameState>> getAllVectorFrame();
+
+    std::set<shared_ptr<FrameState>>& cacheRefGetAllSetFrame();
 };
 
 #endif /* MapDrawer_hpp */

@@ -26,6 +26,13 @@ private:
     std::set<shared_ptr<MapPoint>> cache_mspMapPoint;
     std::vector<shared_ptr<MapPoint>> cache_mvpMapPoint;
 
+    bool cache_mbKF;
+    Tick cache_mtKF;
+    std::set<shared_ptr<KeyFrameState>> cache_mspKeyFrame;
+    std::vector<shared_ptr<KeyFrameState>> cache_mvpKeyFrame;
+
+
+
 public:
     Map();
 
@@ -37,20 +44,18 @@ public:
 
     // origin copy
     std::set<shared_ptr<MapPoint>> getAllSetMapPoint();
-    std::set<shared_ptr<KeyFrameState>> getAllSetKeyFrame();
     std::vector<shared_ptr<MapPoint>> getAllVectorMapPoint();
-    std::vector<shared_ptr<KeyFrameState>> getAllVectorKeyFrame();
 
-    // cache copy
-    std::set<shared_ptr<MapPoint>> cacheCopyGetAllSetMapPoint();
-    std::vector<shared_ptr<MapPoint>> cacheCopyGetAllVectorMapPoint();
+    std::set<shared_ptr<KeyFrameState>> getAllSetKeyFrame();
+    std::vector<shared_ptr<KeyFrameState>> getAllVectorKeyFrame();
 
 
     // cache reference
     std::set<shared_ptr<MapPoint>>& cacheRefGetAllSetMapPoint();
     std::vector<shared_ptr<MapPoint>>& cacheRefGetAllVectorMapPoint();
 
-
+    std::set<shared_ptr<KeyFrameState>>& cacheRefGetAllSetKeyFrame();
+    std::vector<shared_ptr<KeyFrameState>>& cacheRefGetAllVectorKeyFrame();
 
 };
 
