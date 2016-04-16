@@ -229,8 +229,8 @@ void Tracker::initPose() {
     mCurPose.mPos = Const::pnt3d_000;
     mCurPose.mDir3 = Const::mat33_111.clone();
 
-    mpIniFrame->mT2w = cv::Mat::eye(4,4,CV_32FC1);
-    mCurPose.mDir3.copyTo( mpIniFrame->mT2w.rowRange(0,3).colRange(0,3) );
+    mpIniFrame->updatePose( Const::mat44_1111.clone() );
+    //mCurPose.mDir3.copyTo( mpIniFrame->mT2w.rowRange(0,3).colRange(0,3) );
     //mCurPose.mPos.copyTo( mpIniFrame->mT2w.rowRange(0,3).col(3) );
 }
 
@@ -763,12 +763,12 @@ bool Tracker::initStepSecondKeyFrame() {
 
 
 bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D) {
-    mpIniFrame->mT2w = Const::mat44_1111;
-    mpCurFrame->mT2w = cv::Mat(4,4,CV_32FC1);
+    mpIniFrame->mT2w = Const::mat44_1111.clone();
+    mpCurFrame->mT2w = Const::mat44_1111.clone();
 
     initMotion.mMatR.copyTo( mpCurFrame->mT2w.rowRange(0,3).colRange(0,3) );
     initMotion.mMatT.copyTo( mpCurFrame->mT2w.rowRange(0,3).col(3) );
-    mpCurFrame->mT2w.at<float>(3,3) = 1.0f;
+    mpCurFrame->updatePose();
 
     //init KeyFrame;
     shared_ptr<KeyFrameState> pIniKeyFrame = shared_ptr<KeyFrameState>( new KeyFrameState(mpIniFrame, mpVocabulary) );
@@ -845,7 +845,7 @@ bool Tracker::initStepBuildMap(MotionState initMotion, vector<cv::Point3f> &vP3D
         }
     }
 
-    mpCurFrame->mT2w = pCurKeyFrame->getMatT2w();
+
 
     mpLocalMapper->addKeyFrame(pIniKeyFrame);
     mpLocalMapper->addKeyFrame(pCurKeyFrame);
@@ -889,7 +889,7 @@ bool Tracker::TrackFromPreFrame() {
     //std::cout<< "numMatchMapPoint " <<numMatchMapPoint<<std::endl;
 
     // TODO: set estimation mT2w
-    mpCurFrame->mT2w = mpPreFrame->mT2w.clone();
+    mpCurFrame->updatePose( mpPreFrame->mT2w.clone() );
     mpCurFrame->mvpMapPoint = vpMapPoint;
     //std::cout<< "estimation mT2w!!! "<<mpPreFrame->mT2w<<std::endl;
     // TODO: if matches > 10  poseOptimization
@@ -952,7 +952,7 @@ bool Tracker::TrackMotion()
 
     // Compute current pose by motion model
     if ( mVelocity.empty() ) return false;
-    mpCurFrame->mT2w = mVelocity*mpPreFrame->mT2w;
+    mpCurFrame->updatePose( mVelocity*mpPreFrame->mT2w );
 
     //fill(mCurrentFrame.mvpMapPoints.begin(),mCurrentFrame.mvpMapPoints.end(),static_cast<shared_ptr<MapPoint>>(NULL));
     for(size_t i =0; i<mpCurFrame->mvpMapPoint.size(); i++) {

@@ -56,32 +56,28 @@ GLWindow::GLWindow(std::string name, int w, int h):
 
 }
 
-cv::Mat getFrameDir(cv::Mat R ) {
-    static float arr[] = {
-        -1.0f,-0.5f,0.0f,
-        1.0f,-0.5f,0.0f,
-        1.0f,0.5f,0.0f,
-        -1.0f,0.5f,0.0f
-    };
-    static cv::Mat mat(4,3,CV_32FC1, arr);
-    cv::Mat ret = mat * R;
-    return ret.clone();
-}
+static float getFrameDirArr[] = {
+    -1.0f,-0.5f,0.0f,
+    1.0f,-0.5f,0.0f,
+    1.0f,0.5f,0.0f,
+    -1.0f,0.5f,0.0f
+};
+static cv::Mat getFrameDirMat(4,3,CV_32FC1, getFrameDirArr);
 
-void drawFrameOnce(cv::Mat mt2w , float mfDrawScale, cv::Scalar cPlane = cv::Scalar(0,0,0) , cv::Scalar cLine = cv::Scalar(0,0,0) ) {
+
+void drawFrameOnce(shared_ptr<FrameState> pF , float mfDrawScale, cv::Scalar cPlane = cv::Scalar(0,0,0) , cv::Scalar cLine = cv::Scalar(0,0,0) ) {
 
     PoseState pose;
 
-    cv::Mat pop = mt2w;
-    cv::Mat R = pop.rowRange(0,3).colRange(0,3);
-    cv::Mat t = pop.rowRange(0,3).col(3);
+    cv::Mat mT2w = pF->mT2w;
+    cv::Mat mMatR = pF->mMatR;
+    cv::Mat mO2w = pF->mO2w;
 
-    cv::Mat frameDir = getFrameDir(R);
+    cv::Mat frameDir = getFrameDirMat * mT2w.rowRange(0,3).colRange(0,3);
 
-    t = -R.inv() * t;
-    R = R.inv();
-    pose.mPos = Utils::convertToPoint3d(t);
-    pose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
+
+    pose.mPos = Utils::convertToPoint3d( mO2w  );
+    pose.mDir = Utils::convertToPoint3d( mMatR.row(2)  );
 
 
     glPushMatrix();
@@ -121,17 +117,16 @@ void GLWindow::drawAllElement() {
 
     std::set<shared_ptr<FrameState>> spF = mpMapDrawer->getAllSetFrame();
 
-
     for(auto iter=spF.begin();iter!=spF.end();iter++) {
         shared_ptr<FrameState> pF = *iter;
         if ( !pF ) continue;
-        drawFrameOnce(pF->mT2w.clone() ,mfDrawScale, cv::Scalar(128,128,255), cv::Scalar(128,128,255) );
+        drawFrameOnce(pF ,mfDrawScale, cv::Scalar(128,128,255), cv::Scalar(128,128,255) );
     }
     std::set<shared_ptr<KeyFrameState>> spKF = mpMap->getAllSetKeyFrame();
     for(auto iter=spKF.begin();iter!=spKF.end();iter++) {
         shared_ptr<KeyFrameState> pKF = *iter;
         if ( !pKF ) continue;
-        drawFrameOnce(pKF->getMatT2w(),mfDrawScale, cv::Scalar(0,128,0), cv::Scalar(0,0,0) );
+        drawFrameOnce(pKF->mpFrame,mfDrawScale, cv::Scalar(0,128,0), cv::Scalar(0,0,0) );
     }
 
     std::set<shared_ptr<MapPoint>> spLMP = mpTracker->getAllSetLocalMapPoint();

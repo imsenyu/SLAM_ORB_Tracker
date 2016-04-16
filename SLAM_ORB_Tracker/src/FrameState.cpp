@@ -28,7 +28,8 @@ FrameState::FrameState(const FrameState& _FS) {
     mvKeyPoint = _FS.mvKeyPoint;
     mvMatchMask = _FS.mvMatchMask;
     mvbOutlier = _FS.mvbOutlier;
-    mT2w = _FS.mT2w.clone();
+
+    updatePose(_FS.mT2w);
     mDescriptor = _FS.mDescriptor.clone();
     mvpMapPoint = _FS.mvpMapPoint;
     for(int i=0;i<FRAME_GRID_COLS;i++)
@@ -43,7 +44,8 @@ FrameState::FrameState(const FrameState* _pFS) {
     mvKeyPoint = _pFS->mvKeyPoint;
     mvMatchMask = _pFS->mvMatchMask;
     mvbOutlier = _pFS->mvbOutlier;
-    mT2w = _pFS->mT2w.clone();
+
+    updatePose(_pFS->mT2w);
     mDescriptor = _pFS->mDescriptor.clone();
     mvpMapPoint = _pFS->mvpMapPoint;
     for(int i=0;i<FRAME_GRID_COLS;i++)

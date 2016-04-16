@@ -20,9 +20,9 @@ double Utils::getRodriguesRotation(cv::Mat _rtDir, cv::Mat& matRotation, cv::Mat
     
 
     if (abs(thetaInR) > 1 - 1e-7) {
-        matRotation = cv::Mat(3, 3, CV_64FC1);
+        matRotation = cv::Mat(3, 3, CV_32FC1);
         matRotation = 0.0f;
-        matRotation.at<double>(0, 0) = matRotation.at<double>(1, 1) = matRotation.at<double>(2, 2) = 1.0f;
+        matRotation.at<float>(0, 0) = matRotation.at<float>(1, 1) = matRotation.at<float>(2, 2) = 1.0f;
 
         return 0.0f;
     }
@@ -37,14 +37,14 @@ double Utils::getRodriguesRotation(cv::Mat _rtDir, cv::Mat& matRotation, cv::Mat
 cv::Point3d Utils::convertToPoint3d(const cv::Mat &mat31) {
     cv::Point3d ret;
     if ( mat31.type() == CV_32FC1 ) {
-        ret.x = mat31.at<float>(0, 0);
-        ret.y = mat31.at<float>(1, 0);
-        ret.z = mat31.at<float>(2, 0);
+        ret.x = mat31.at<float>(0);
+        ret.y = mat31.at<float>(1);
+        ret.z = mat31.at<float>(2);
     }
     else if ( mat31.type() == CV_64FC1 ) {
-        ret.x = mat31.at<double>(0, 0);
-        ret.y = mat31.at<double>(1, 0);
-        ret.z = mat31.at<double>(2, 0);
+        ret.x = mat31.at<double>(0);
+        ret.y = mat31.at<double>(1);
+        ret.z = mat31.at<double>(2);
     }
     else {
         std::cout<<"matrix type error"<<std::endl;

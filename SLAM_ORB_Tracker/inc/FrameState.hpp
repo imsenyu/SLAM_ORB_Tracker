@@ -37,6 +37,7 @@ public:
     cv::Mat mMatR;
     cv::Mat mMatT;
     cv::Mat mO2w;
+
     void updatePose(cv::Mat _mT) {
         mT2w = _mT.clone();
         updatePose();

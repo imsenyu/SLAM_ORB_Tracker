@@ -54,7 +54,7 @@ PoseState PoseState::move(MotionState& _motion) {
     
     
     //如果不考虑y轴影响,则要重新把 模长置为1
-    if (true) {
+    if (false) {
         cv::Mat tT = _motion.mMatT.clone();
         tT.at<float>(1, 0) = 0.0f;
 
