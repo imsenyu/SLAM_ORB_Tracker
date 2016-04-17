@@ -104,14 +104,16 @@ int main(int argc, char * argv[]) {
     LocalMapper localMapper(&map);
     Tracker tracker(&inputBuffer, &frameDrawer, &mapDrawer, &vocabulary, &map, &localMapper);
     mapDrawer.setTracker(&tracker);
-    boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
-    boost::thread mapDrawerThread( boost::bind(&MapDrawer::threadRun, &mapDrawer) );
 
     GLWindow glWindow3D("3D");
     glWindow3D.setMap(&map);
     glWindow3D.setMapDrawer(&mapDrawer);
     glWindow3D.setTracker(&tracker);
     mapDrawer.setGLWindow(&glWindow3D);
+
+    boost::thread trackerThread( boost::bind(&Tracker::run, &tracker) );
+    boost::thread mapDrawerThread( boost::bind(&MapDrawer::threadRun, &mapDrawer) );
+
 
     Tick tGUI(20);
     while( tGUI.tock() ) {

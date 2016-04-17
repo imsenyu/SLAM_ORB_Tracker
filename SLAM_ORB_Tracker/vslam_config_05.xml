@@ -4,7 +4,7 @@
 <iImageBeginIdx>0</iImageBeginIdx>
 <iImageEndIdx>2760</iImageEndIdx>
 <sPathVocabulary>/tmp/ORBvoc.bin</sPathVocabulary>
-<iFeatureNum>2000</iFeatureNum>
+<iFeatureNum>1000</iFeatureNum>
 <dDrawFrameStep>15.</dDrawFrameStep>
 <mCameraParameter type_id="opencv-matrix">
   <rows>3</rows>
@@ -17,4 +17,5 @@
 <dScaleLevel>8</dScaleLevel>
 <dScaleFactor>1.2000000000000000e+00</dScaleFactor>
 <sProjectName>kitti05</sProjectName>
+<sPathOutput>/tmp/</sPathOutput>
 </opencv_storage>

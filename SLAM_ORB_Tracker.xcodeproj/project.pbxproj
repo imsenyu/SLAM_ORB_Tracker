@@ -15,32 +15,28 @@
 		684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842448CAB6464C237ED57EC /* Initializer.cc */; };
 		68424AA02308E2E3333AD710 /* GLWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424A4228369C28A681D4E8 /* GLWindow.cpp */; };
 		68424E66C2C4242C9BF1A94A /* ORBmatcher.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842436352005E2720FD4CFD /* ORBmatcher.cc */; };
+		EB0FDAC21CC2687F00A2E303 /* libg2o_types_sim3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAA91CC2687F00A2E303 /* libg2o_types_sim3.dylib */; };
+		EB0FDAC31CC2687F00A2E303 /* libg2o_solver_dense.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAAA1CC2687F00A2E303 /* libg2o_solver_dense.dylib */; };
+		EB0FDAC41CC2687F00A2E303 /* libg2o_solver_structure_only.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAAB1CC2687F00A2E303 /* libg2o_solver_structure_only.dylib */; };
+		EB0FDAC61CC2687F00A2E303 /* libg2o_types_sclam2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAAD1CC2687F00A2E303 /* libg2o_types_sclam2d.dylib */; };
+		EB0FDAC71CC2687F00A2E303 /* libg2o_types_icp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAAE1CC2687F00A2E303 /* libg2o_types_icp.dylib */; };
+		EB0FDAC81CC2687F00A2E303 /* libg2o_types_slam2d_addons.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAAF1CC2687F00A2E303 /* libg2o_types_slam2d_addons.dylib */; };
+		EB0FDAC91CC2687F00A2E303 /* libg2o_types_sba.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB01CC2687F00A2E303 /* libg2o_types_sba.dylib */; };
+		EB0FDACA1CC2687F00A2E303 /* libg2o_types_slam3d_addons.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB11CC2687F00A2E303 /* libg2o_types_slam3d_addons.dylib */; };
+		EB0FDACB1CC2687F00A2E303 /* libg2o_solver_pcg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB21CC2687F00A2E303 /* libg2o_solver_pcg.dylib */; };
+		EB0FDACC1CC2687F00A2E303 /* libg2o_types_data.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB31CC2687F00A2E303 /* libg2o_types_data.dylib */; };
+		EB0FDACD1CC2687F00A2E303 /* libg2o_solver_slam2d_linear.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB41CC2687F00A2E303 /* libg2o_solver_slam2d_linear.dylib */; };
+		EB0FDACE1CC2687F00A2E303 /* libg2o_types_slam3d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB51CC2687F00A2E303 /* libg2o_types_slam3d.dylib */; };
+		EB0FDAD01CC2687F00A2E303 /* libg2o_types_slam2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB71CC2687F00A2E303 /* libg2o_types_slam2d.dylib */; };
+		EB0FDAD11CC2687F00A2E303 /* libg2o_solver_csparse.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB81CC2687F00A2E303 /* libg2o_solver_csparse.dylib */; };
+		EB0FDAD21CC2687F00A2E303 /* libg2o_solver_eigen.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAB91CC2687F00A2E303 /* libg2o_solver_eigen.dylib */; };
+		EB0FDAD31CC2687F00A2E303 /* libg2o_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDABA1CC2687F00A2E303 /* libg2o_core.dylib */; };
+		EB0FDAD41CC2687F00A2E303 /* libg2o_csparse_extension.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDABB1CC2687F00A2E303 /* libg2o_csparse_extension.dylib */; };
+		EB0FDAD61CC2687F00A2E303 /* libg2o_ext_csparse.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDABD1CC2687F00A2E303 /* libg2o_ext_csparse.dylib */; };
+		EB0FDAD71CC2687F00A2E303 /* libg2o_stuff.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDABE1CC2687F00A2E303 /* libg2o_stuff.dylib */; };
+		EB0FDAD81CC2687F00A2E303 /* libg2o_ext_freeglut_minimal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDABF1CC2687F00A2E303 /* libg2o_ext_freeglut_minimal.dylib */; };
+		EB0FDAD91CC2687F00A2E303 /* libg2o_opengl_helper.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAC01CC2687F00A2E303 /* libg2o_opengl_helper.dylib */; };
 		EB2CCF701CA24E0300170EEE /* libDBoW2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */; };
-		EB301C371C9F94AB00F685EE /* libg2o_cli.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */; };
-		EB301C381C9F94AB00F685EE /* libg2o_core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */; };
-		EB301C391C9F94AB00F685EE /* libg2o_csparse_extension.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C201C9F94AA00F685EE /* libg2o_csparse_extension.dylib */; };
-		EB301C3A1C9F94AB00F685EE /* libg2o_ext_csparse.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C211C9F94AB00F685EE /* libg2o_ext_csparse.dylib */; };
-		EB301C3B1C9F94AB00F685EE /* libg2o_ext_freeglut_minimal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C221C9F94AB00F685EE /* libg2o_ext_freeglut_minimal.dylib */; };
-		EB301C3C1C9F94AB00F685EE /* libg2o_interface.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C231C9F94AB00F685EE /* libg2o_interface.dylib */; };
-		EB301C3D1C9F94AB00F685EE /* libg2o_opengl_helper.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C241C9F94AB00F685EE /* libg2o_opengl_helper.dylib */; };
-		EB301C3E1C9F94AB00F685EE /* libg2o_parser.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C251C9F94AB00F685EE /* libg2o_parser.dylib */; };
-		EB301C3F1C9F94AB00F685EE /* libg2o_simulator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C261C9F94AB00F685EE /* libg2o_simulator.dylib */; };
-		EB301C401C9F94AB00F685EE /* libg2o_solver_csparse.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C271C9F94AB00F685EE /* libg2o_solver_csparse.dylib */; };
-		EB301C411C9F94AB00F685EE /* libg2o_solver_dense.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C281C9F94AB00F685EE /* libg2o_solver_dense.dylib */; };
-		EB301C421C9F94AB00F685EE /* libg2o_solver_eigen.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C291C9F94AB00F685EE /* libg2o_solver_eigen.dylib */; };
-		EB301C431C9F94AB00F685EE /* libg2o_solver_pcg.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C2A1C9F94AB00F685EE /* libg2o_solver_pcg.dylib */; };
-		EB301C441C9F94AB00F685EE /* libg2o_solver_slam2d_linear.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C2B1C9F94AB00F685EE /* libg2o_solver_slam2d_linear.dylib */; };
-		EB301C451C9F94AB00F685EE /* libg2o_solver_structure_only.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C2C1C9F94AB00F685EE /* libg2o_solver_structure_only.dylib */; };
-		EB301C461C9F94AB00F685EE /* libg2o_stuff.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C2D1C9F94AB00F685EE /* libg2o_stuff.dylib */; };
-		EB301C471C9F94AB00F685EE /* libg2o_types_data.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C2E1C9F94AB00F685EE /* libg2o_types_data.dylib */; };
-		EB301C481C9F94AB00F685EE /* libg2o_types_icp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C2F1C9F94AB00F685EE /* libg2o_types_icp.dylib */; };
-		EB301C491C9F94AB00F685EE /* libg2o_types_sba.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C301C9F94AB00F685EE /* libg2o_types_sba.dylib */; };
-		EB301C4A1C9F94AB00F685EE /* libg2o_types_sclam2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C311C9F94AB00F685EE /* libg2o_types_sclam2d.dylib */; };
-		EB301C4B1C9F94AB00F685EE /* libg2o_types_sim3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C321C9F94AB00F685EE /* libg2o_types_sim3.dylib */; };
-		EB301C4C1C9F94AB00F685EE /* libg2o_types_slam2d_addons.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C331C9F94AB00F685EE /* libg2o_types_slam2d_addons.dylib */; };
-		EB301C4D1C9F94AB00F685EE /* libg2o_types_slam2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C341C9F94AB00F685EE /* libg2o_types_slam2d.dylib */; };
-		EB301C4E1C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C351C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib */; };
-		EB301C4F1C9F94AB00F685EE /* libg2o_types_slam3d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB301C361C9F94AB00F685EE /* libg2o_types_slam3d.dylib */; };
 		EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C501C9FF0E600F685EE /* FrameDrawer.cpp */; };
 		EB301C551C9FF0F500F685EE /* MapDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C531C9FF0F500F685EE /* MapDrawer.cpp */; };
 		EB301C5B1CA0006400F685EE /* PoseState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB301C591CA0006400F685EE /* PoseState.cpp */; };
@@ -171,32 +167,28 @@
 		68424BCBCC9C77B25984FCC0 /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
 		68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Optimizer.cpp; sourceTree = "<group>"; };
 		68424FD80CEAC66F210301CD /* ORBextractor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBextractor.cc; sourceTree = "<group>"; };
+		EB0FDAA91CC2687F00A2E303 /* libg2o_types_sim3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sim3.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_sim3.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAAA1CC2687F00A2E303 /* libg2o_solver_dense.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_dense.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_dense.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAAB1CC2687F00A2E303 /* libg2o_solver_structure_only.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_structure_only.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_structure_only.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAAD1CC2687F00A2E303 /* libg2o_types_sclam2d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sclam2d.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_sclam2d.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAAE1CC2687F00A2E303 /* libg2o_types_icp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_icp.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_icp.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAAF1CC2687F00A2E303 /* libg2o_types_slam2d_addons.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam2d_addons.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_slam2d_addons.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB01CC2687F00A2E303 /* libg2o_types_sba.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sba.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_sba.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB11CC2687F00A2E303 /* libg2o_types_slam3d_addons.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam3d_addons.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_slam3d_addons.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB21CC2687F00A2E303 /* libg2o_solver_pcg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_pcg.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_pcg.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB31CC2687F00A2E303 /* libg2o_types_data.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_data.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_data.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB41CC2687F00A2E303 /* libg2o_solver_slam2d_linear.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_slam2d_linear.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_slam2d_linear.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB51CC2687F00A2E303 /* libg2o_types_slam3d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam3d.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_slam3d.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB71CC2687F00A2E303 /* libg2o_types_slam2d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam2d.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_slam2d.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB81CC2687F00A2E303 /* libg2o_solver_csparse.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_csparse.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_csparse.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAB91CC2687F00A2E303 /* libg2o_solver_eigen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_eigen.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_eigen.dylib"; sourceTree = "<absolute>"; };
+		EB0FDABA1CC2687F00A2E303 /* libg2o_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_core.dylib; path = "/usr/local/lib/g2o-non/libg2o_core.dylib"; sourceTree = "<absolute>"; };
+		EB0FDABB1CC2687F00A2E303 /* libg2o_csparse_extension.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_csparse_extension.dylib; path = "/usr/local/lib/g2o-non/libg2o_csparse_extension.dylib"; sourceTree = "<absolute>"; };
+		EB0FDABD1CC2687F00A2E303 /* libg2o_ext_csparse.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_ext_csparse.dylib; path = "/usr/local/lib/g2o-non/libg2o_ext_csparse.dylib"; sourceTree = "<absolute>"; };
+		EB0FDABE1CC2687F00A2E303 /* libg2o_stuff.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_stuff.dylib; path = "/usr/local/lib/g2o-non/libg2o_stuff.dylib"; sourceTree = "<absolute>"; };
+		EB0FDABF1CC2687F00A2E303 /* libg2o_ext_freeglut_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_ext_freeglut_minimal.dylib; path = "/usr/local/lib/g2o-non/libg2o_ext_freeglut_minimal.dylib"; sourceTree = "<absolute>"; };
+		EB0FDAC01CC2687F00A2E303 /* libg2o_opengl_helper.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_opengl_helper.dylib; path = "/usr/local/lib/g2o-non/libg2o_opengl_helper.dylib"; sourceTree = "<absolute>"; };
 		EB2CCF6F1CA24E0300170EEE /* libDBoW2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libDBoW2.a; path = "../../../Library/Developer/Xcode/DerivedData/SLAM_ORB_Tracker-dwkscwtidfjkxdggobyagrolwzft/Build/Products/Debug/libDBoW2.a"; sourceTree = "<group>"; };
-		EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_cli.dylib; path = /usr/local/lib/libg2o_cli.dylib; sourceTree = "<absolute>"; };
-		EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_core.dylib; path = /usr/local/lib/libg2o_core.dylib; sourceTree = "<absolute>"; };
-		EB301C201C9F94AA00F685EE /* libg2o_csparse_extension.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_csparse_extension.dylib; path = /usr/local/lib/libg2o_csparse_extension.dylib; sourceTree = "<absolute>"; };
-		EB301C211C9F94AB00F685EE /* libg2o_ext_csparse.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_ext_csparse.dylib; path = /usr/local/lib/libg2o_ext_csparse.dylib; sourceTree = "<absolute>"; };
-		EB301C221C9F94AB00F685EE /* libg2o_ext_freeglut_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_ext_freeglut_minimal.dylib; path = /usr/local/lib/libg2o_ext_freeglut_minimal.dylib; sourceTree = "<absolute>"; };
-		EB301C231C9F94AB00F685EE /* libg2o_interface.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_interface.dylib; path = /usr/local/lib/libg2o_interface.dylib; sourceTree = "<absolute>"; };
-		EB301C241C9F94AB00F685EE /* libg2o_opengl_helper.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_opengl_helper.dylib; path = /usr/local/lib/libg2o_opengl_helper.dylib; sourceTree = "<absolute>"; };
-		EB301C251C9F94AB00F685EE /* libg2o_parser.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_parser.dylib; path = /usr/local/lib/libg2o_parser.dylib; sourceTree = "<absolute>"; };
-		EB301C261C9F94AB00F685EE /* libg2o_simulator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_simulator.dylib; path = /usr/local/lib/libg2o_simulator.dylib; sourceTree = "<absolute>"; };
-		EB301C271C9F94AB00F685EE /* libg2o_solver_csparse.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_csparse.dylib; path = /usr/local/lib/libg2o_solver_csparse.dylib; sourceTree = "<absolute>"; };
-		EB301C281C9F94AB00F685EE /* libg2o_solver_dense.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_dense.dylib; path = /usr/local/lib/libg2o_solver_dense.dylib; sourceTree = "<absolute>"; };
-		EB301C291C9F94AB00F685EE /* libg2o_solver_eigen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_eigen.dylib; path = /usr/local/lib/libg2o_solver_eigen.dylib; sourceTree = "<absolute>"; };
-		EB301C2A1C9F94AB00F685EE /* libg2o_solver_pcg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_pcg.dylib; path = /usr/local/lib/libg2o_solver_pcg.dylib; sourceTree = "<absolute>"; };
-		EB301C2B1C9F94AB00F685EE /* libg2o_solver_slam2d_linear.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_slam2d_linear.dylib; path = /usr/local/lib/libg2o_solver_slam2d_linear.dylib; sourceTree = "<absolute>"; };
-		EB301C2C1C9F94AB00F685EE /* libg2o_solver_structure_only.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_structure_only.dylib; path = /usr/local/lib/libg2o_solver_structure_only.dylib; sourceTree = "<absolute>"; };
-		EB301C2D1C9F94AB00F685EE /* libg2o_stuff.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_stuff.dylib; path = /usr/local/lib/libg2o_stuff.dylib; sourceTree = "<absolute>"; };
-		EB301C2E1C9F94AB00F685EE /* libg2o_types_data.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_data.dylib; path = /usr/local/lib/libg2o_types_data.dylib; sourceTree = "<absolute>"; };
-		EB301C2F1C9F94AB00F685EE /* libg2o_types_icp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_icp.dylib; path = /usr/local/lib/libg2o_types_icp.dylib; sourceTree = "<absolute>"; };
-		EB301C301C9F94AB00F685EE /* libg2o_types_sba.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sba.dylib; path = /usr/local/lib/libg2o_types_sba.dylib; sourceTree = "<absolute>"; };
-		EB301C311C9F94AB00F685EE /* libg2o_types_sclam2d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sclam2d.dylib; path = /usr/local/lib/libg2o_types_sclam2d.dylib; sourceTree = "<absolute>"; };
-		EB301C321C9F94AB00F685EE /* libg2o_types_sim3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sim3.dylib; path = /usr/local/lib/libg2o_types_sim3.dylib; sourceTree = "<absolute>"; };
-		EB301C331C9F94AB00F685EE /* libg2o_types_slam2d_addons.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam2d_addons.dylib; path = /usr/local/lib/libg2o_types_slam2d_addons.dylib; sourceTree = "<absolute>"; };
-		EB301C341C9F94AB00F685EE /* libg2o_types_slam2d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam2d.dylib; path = /usr/local/lib/libg2o_types_slam2d.dylib; sourceTree = "<absolute>"; };
-		EB301C351C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam3d_addons.dylib; path = /usr/local/lib/libg2o_types_slam3d_addons.dylib; sourceTree = "<absolute>"; };
-		EB301C361C9F94AB00F685EE /* libg2o_types_slam3d.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_slam3d.dylib; path = /usr/local/lib/libg2o_types_slam3d.dylib; sourceTree = "<absolute>"; };
 		EB301C501C9FF0E600F685EE /* FrameDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameDrawer.cpp; sourceTree = "<group>"; };
 		EB301C531C9FF0F500F685EE /* MapDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapDrawer.cpp; sourceTree = "<group>"; };
 		EB301C561C9FF13700F685EE /* FrameDrawer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FrameDrawer.hpp; sourceTree = "<group>"; };
@@ -315,37 +307,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB0FDAC21CC2687F00A2E303 /* libg2o_types_sim3.dylib in Frameworks */,
+				EB0FDAC31CC2687F00A2E303 /* libg2o_solver_dense.dylib in Frameworks */,
+				EB0FDAC41CC2687F00A2E303 /* libg2o_solver_structure_only.dylib in Frameworks */,
+				EB0FDAC61CC2687F00A2E303 /* libg2o_types_sclam2d.dylib in Frameworks */,
+				EB0FDAC71CC2687F00A2E303 /* libg2o_types_icp.dylib in Frameworks */,
+				EB0FDAC81CC2687F00A2E303 /* libg2o_types_slam2d_addons.dylib in Frameworks */,
+				EB0FDAC91CC2687F00A2E303 /* libg2o_types_sba.dylib in Frameworks */,
+				EB0FDACA1CC2687F00A2E303 /* libg2o_types_slam3d_addons.dylib in Frameworks */,
+				EB0FDACB1CC2687F00A2E303 /* libg2o_solver_pcg.dylib in Frameworks */,
+				EB0FDACC1CC2687F00A2E303 /* libg2o_types_data.dylib in Frameworks */,
+				EB0FDACD1CC2687F00A2E303 /* libg2o_solver_slam2d_linear.dylib in Frameworks */,
+				EB0FDACE1CC2687F00A2E303 /* libg2o_types_slam3d.dylib in Frameworks */,
+				EB0FDAD01CC2687F00A2E303 /* libg2o_types_slam2d.dylib in Frameworks */,
+				EB0FDAD11CC2687F00A2E303 /* libg2o_solver_csparse.dylib in Frameworks */,
+				EB0FDAD21CC2687F00A2E303 /* libg2o_solver_eigen.dylib in Frameworks */,
+				EB0FDAD31CC2687F00A2E303 /* libg2o_core.dylib in Frameworks */,
+				EB0FDAD41CC2687F00A2E303 /* libg2o_csparse_extension.dylib in Frameworks */,
+				EB0FDAD61CC2687F00A2E303 /* libg2o_ext_csparse.dylib in Frameworks */,
+				EB0FDAD71CC2687F00A2E303 /* libg2o_stuff.dylib in Frameworks */,
+				EB0FDAD81CC2687F00A2E303 /* libg2o_ext_freeglut_minimal.dylib in Frameworks */,
+				EB0FDAD91CC2687F00A2E303 /* libg2o_opengl_helper.dylib in Frameworks */,
 				EB98C35C1CBF5CD2006110BA /* libglut.3.dylib in Frameworks */,
 				EB98C35A1CBF5C8E006110BA /* OpenGL.framework in Frameworks */,
 				EB2CCF701CA24E0300170EEE /* libDBoW2.a in Frameworks */,
-				EB301C371C9F94AB00F685EE /* libg2o_cli.dylib in Frameworks */,
-				EB301C381C9F94AB00F685EE /* libg2o_core.dylib in Frameworks */,
-				EB301C391C9F94AB00F685EE /* libg2o_csparse_extension.dylib in Frameworks */,
-				EB301C3A1C9F94AB00F685EE /* libg2o_ext_csparse.dylib in Frameworks */,
-				EB301C3B1C9F94AB00F685EE /* libg2o_ext_freeglut_minimal.dylib in Frameworks */,
-				EB301C3C1C9F94AB00F685EE /* libg2o_interface.dylib in Frameworks */,
-				EB301C3D1C9F94AB00F685EE /* libg2o_opengl_helper.dylib in Frameworks */,
-				EB301C3E1C9F94AB00F685EE /* libg2o_parser.dylib in Frameworks */,
-				EB301C3F1C9F94AB00F685EE /* libg2o_simulator.dylib in Frameworks */,
-				EB301C401C9F94AB00F685EE /* libg2o_solver_csparse.dylib in Frameworks */,
 				EBAB8DA71CA18B64009A0ED4 /* libopencv_features2d.2.4.12.dylib in Frameworks */,
-				EB301C411C9F94AB00F685EE /* libg2o_solver_dense.dylib in Frameworks */,
-				EB301C421C9F94AB00F685EE /* libg2o_solver_eigen.dylib in Frameworks */,
-				EB301C431C9F94AB00F685EE /* libg2o_solver_pcg.dylib in Frameworks */,
-				EB301C441C9F94AB00F685EE /* libg2o_solver_slam2d_linear.dylib in Frameworks */,
 				EBAB8DB11CA18B64009A0ED4 /* libopencv_photo.2.4.12.dylib in Frameworks */,
-				EB301C451C9F94AB00F685EE /* libg2o_solver_structure_only.dylib in Frameworks */,
-				EB301C461C9F94AB00F685EE /* libg2o_stuff.dylib in Frameworks */,
-				EB301C471C9F94AB00F685EE /* libg2o_types_data.dylib in Frameworks */,
-				EB301C481C9F94AB00F685EE /* libg2o_types_icp.dylib in Frameworks */,
-				EB301C491C9F94AB00F685EE /* libg2o_types_sba.dylib in Frameworks */,
-				EB301C4A1C9F94AB00F685EE /* libg2o_types_sclam2d.dylib in Frameworks */,
-				EB301C4B1C9F94AB00F685EE /* libg2o_types_sim3.dylib in Frameworks */,
-				EB301C4C1C9F94AB00F685EE /* libg2o_types_slam2d_addons.dylib in Frameworks */,
 				EBAB8DAA1CA18B64009A0ED4 /* libopencv_highgui.2.4.12.dylib in Frameworks */,
-				EB301C4D1C9F94AB00F685EE /* libg2o_types_slam2d.dylib in Frameworks */,
-				EB301C4E1C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib in Frameworks */,
-				EB301C4F1C9F94AB00F685EE /* libg2o_types_slam3d.dylib in Frameworks */,
 				EBAB8DB31CA18B64009A0ED4 /* libopencv_superres.2.4.12.dylib in Frameworks */,
 				EBFE5C461C9DA6F400E6DA0B /* libboost_serialization-mt.dylib in Frameworks */,
 				EBFE5C2A1C9DA6F400E6DA0B /* libboost_math_tr1-mt.dylib in Frameworks */,
@@ -466,31 +454,27 @@
 		EB301C1D1C9F946B00F685EE /* g2o */ = {
 			isa = PBXGroup;
 			children = (
-				EB301C1E1C9F94AA00F685EE /* libg2o_cli.dylib */,
-				EB301C1F1C9F94AA00F685EE /* libg2o_core.dylib */,
-				EB301C201C9F94AA00F685EE /* libg2o_csparse_extension.dylib */,
-				EB301C211C9F94AB00F685EE /* libg2o_ext_csparse.dylib */,
-				EB301C221C9F94AB00F685EE /* libg2o_ext_freeglut_minimal.dylib */,
-				EB301C231C9F94AB00F685EE /* libg2o_interface.dylib */,
-				EB301C241C9F94AB00F685EE /* libg2o_opengl_helper.dylib */,
-				EB301C251C9F94AB00F685EE /* libg2o_parser.dylib */,
-				EB301C261C9F94AB00F685EE /* libg2o_simulator.dylib */,
-				EB301C271C9F94AB00F685EE /* libg2o_solver_csparse.dylib */,
-				EB301C281C9F94AB00F685EE /* libg2o_solver_dense.dylib */,
-				EB301C291C9F94AB00F685EE /* libg2o_solver_eigen.dylib */,
-				EB301C2A1C9F94AB00F685EE /* libg2o_solver_pcg.dylib */,
-				EB301C2B1C9F94AB00F685EE /* libg2o_solver_slam2d_linear.dylib */,
-				EB301C2C1C9F94AB00F685EE /* libg2o_solver_structure_only.dylib */,
-				EB301C2D1C9F94AB00F685EE /* libg2o_stuff.dylib */,
-				EB301C2E1C9F94AB00F685EE /* libg2o_types_data.dylib */,
-				EB301C2F1C9F94AB00F685EE /* libg2o_types_icp.dylib */,
-				EB301C301C9F94AB00F685EE /* libg2o_types_sba.dylib */,
-				EB301C311C9F94AB00F685EE /* libg2o_types_sclam2d.dylib */,
-				EB301C321C9F94AB00F685EE /* libg2o_types_sim3.dylib */,
-				EB301C331C9F94AB00F685EE /* libg2o_types_slam2d_addons.dylib */,
-				EB301C341C9F94AB00F685EE /* libg2o_types_slam2d.dylib */,
-				EB301C351C9F94AB00F685EE /* libg2o_types_slam3d_addons.dylib */,
-				EB301C361C9F94AB00F685EE /* libg2o_types_slam3d.dylib */,
+				EB0FDAA91CC2687F00A2E303 /* libg2o_types_sim3.dylib */,
+				EB0FDAAA1CC2687F00A2E303 /* libg2o_solver_dense.dylib */,
+				EB0FDAAB1CC2687F00A2E303 /* libg2o_solver_structure_only.dylib */,
+				EB0FDAAD1CC2687F00A2E303 /* libg2o_types_sclam2d.dylib */,
+				EB0FDAAE1CC2687F00A2E303 /* libg2o_types_icp.dylib */,
+				EB0FDAAF1CC2687F00A2E303 /* libg2o_types_slam2d_addons.dylib */,
+				EB0FDAB01CC2687F00A2E303 /* libg2o_types_sba.dylib */,
+				EB0FDAB11CC2687F00A2E303 /* libg2o_types_slam3d_addons.dylib */,
+				EB0FDAB21CC2687F00A2E303 /* libg2o_solver_pcg.dylib */,
+				EB0FDAB31CC2687F00A2E303 /* libg2o_types_data.dylib */,
+				EB0FDAB41CC2687F00A2E303 /* libg2o_solver_slam2d_linear.dylib */,
+				EB0FDAB51CC2687F00A2E303 /* libg2o_types_slam3d.dylib */,
+				EB0FDAB71CC2687F00A2E303 /* libg2o_types_slam2d.dylib */,
+				EB0FDAB81CC2687F00A2E303 /* libg2o_solver_csparse.dylib */,
+				EB0FDAB91CC2687F00A2E303 /* libg2o_solver_eigen.dylib */,
+				EB0FDABA1CC2687F00A2E303 /* libg2o_core.dylib */,
+				EB0FDABB1CC2687F00A2E303 /* libg2o_csparse_extension.dylib */,
+				EB0FDABD1CC2687F00A2E303 /* libg2o_ext_csparse.dylib */,
+				EB0FDABE1CC2687F00A2E303 /* libg2o_stuff.dylib */,
+				EB0FDABF1CC2687F00A2E303 /* libg2o_ext_freeglut_minimal.dylib */,
+				EB0FDAC01CC2687F00A2E303 /* libg2o_opengl_helper.dylib */,
 			);
 			name = g2o;
 			sourceTree = "<group>";
@@ -897,8 +881,8 @@
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.60.0/lib,
 					/usr/local/Cellar/opencv/2.4.12/lib,
-					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
 					/usr/local/Cellar/freeglut/2.8.1/lib,
+					"/usr/local/lib/g2o-non",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -924,8 +908,8 @@
 					/usr/local/lib,
 					/usr/local/Cellar/boost/1.60.0/lib,
 					/usr/local/Cellar/opencv/2.4.12/lib,
-					"\"${PROJECT_DIR}/SLAM_ORB_Tracker/third/g2o/lib/Release\"/**",
 					/usr/local/Cellar/freeglut/2.8.1/lib,
+					"/usr/local/lib/g2o-non",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";

@@ -65,7 +65,7 @@ static float getFrameDirArr[] = {
 static cv::Mat getFrameDirMat(4,3,CV_32FC1, getFrameDirArr);
 
 
-void drawFrameOnce(shared_ptr<FrameState> pF , float mfDrawScale, cv::Scalar cPlane = cv::Scalar(0,0,0) , cv::Scalar cLine = cv::Scalar(0,0,0) ) {
+void drawFrameOnce(shared_ptr<FrameState> pF , float mfDrawScale ) {
 
     PoseState pose;
 
@@ -80,27 +80,27 @@ void drawFrameOnce(shared_ptr<FrameState> pF , float mfDrawScale, cv::Scalar cPl
     pose.mDir = Utils::convertToPoint3d( mMatR.row(2)  );
 
 
-    glPushMatrix();
-        glTranslatef(pose.mPos.x * mfDrawScale, pose.mPos.y * mfDrawScale, pose.mPos.z * mfDrawScale);
-        glColor3f( cPlane[0] / 255.0f, cPlane[1] / 255.0f, cPlane[2] / 255.0f ); // Let it be blue
-        glBegin(GL_QUADS); // 2x2 pixels
+    //glPushMatrix();
+        //glTranslatef(pose.mPos.x * mfDrawScale, pose.mPos.y * mfDrawScale, pose.mPos.z * mfDrawScale);
+        //glColor3f( cPlane[0] / 255.0f, cPlane[1] / 255.0f, cPlane[2] / 255.0f ); // Let it be blue
+
             for(int i=0;i<4;i++) {
-                glVertex3f( frameDir.at<float>(i,0),
-                    frameDir.at<float>(i,1),
-                    frameDir.at<float>(i,2));
+                glVertex3f( frameDir.at<float>(i,0) + pose.mPos.x * mfDrawScale,
+                    frameDir.at<float>(i,1) + pose.mPos.y * mfDrawScale,
+                    frameDir.at<float>(i,2) +pose.mPos.z * mfDrawScale );
             }
 
-        glEnd();
-        glColor3f( cLine[0] / 255.0f, cLine[1] / 255.0f, cLine[2] / 255.0f ); // Let it be blue
-        glBegin(GL_LINE_STRIP);
-            glLineWidth(2.0);
-            for(int i=0;i<4;i++) {
-                glVertex3f( frameDir.at<float>(i,0),
-                    frameDir.at<float>(i,1),
-                    frameDir.at<float>(i,2));
-            }
-        glEnd();
-    glPopMatrix();
+
+//        glColor3f( cLine[0] / 255.0f, cLine[1] / 255.0f, cLine[2] / 255.0f ); // Let it be blue
+//        glBegin(GL_LINE_STRIP);
+//            glLineWidth(2.0);
+//            for(int i=0;i<4;i++) {
+//                glVertex3f( frameDir.at<float>(i,0),
+//                    frameDir.at<float>(i,1),
+//                    frameDir.at<float>(i,2));
+//            }
+//        glEnd();
+    //glPopMatrix();
 
 
 }
@@ -117,17 +117,25 @@ void GLWindow::drawAllElement() {
 
     std::set<shared_ptr<FrameState>>& spF = mpMapDrawer->cacheRefGetAllSetFrame();
 
+    glColor3f( 0.5,0.5,1.0); // Let it be blue
+    glBegin(GL_QUADS); // 2x2 pixels
     for(auto iter=spF.begin();iter!=spF.end();iter++) {
         shared_ptr<FrameState> pF = *iter;
         if ( !pF ) continue;
-        drawFrameOnce(pF ,mfDrawScale, cv::Scalar(128,128,255), cv::Scalar(128,128,255) );
+        drawFrameOnce(pF ,mfDrawScale );
     }
+    glEnd();
+
     std::set<shared_ptr<KeyFrameState>>& spKF = mpMap->cacheRefGetAllSetKeyFrame();
+
+    glColor3f( 0,0.5,0 ); // Let it be blue
+    glBegin(GL_QUADS);
     for(auto iter=spKF.begin();iter!=spKF.end();iter++) {
         shared_ptr<KeyFrameState> pKF = *iter;
         if ( !pKF ) continue;
-        drawFrameOnce(pKF->mpFrame,mfDrawScale, cv::Scalar(0,128,0), cv::Scalar(0,0,0) );
+        drawFrameOnce(pKF->mpFrame,mfDrawScale );
     }
+    glEnd();
 
     std::vector<shared_ptr<MapPoint>>& vpLMP = mpTracker->cacheRefGetAllVectorLocalMapPoint();
     std::set<shared_ptr<MapPoint>>&  spMP = mpMap->cacheRefGetAllSetMapPoint();
