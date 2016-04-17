@@ -7,7 +7,12 @@
 //
 
 #include "FrameState.hpp"
+#include "MapPoint.hpp"
 
+
+bool std::less<std::shared_ptr<FrameState>>::operator () (const std::shared_ptr<FrameState> &x, const std::shared_ptr<FrameState> &y) const {
+    return x->mId < y->mId;
+}
 
 bool FrameState::mbInitialComputations=true;
 float FrameState::mfGridElementWidthInv;

@@ -10,19 +10,25 @@
 #define KeyFrameState_hpp
 
 #include "stdafx.hpp"
-
 #include "FrameState.hpp"
-#include "Vocabulary.hpp"
-#include "MapPoint.hpp"
 
+
+#include "Vocabulary.hpp"
 //DBoW2
 #include "third/DBoW2/DBoW2/BowVector.h"
 #include "third/DBoW2/DBoW2/FeatureVector.h"
 
 class MapPoint;
 class FrameState;
+class KeyFrameState;
 
-class KeyFrameState: public boost::enable_shared_from_this<KeyFrameState> {
+namespace std {
+    template <>
+    struct less<shared_ptr<KeyFrameState>> {
+        bool operator () (const shared_ptr<KeyFrameState> &x, const shared_ptr<KeyFrameState> &y) const;    };
+}
+
+class KeyFrameState: public std::enable_shared_from_this<KeyFrameState> {
 private:
 
     Vocabulary* mpVocabulary;

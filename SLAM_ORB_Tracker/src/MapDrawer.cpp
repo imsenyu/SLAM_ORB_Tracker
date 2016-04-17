@@ -8,6 +8,11 @@
 
 
 #include "MapDrawer.hpp"
+#include "Tracker.hpp"
+#include "Map.hpp"
+#include "GLWindow.hpp"
+#include "FrameState.hpp"
+
 
 MapDrawer::MapDrawer(Map *_pMap) :
     inited(false),

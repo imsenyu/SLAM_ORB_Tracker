@@ -4,8 +4,10 @@
 //
 
 #include "Optimizer.hpp"
-
-
+#include "Map.hpp"
+#include "FrameState.hpp"
+#include "KeyFrameState.hpp"
+#include "MapPoint.hpp"
 
 using std::vector;
 using std::list;
@@ -531,7 +533,7 @@ void Optimizer::GlobalBundleAdjustemnt(Map* pMap, int nIterations, bool bStopFla
 }
 
 
-void Optimizer::BundleAdjustment(const vector<shared_ptr<KeyFrameState>> &vpKFs, const vector<shared_ptr<MapPoint>> &vpMP, int nIterations, bool bStopFlag)
+void Optimizer::BundleAdjustment(const std::vector<shared_ptr<KeyFrameState>> &vpKFs, const std::vector<shared_ptr<MapPoint>> &vpMP, int nIterations, bool bStopFlag)
 {
     g2o::SparseOptimizer optimizer;
     g2o::BlockSolverX::LinearSolverType * linearSolver;

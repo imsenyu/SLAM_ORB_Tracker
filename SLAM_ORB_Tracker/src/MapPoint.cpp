@@ -4,7 +4,12 @@
 //
 
 #include "MapPoint.hpp"
+#include "Map.hpp"
 #include "ORBmatcher.h"
+
+bool std::less<std::shared_ptr<MapPoint>>::operator () (const std::shared_ptr<MapPoint> &x, const std::shared_ptr<MapPoint> &y) const {
+    return x->getUID() < y->getUID();
+}
 
 int MapPoint::_counterId = 1;
 
