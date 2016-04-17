@@ -13,16 +13,16 @@
 #include "PoseState.hpp"
 #include "MotionState.hpp"
 #include "BlockingQueue.hpp"
-#include "Tracker.hpp"
-#include "Map.hpp"
-#include "GLWindow.hpp"
+#include "FrameState.hpp"
+
 
 #include <opencv2/viz/viz3d.hpp>
 #include <opencv2/viz/vizcore.hpp>
 #include <boost/thread/pthread/mutex.hpp>
 
+class FrameState;
 class Tracker;
-
+class Map;
 class GLWindow;
 
 class MapDrawer {

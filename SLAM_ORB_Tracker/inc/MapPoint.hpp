@@ -8,12 +8,20 @@
 
 #include "stdafx.hpp"
 #include "KeyFrameState.hpp"
-#include "Map.hpp"
+
 
 class KeyFrameState;
 class Map;
 
-class MapPoint: public boost::enable_shared_from_this<MapPoint> {
+class MapPoint;
+namespace std {
+    template <>
+    struct less<shared_ptr<MapPoint>> {
+        bool operator () (const shared_ptr<MapPoint> &x, const shared_ptr<MapPoint> &y) const;    };
+}
+
+
+class MapPoint: public std::enable_shared_from_this<MapPoint> {
 private:
     static int _counterId;
     int mId;

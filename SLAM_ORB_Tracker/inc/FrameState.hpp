@@ -11,7 +11,6 @@
 
 
 #include "stdafx.hpp"
-#include "MapPoint.hpp"
 
 // ORB
 #include "ORBextractor.h"
@@ -24,7 +23,14 @@ using std::vector;
 using std::max;
 using std::min;
 
-class FrameState: public boost::enable_shared_from_this<FrameState> {
+class FrameState;
+namespace std {
+    template <>
+    struct less<shared_ptr<FrameState>> {
+        bool operator () (const shared_ptr<FrameState> &x, const shared_ptr<FrameState> &y) const;    };
+}
+
+class FrameState: public std::enable_shared_from_this<FrameState> {
 private:
     bool loadImage(int _id);
     
@@ -96,5 +102,7 @@ public:
         mbPainted = _b;
     }
 };
+
+
 
 #endif /* FrameState_hpp */

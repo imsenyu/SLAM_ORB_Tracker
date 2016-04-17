@@ -7,6 +7,11 @@
 //
 
 #include "KeyFrameState.hpp"
+#include "MapPoint.hpp"
+
+bool std::less<std::shared_ptr<KeyFrameState>>::operator () (const std::shared_ptr<KeyFrameState> &x, const std::shared_ptr<KeyFrameState> &y) const {
+    return x->mId < y->mId;
+}
 
 KeyFrameState::KeyFrameState(shared_ptr<FrameState> _pFrame, Vocabulary *_pVocabulary):
     mpFrame( _pFrame ), mpVocabulary(_pVocabulary),

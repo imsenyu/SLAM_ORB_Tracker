@@ -7,7 +7,11 @@
 //
 
 #include "Tracker.hpp"
+#include "FrameDrawer.hpp"
+#include "MapDrawer.hpp"
+
 #include "Initializer.h"
+
 Tracker::Tracker(InputBuffer *_pIB, FrameDrawer *_pFD, MapDrawer *_pMD, Vocabulary *_pVocabulary, Map *_pMap, LocalMapper* _pLocalMapper) :
     mpInputBuffer(_pIB), mpFrameDrawer(_pFD), mpMapDrawer(_pMD),
     meMode(Tracker::WorkMode::InitStep0), meLastMode(Tracker::WorkMode::Start),

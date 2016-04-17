@@ -11,7 +11,6 @@
 		6842405E4B73F91D4B553B4F /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424BCBCC9C77B25984FCC0 /* Map.cpp */; };
 		684240FEBC9232D35FF2B8BC /* ORBextractor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 68424FD80CEAC66F210301CD /* ORBextractor.cc */; };
 		6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */; };
-		684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684248FBF32618DB250B4B50 /* MapInitializer.cpp */; };
 		684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842448CAB6464C237ED57EC /* Initializer.cc */; };
 		68424AA02308E2E3333AD710 /* GLWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424A4228369C28A681D4E8 /* GLWindow.cpp */; };
 		68424E66C2C4242C9BF1A94A /* ORBmatcher.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842436352005E2720FD4CFD /* ORBmatcher.cc */; };
@@ -160,10 +159,8 @@
 		6842451951300DE381D10052 /* vslam_config_05.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_05.xml; sourceTree = "<group>"; };
 		684246AC35F9293964205A49 /* MapPoint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapPoint.hpp; sourceTree = "<group>"; };
 		684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapPoint.cpp; sourceTree = "<group>"; };
-		6842470832A1DC42A57812C7 /* MapInitializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapInitializer.hpp; sourceTree = "<group>"; };
 		684247F1994032F5A8E342A6 /* ORBmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBmatcher.h; sourceTree = "<group>"; };
 		684248003DB3D1575EBC521D /* Optimizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Optimizer.hpp; sourceTree = "<group>"; };
-		684248FBF32618DB250B4B50 /* MapInitializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapInitializer.cpp; sourceTree = "<group>"; };
 		68424A2E1DF0FAAAB3C566EA /* vslam_config_04.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_04.xml; sourceTree = "<group>"; };
 		68424A4228369C28A681D4E8 /* GLWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLWindow.cpp; sourceTree = "<group>"; };
 		68424AD6B666DAA47A38A761 /* Map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Map.hpp; sourceTree = "<group>"; };
@@ -562,7 +559,6 @@
 				EB301C611CA0208300F685EE /* Utils.cpp */,
 				EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */,
 				68424BCBCC9C77B25984FCC0 /* Map.cpp */,
-				684248FBF32618DB250B4B50 /* MapInitializer.cpp */,
 				684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */,
 				68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */,
 				68424A4228369C28A681D4E8 /* GLWindow.cpp */,
@@ -590,7 +586,6 @@
 				EBFE5CD81C9DB09100E6DA0B /* InputBuffer.hpp */,
 				EBFE5B751C9DA1F100E6DA0B /* stdafx.hpp */,
 				68424AD6B666DAA47A38A761 /* Map.hpp */,
-				6842470832A1DC42A57812C7 /* MapInitializer.hpp */,
 				684246AC35F9293964205A49 /* MapPoint.hpp */,
 				684248003DB3D1575EBC521D /* Optimizer.hpp */,
 				68424327287BB2C020822879 /* GLWindow.hpp */,
@@ -777,7 +772,6 @@
 				EB301C631CA0208300F685EE /* Utils.cpp in Sources */,
 				EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */,
 				6842405E4B73F91D4B553B4F /* Map.cpp in Sources */,
-				684243CCE18AE6C580FA7B8D /* MapInitializer.cpp in Sources */,
 				6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */,
 				684240194D0966B0985B142F /* Optimizer.cpp in Sources */,
 				684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */,

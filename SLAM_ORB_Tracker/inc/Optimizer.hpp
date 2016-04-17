@@ -7,9 +7,7 @@
 #define SLAM_ORB_TRACKER_OPTIMIZER_HPP
 
 #include "stdafx.hpp"
-#include "FrameState.hpp"
-#include "KeyFrameState.hpp"
-#include "MapPoint.hpp"
+
 
 // g2o
 #include <Eigen/Core>
@@ -25,6 +23,11 @@
 #include "third/g2o/g2o/solvers/dense/linear_solver_dense.h"
 #include "third/g2o/g2o/types/sba/types_six_dof_expmap.h"
 #include "third/g2o/g2o/types/sim3/types_seven_dof_expmap.h"
+
+class FrameState;
+class KeyFrameState;
+class MapPoint;
+class Map;
 
 
 namespace g2o {
@@ -67,7 +70,7 @@ public:
     static int PoseOptimization(shared_ptr<FrameState> _pFrame);
     static void LocalBundleAdjustment(shared_ptr<KeyFrameState> pKF, bool pbStopFlag = false);
     static void GlobalBundleAdjustemnt(Map* pMap, int nIterations, bool bStopFlag = false);
-    static void BundleAdjustment(const vector<shared_ptr<KeyFrameState>> &vpKFs, const vector<shared_ptr<MapPoint>> &vpMP, int nIterations, bool bStopFlag = false);
+    static void BundleAdjustment(const std::vector<shared_ptr<KeyFrameState>> &vpKFs, const std::vector<shared_ptr<MapPoint>> &vpMP, int nIterations, bool bStopFlag = false);
 };
 
 

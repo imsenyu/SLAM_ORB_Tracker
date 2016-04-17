@@ -13,11 +13,9 @@
 #include "FrameState.hpp"
 #include "InputBuffer.hpp"
 #include "Vocabulary.hpp"
-#include "FrameDrawer.hpp"
-#include "MapDrawer.hpp"
+
 #include "PoseState.hpp"
 #include "MotionState.hpp"
-#include "MapInitializer.hpp"
 #include "KeyFrameState.hpp"
 #include "Map.hpp"
 #include "MapPoint.hpp"
@@ -29,6 +27,8 @@
 #include "ORBextractor.h"
 
 class MapDrawer;
+class FrameDrawer;
+class KeyFrameState;
 
 class Tracker {
 private:
