@@ -145,7 +145,7 @@ void MapPoint::ComputeDistinctiveDescriptors()
     for(size_t i=0;i<N;i++)
     {
         vector<int> vDists(Distances[i],Distances[i]+N);
-        sort(vDists.begin(),vDists.end());
+        std::stable_sort(vDists.begin(),vDists.end());
         int median = vDists[0.5*(N-1)];
 
         if(median<BestMedian)

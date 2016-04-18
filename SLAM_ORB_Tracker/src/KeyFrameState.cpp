@@ -75,7 +75,7 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
         }
     }
 
-    sort(vDepths.begin(),vDepths.end());
+    std::stable_sort(vDepths.begin(),vDepths.end());
 
     return vDepths[(vDepths.size()-1)/r];
 }
@@ -102,6 +102,12 @@ void KeyFrameState::AddConnection(shared_ptr<KeyFrameState> pKF, const int &weig
     UpdateBestCovisibles();
 }
 
+bool pairSortFunc_int_pKF(const std::pair<int,shared_ptr<KeyFrameState>>& l, const std::pair<int,shared_ptr<KeyFrameState>>& r) {
+    if ( l.first != r.first ) return l.first < r.first;
+    return l.second->mId > r.second->mId;
+}
+
+
 void KeyFrameState::UpdateBestCovisibles()
 {
     //std::cout<<"UpdateBestCovisibles at frameId"<<(this->mpFrame->mId)<<std::endl;
@@ -111,7 +117,7 @@ void KeyFrameState::UpdateBestCovisibles()
     for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=mConnectedKeyFrameWeights.begin(), mend=mConnectedKeyFrameWeights.end(); mit!=mend; mit++)
         vPairs.push_back(std::make_pair(mit->second,mit->first));
 
-    std::sort(vPairs.begin(),vPairs.end());
+    std::stable_sort(vPairs.begin(), vPairs.end(), pairSortFunc_int_pKF);
     std::list<shared_ptr<KeyFrameState>> lKFs;
     std::list<int> lWs;
     for(size_t i=0, iend=vPairs.size(); i<iend;i++)
@@ -191,7 +197,7 @@ void KeyFrameState::UpdateConnections()
         pKFmax->AddConnection(shared_from_this(),nmax);
     }
 
-    std::sort(vPairs.begin(),vPairs.end());
+    std::stable_sort(vPairs.begin(),vPairs.end(), pairSortFunc_int_pKF);
     std::list<shared_ptr<KeyFrameState>> lKFs;
     std::list<int> lWs;
     for(size_t i=0; i<vPairs.size();i++)
