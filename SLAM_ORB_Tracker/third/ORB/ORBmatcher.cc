@@ -954,7 +954,7 @@ std::vector<cv::KeyPoint> &vMatchedKeys1, std::vector<cv::KeyPoint> &vMatchedKey
                 if(vDistIndex.empty())
                     continue;
 
-                sort(vDistIndex.begin(),vDistIndex.end());
+                std::stable_sort(vDistIndex.begin(),vDistIndex.end());
                 int BestDist = vDistIndex.front().first;
                 int DistTh = round(2*BestDist);
 
