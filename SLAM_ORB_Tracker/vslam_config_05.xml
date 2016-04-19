@@ -18,4 +18,8 @@
 <dScaleFactor>1.2000000000000000e+00</dScaleFactor>
 <sProjectName>kitti05</sProjectName>
 <sPathOutput>/tmp/</sPathOutput>
+<fKFConditionMatchRatio>8.9999997615814209e-01</fKFConditionMatchRatio>
+<iKFConditionMinMatchNum>100</iKFConditionMinMatchNum>
+<iKFConditionMaxMatchNum>500</iKFConditionMaxMatchNum>
+<iKFConditionLaunchForce>10</iKFConditionLaunchForce>
 </opencv_storage>
