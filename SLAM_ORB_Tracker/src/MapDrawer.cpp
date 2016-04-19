@@ -113,7 +113,7 @@ void MapDrawer::initCanvas() {
     mPathCanvasWithDir = mPathCanvas.clone();
 
     //设定画布绘制偏移
-    mDrawBase = cv::Point2f(400, 500);
+    mDrawBase = cv::Point2f(400, 600);
     cv::namedWindow("Map", CV_GUI_NORMAL | CV_WINDOW_AUTOSIZE );
 }
 

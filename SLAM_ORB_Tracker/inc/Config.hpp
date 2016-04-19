@@ -58,6 +58,12 @@ namespace Config {
     extern std::string tLaunchTime;
     extern std::string sPathOutput;
 
+
+    extern float fKFConditionMatchRatio;
+    extern int iKFConditionMinMatchNum;
+    extern int iKFConditionMaxMatchNum;
+    extern int iKFConditionLaunchForce;
+
 };
 
 

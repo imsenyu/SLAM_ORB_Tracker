@@ -31,6 +31,11 @@ double Config::dCy;
 std::string Config::sProjectName;
 std::string Config::tLaunchTime;
 std::string Config::sPathOutput;
+float Config::fKFConditionMatchRatio;
+int Config::iKFConditionMinMatchNum;
+int Config::iKFConditionMaxMatchNum;
+int Config::iKFConditionLaunchForce;
+
 
 int Config::parse(int argc, char * argv[]) {
     namespace po = boost::program_options;
@@ -81,6 +86,10 @@ int Config::loadConfig(std::string cfgPath) {
     dScaleFactor            = getDefault<double>(1.2f, fs["dScaleFactor"]);
     sProjectName            = getDefault<std::string>("tmp", fs["sProjectName"]);
     sPathOutput             = getDefault<std::string>("/tmp/", fs["sPathOutput"]);
+    fKFConditionMatchRatio  = getDefault<float>(0.7, fs["fKFConditionMatchRatio"]);
+    iKFConditionMinMatchNum = getDefault<int>(80, fs["iKFConditionMinMatchNum"]);
+    iKFConditionMaxMatchNum = getDefault<int>(200, fs["iKFConditionMaxMatchNum"]);
+    iKFConditionLaunchForce = getDefault<int>(5, fs["iKFConditionLaunchForce"]);
     fs.release();
     fs.open(cfgPath, cv::FileStorage::WRITE);
 
@@ -96,6 +105,10 @@ int Config::loadConfig(std::string cfgPath) {
     fs << "dScaleFactor"            << dScaleFactor;
     fs << "sProjectName"            << sProjectName;
     fs << "sPathOutput"             << sPathOutput;
+    fs << "fKFConditionMatchRatio" << fKFConditionMatchRatio;
+    fs << "iKFConditionMinMatchNum" << iKFConditionMinMatchNum;
+    fs << "iKFConditionMaxMatchNum" << iKFConditionMaxMatchNum;
+    fs << "iKFConditionLaunchForce" << iKFConditionLaunchForce;
     fs.release();
 
     // do some MATH

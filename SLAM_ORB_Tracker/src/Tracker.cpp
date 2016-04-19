@@ -123,12 +123,13 @@ int Tracker::threadRun() {
                         if(mpReferenceKF->GetMapPoint(i) )
                             nRefMatches++;
                     }
-                    bNeedKeyFrame = mnMatchesInliers<nRefMatches*0.6 || mnMatchesInliers < 90 ;
-                    bNeedKeyFrame = bNeedKeyFrame && mnMatchesInliers < 200;
-                    bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId < 5;
+                    bNeedKeyFrame = mnMatchesInliers<nRefMatches* Config::fKFConditionMatchRatio;
+                    bNeedKeyFrame = bNeedKeyFrame || mnMatchesInliers < Config::iKFConditionMinMatchNum;
+                    bNeedKeyFrame = bNeedKeyFrame && mnMatchesInliers < Config::iKFConditionMaxMatchNum;
+                    bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId < Config::iKFConditionLaunchForce;
                     bNeedKeyFrame = bNeedKeyFrame || mpCurFrame->mId - mLastMapperId > 10;
                     // TODO:  should not > 100 ,if > 100, continue;
-                    printf("========need %d %f\n",mnMatchesInliers, nRefMatches*0.6);
+                    printf("========need %d %f\n",mnMatchesInliers, nRefMatches*Config::fKFConditionMatchRatio);
                 }
 
 
