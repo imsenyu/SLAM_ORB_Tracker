@@ -5,7 +5,9 @@
 //  Created by Sen Yu on 3/20/16.
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
-
+/**
+* Some code in this file is part of ORB-SLAM.
+*/
 #ifndef Vocabulary_hpp
 #define Vocabulary_hpp
 

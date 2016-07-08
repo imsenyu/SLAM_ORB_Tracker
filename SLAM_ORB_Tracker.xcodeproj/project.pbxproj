@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		684240194D0966B0985B142F /* Optimizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */; };
 		6842405E4B73F91D4B553B4F /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424BCBCC9C77B25984FCC0 /* Map.cpp */; };
 		684240FEBC9232D35FF2B8BC /* ORBextractor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 68424FD80CEAC66F210301CD /* ORBextractor.cc */; };
 		6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */; };
 		684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842448CAB6464C237ED57EC /* Initializer.cc */; };
+		6842495A25CBE8FAA0451D5B /* Optimizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6842464FDC073CEEE8B7FF13 /* Optimizer.cpp */; };
 		68424AA02308E2E3333AD710 /* GLWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68424A4228369C28A681D4E8 /* GLWindow.cpp */; };
 		68424E66C2C4242C9BF1A94A /* ORBmatcher.cc in Sources */ = {isa = PBXBuildFile; fileRef = 6842436352005E2720FD4CFD /* ORBmatcher.cc */; };
 		EB0FDAC21CC2687F00A2E303 /* libg2o_types_sim3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FDAA91CC2687F00A2E303 /* libg2o_types_sim3.dylib */; };
@@ -145,6 +145,8 @@
 
 /* Begin PBXFileReference section */
 		68424086D3C909E0A07B35B2 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Initializer.h; sourceTree = "<group>"; };
+		6842423AD08F2330271E2F9B /* Optimizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Optimizer.hpp; sourceTree = "<group>"; };
+		6842425E5A570EC4275AD92A /* vslam_config_09.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_09.xml; sourceTree = "<group>"; };
 		684242E68BAF5C4D3A113229 /* vslam_config.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config.xml; sourceTree = "<group>"; };
 		68424327287BB2C020822879 /* GLWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GLWindow.hpp; sourceTree = "<group>"; };
 		68424359A74CDA8313469CCC /* vslam_config_07.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_07.xml; sourceTree = "<group>"; };
@@ -153,16 +155,15 @@
 		6842448CAB6464C237ED57EC /* Initializer.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Initializer.cc; sourceTree = "<group>"; };
 		684244CAD6D08898B6209094 /* ORBextractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBextractor.h; sourceTree = "<group>"; };
 		6842451951300DE381D10052 /* vslam_config_05.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_05.xml; sourceTree = "<group>"; };
+		6842464FDC073CEEE8B7FF13 /* Optimizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Optimizer.cpp; sourceTree = "<group>"; };
 		684246AC35F9293964205A49 /* MapPoint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MapPoint.hpp; sourceTree = "<group>"; };
 		684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapPoint.cpp; sourceTree = "<group>"; };
 		684247F1994032F5A8E342A6 /* ORBmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORBmatcher.h; sourceTree = "<group>"; };
-		684248003DB3D1575EBC521D /* Optimizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Optimizer.hpp; sourceTree = "<group>"; };
 		68424A2E1DF0FAAAB3C566EA /* vslam_config_04.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_04.xml; sourceTree = "<group>"; };
 		68424A4228369C28A681D4E8 /* GLWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLWindow.cpp; sourceTree = "<group>"; };
 		68424AD6B666DAA47A38A761 /* Map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Map.hpp; sourceTree = "<group>"; };
 		68424B39E73E39D432BD5342 /* vslam_config_03.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = vslam_config_03.xml; sourceTree = "<group>"; };
 		68424BCBCC9C77B25984FCC0 /* Map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
-		68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Optimizer.cpp; sourceTree = "<group>"; };
 		68424FD80CEAC66F210301CD /* ORBextractor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ORBextractor.cc; sourceTree = "<group>"; };
 		EB0FDAA91CC2687F00A2E303 /* libg2o_types_sim3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_types_sim3.dylib; path = "/usr/local/lib/g2o-non/libg2o_types_sim3.dylib"; sourceTree = "<absolute>"; };
 		EB0FDAAA1CC2687F00A2E303 /* libg2o_solver_dense.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libg2o_solver_dense.dylib; path = "/usr/local/lib/g2o-non/libg2o_solver_dense.dylib"; sourceTree = "<absolute>"; };
@@ -444,6 +445,8 @@
 				684247F1994032F5A8E342A6 /* ORBmatcher.h */,
 				68424FD80CEAC66F210301CD /* ORBextractor.cc */,
 				684244CAD6D08898B6209094 /* ORBextractor.h */,
+				6842464FDC073CEEE8B7FF13 /* Optimizer.cpp */,
+				6842423AD08F2330271E2F9B /* Optimizer.hpp */,
 			);
 			path = ORB;
 			sourceTree = "<group>";
@@ -520,6 +523,7 @@
 				68424A2E1DF0FAAAB3C566EA /* vslam_config_04.xml */,
 				68424B39E73E39D432BD5342 /* vslam_config_03.xml */,
 				68424359A74CDA8313469CCC /* vslam_config_07.xml */,
+				6842425E5A570EC4275AD92A /* vslam_config_09.xml */,
 			);
 			path = SLAM_ORB_Tracker;
 			sourceTree = "<group>";
@@ -544,7 +548,6 @@
 				EB361E901C9EE69E00883F14 /* KeyFrameState.cpp */,
 				68424BCBCC9C77B25984FCC0 /* Map.cpp */,
 				684246C0ADD12E1DC4FECEC2 /* MapPoint.cpp */,
-				68424CA07DB8D19C194B5BC9 /* Optimizer.cpp */,
 				68424A4228369C28A681D4E8 /* GLWindow.cpp */,
 			);
 			path = src;
@@ -571,7 +574,6 @@
 				EBFE5B751C9DA1F100E6DA0B /* stdafx.hpp */,
 				68424AD6B666DAA47A38A761 /* Map.hpp */,
 				684246AC35F9293964205A49 /* MapPoint.hpp */,
-				684248003DB3D1575EBC521D /* Optimizer.hpp */,
 				68424327287BB2C020822879 /* GLWindow.hpp */,
 			);
 			path = inc;
@@ -757,11 +759,11 @@
 				EB301C521C9FF0E600F685EE /* FrameDrawer.cpp in Sources */,
 				6842405E4B73F91D4B553B4F /* Map.cpp in Sources */,
 				6842415444099A1FE7B3B508 /* MapPoint.cpp in Sources */,
-				684240194D0966B0985B142F /* Optimizer.cpp in Sources */,
 				684248A1A2F465A967DB66A4 /* Initializer.cc in Sources */,
 				68424E66C2C4242C9BF1A94A /* ORBmatcher.cc in Sources */,
 				684240FEBC9232D35FF2B8BC /* ORBextractor.cc in Sources */,
 				68424AA02308E2E3333AD710 /* GLWindow.cpp in Sources */,
+				6842495A25CBE8FAA0451D5B /* Optimizer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

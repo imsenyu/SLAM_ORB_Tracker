@@ -7,7 +7,7 @@
 
 Map::Map():
     cache_mbMP(false),
-    cache_mtMP(5),
+    cache_mtMP(15),
     cache_mbKF(false),
     cache_mtKF(10)
 {
@@ -101,4 +101,8 @@ std::vector<shared_ptr<KeyFrameState>>& Map::cacheRefGetAllVectorKeyFrame() {
         cache_mbKF = false;
     }
     return cache_mvpKeyFrame;
+}
+
+std::set<shared_ptr<MapPoint>> &Map::refGetAllSetMapPoint() {
+    return mspMapPoint;
 }

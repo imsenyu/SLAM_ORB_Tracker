@@ -30,6 +30,7 @@ Tracker::~Tracker() {
 }
 
 int Tracker::run() {
+    //Tick tTrack(20);
     while(true) threadRun();
 
     return 0;

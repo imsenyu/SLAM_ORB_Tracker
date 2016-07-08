@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <opencv_storage>
-<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/05/image_0/%06d.png</sPathImageLoad>
+<sPathImageLoad>/Volumes/HDD/Workspace/Git/ZJU_Summer/Dataset/09/image_0/%06d.png</sPathImageLoad>
 <iImageBeginIdx>0</iImageBeginIdx>
-<iImageEndIdx>2760</iImageEndIdx>
+<iImageEndIdx>1590</iImageEndIdx>
 <sPathVocabulary>/tmp/ORBvoc.bin</sPathVocabulary>
 <iFeatureNum>1500</iFeatureNum>
-<dDrawFrameStep>15.</dDrawFrameStep>
+<dDrawFrameStep>20.</dDrawFrameStep>
 <mCameraParameter type_id="opencv-matrix">
   <rows>3</rows>
   <cols>3</cols>
@@ -16,10 +16,10 @@
 <dOpticalFlowThreshold>1.</dOpticalFlowThreshold>
 <dScaleLevel>8</dScaleLevel>
 <dScaleFactor>1.2000000000000000e+00</dScaleFactor>
-<sProjectName>kitti05</sProjectName>
+<sProjectName>kitti09</sProjectName>
 <sPathOutput>/Volumes/HFS/Users/senyu/Workspace/temp/</sPathOutput>
-<fKFConditionMatchRatio>9.9000000953674316e-01</fKFConditionMatchRatio>
-<iKFConditionMinMatchNum>80</iKFConditionMinMatchNum>
-<iKFConditionMaxMatchNum>400</iKFConditionMaxMatchNum>
+<fKFConditionMatchRatio>9.5999997854232788e-01</fKFConditionMatchRatio>
+<iKFConditionMinMatchNum>100</iKFConditionMinMatchNum>
+<iKFConditionMaxMatchNum>500</iKFConditionMaxMatchNum>
 <iKFConditionLaunchForce>10</iKFConditionLaunchForce>
 </opencv_storage>

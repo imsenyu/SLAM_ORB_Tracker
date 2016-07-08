@@ -5,7 +5,7 @@
 <iImageEndIdx>1100</iImageEndIdx>
 <sPathVocabulary>/tmp/ORBvoc.bin</sPathVocabulary>
 <iFeatureNum>1000</iFeatureNum>
-<dDrawFrameStep>20.</dDrawFrameStep>
+<dDrawFrameStep>10.</dDrawFrameStep>
 <mCameraParameter type_id="opencv-matrix">
   <rows>3</rows>
   <cols>3</cols>
@@ -16,10 +16,10 @@
 <dOpticalFlowThreshold>1.</dOpticalFlowThreshold>
 <dScaleLevel>8</dScaleLevel>
 <dScaleFactor>1.2000000000000000e+00</dScaleFactor>
-<sProjectName>tmp</sProjectName>
-<sPathOutput>/tmp/</sPathOutput>
-  <fKFConditionMatchRatio>9e-01</fKFConditionMatchRatio>
-  <iKFConditionMinMatchNum>100</iKFConditionMinMatchNum>
-  <iKFConditionMaxMatchNum>500</iKFConditionMaxMatchNum>
-  <iKFConditionLaunchForce>10</iKFConditionLaunchForce>
+<sProjectName>kitti07</sProjectName>
+<sPathOutput>/Volumes/HFS/Users/senyu/Workspace/temp/</sPathOutput>
+<fKFConditionMatchRatio>9.800001192092896e-01</fKFConditionMatchRatio>
+<iKFConditionMinMatchNum>100</iKFConditionMinMatchNum>
+<iKFConditionMaxMatchNum>500</iKFConditionMaxMatchNum>
+<iKFConditionLaunchForce>10</iKFConditionLaunchForce>
 </opencv_storage>

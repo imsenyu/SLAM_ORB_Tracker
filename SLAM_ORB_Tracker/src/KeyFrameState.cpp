@@ -82,19 +82,19 @@ float KeyFrameState::ComputeSceneMedianDepth(int r) {
 
 std::vector<shared_ptr<KeyFrameState>> KeyFrameState::GetBestCovisibilityKeyFrames(const int &N)
 {
-    if((int)mvpOrderedConnectedKeyFrames.size()<N)
-        return mvpOrderedConnectedKeyFrames;
+    if((int) mvpNeighbourKeyFrames.size()<N)
+        return mvpNeighbourKeyFrames;
     else
-        return std::vector<shared_ptr<KeyFrameState>>(mvpOrderedConnectedKeyFrames.begin(),mvpOrderedConnectedKeyFrames.begin()+N);
+        return std::vector<shared_ptr<KeyFrameState>>(mvpNeighbourKeyFrames.begin(), mvpNeighbourKeyFrames.begin()+N);
 
 }
 void KeyFrameState::AddConnection(shared_ptr<KeyFrameState> pKF, const int &weight)
 {
 
-    if(!mConnectedKeyFrameWeights.count(pKF))
-        mConnectedKeyFrameWeights[pKF]=weight;
-    else if(mConnectedKeyFrameWeights[pKF]!=weight)
-        mConnectedKeyFrameWeights[pKF]=weight;
+    if(!mKeyFrameWeightsMap.count(pKF))
+        mKeyFrameWeightsMap[pKF]=weight;
+    else if(mKeyFrameWeightsMap[pKF]!=weight)
+        mKeyFrameWeightsMap[pKF]=weight;
     else
         return;
 
@@ -113,8 +113,8 @@ void KeyFrameState::UpdateBestCovisibles()
     //std::cout<<"UpdateBestCovisibles at frameId"<<(this->mpFrame->mId)<<std::endl;
 
     std::vector<std::pair<int,shared_ptr<KeyFrameState>> > vPairs;
-    vPairs.reserve(mConnectedKeyFrameWeights.size());
-    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit=mConnectedKeyFrameWeights.begin(), mend=mConnectedKeyFrameWeights.end(); mit!=mend; mit++)
+    vPairs.reserve(mKeyFrameWeightsMap.size());
+    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit= mKeyFrameWeightsMap.begin(), mend= mKeyFrameWeightsMap.end(); mit!=mend; mit++)
         vPairs.push_back(std::make_pair(mit->second,mit->first));
 
     std::stable_sort(vPairs.begin(), vPairs.end(), pairSortFunc_int_pKF);
@@ -126,9 +126,9 @@ void KeyFrameState::UpdateBestCovisibles()
         lWs.push_front(vPairs[i].first);
     }
 
-    mvpOrderedConnectedKeyFrames = std::vector<shared_ptr<KeyFrameState>>(lKFs.begin(),lKFs.end());
-    //std::cout<<"mvpOrderedConnectedKeyFrames size "<<mvpOrderedConnectedKeyFrames.size()<<std::endl;
-    mvOrderedWeights = std::vector<int>(lWs.begin(), lWs.end());
+    mvpNeighbourKeyFrames = std::vector<shared_ptr<KeyFrameState>>(lKFs.begin(),lKFs.end());
+    //std::cout<<"mvpNeighbourKeyFrames size "<<mvpNeighbourKeyFrames.size()<<std::endl;
+    mvWeights = std::vector<int>(lWs.begin(), lWs.end());
 }
 
 void KeyFrameState::UpdateConnections()
@@ -209,19 +209,19 @@ void KeyFrameState::UpdateConnections()
 
 
     // mspConnectedKeyFrames = spConnectedKeyFrames;
-    // copy mvpOrderedConnectedKeyFrames for not destory them by shared_ptr<>
-    //std::vector<shared_ptr<KeyFrameState>> copy = mvpOrderedConnectedKeyFrames;
+    // copy mvpNeighbourKeyFrames for not destory them by shared_ptr<>
+    //std::vector<shared_ptr<KeyFrameState>> copy = mvpNeighbourKeyFrames;
 
 
-    mConnectedKeyFrameWeights = KFcounter;
-    mvpOrderedConnectedKeyFrames = std::vector<shared_ptr<KeyFrameState>>(lKFs.begin(),lKFs.end());
+    mKeyFrameWeightsMap = KFcounter;
+    mvpNeighbourKeyFrames = std::vector<shared_ptr<KeyFrameState>>(lKFs.begin(),lKFs.end());
 
-    //std::cout<<"mvpOrderedConnectedKeyFrames size "<<mvpOrderedConnectedKeyFrames.size()<<std::endl;
-    mvOrderedWeights = std::vector<int>(lWs.begin(), lWs.end());
+    //std::cout<<"mvpNeighbourKeyFrames size "<<mvpNeighbourKeyFrames.size()<<std::endl;
+    mvWeights = std::vector<int>(lWs.begin(), lWs.end());
 
 //    if(mbFirstConnection && mpFrame->mId!=0)
 //    {
-//        mpParent = mvpOrderedConnectedKeyFrames.front();
+//        mpParent = mvpNeighbourKeyFrames.front();
 //        mpParent->AddChild(this);
 //        mbFirstConnection = false;
 //    }
@@ -311,7 +311,7 @@ void KeyFrameState::SetBadFlag()
         }
     }
 
-    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit = mConnectedKeyFrameWeights.begin(), mend=mConnectedKeyFrameWeights.end(); mit!=mend; mit++)
+    for(std::map<shared_ptr<KeyFrameState>,int>::iterator mit = mKeyFrameWeightsMap.begin(), mend= mKeyFrameWeightsMap.end(); mit!=mend; mit++)
         mit->first->EraseConnection(shared_from_this());
 
     for(size_t i=0; i<mpFrame->mvpMapPoint.size(); i++)
@@ -320,8 +320,8 @@ void KeyFrameState::SetBadFlag()
     {
 
 
-        mConnectedKeyFrameWeights.clear();
-        mvpOrderedConnectedKeyFrames.clear();
+        mKeyFrameWeightsMap.clear();
+        mvpNeighbourKeyFrames.clear();
 
         mbBad = true;
     }
@@ -336,9 +336,9 @@ void KeyFrameState::EraseConnection(shared_ptr<KeyFrameState> pKF)
     bool bUpdate = false;
     {
 
-        if(mConnectedKeyFrameWeights.count(pKF))
+        if(mKeyFrameWeightsMap.count(pKF))
         {
-            mConnectedKeyFrameWeights.erase(pKF);
+            mKeyFrameWeightsMap.erase(pKF);
             bUpdate=true;
         }
     }

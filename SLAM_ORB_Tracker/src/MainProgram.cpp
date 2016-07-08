@@ -120,11 +120,11 @@ int main(int argc, char * argv[]) {
         frameDrawer.show();
         mapDrawer.show();
 
-        cv::waitKey(10);
+        cv::waitKey(5);
 
-        Config::time("gl_render");
+        //Config::time("gl_render");
         glWindow3D.loopOnce();
-        Config::timeEnd("gl_render");
+        //Config::timeEnd("gl_render");
     }
     
     // wait for quit

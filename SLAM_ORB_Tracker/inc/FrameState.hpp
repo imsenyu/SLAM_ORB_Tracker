@@ -6,6 +6,9 @@
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
 
+/**
+* Some code in this file is part of ORB-SLAM.
+*/
 #ifndef FrameState_hpp
 #define FrameState_hpp
 
@@ -77,13 +80,13 @@ public:
     }
     std::vector<size_t> getFeaturesInArea(const float &x, const float &y, const float &r, const int minLevel = -1, const int maxLevel = -1) const;
     // Keypoints are assigned to cells in a grid to reduce matching complexity when projecting MapPoints
-    static float mfGridElementWidthInv;
-    static float mfGridElementHeightInv;
+    static float mfGridWidthDivideOne;
+    static float mfGridHeightDivideOne;
     static int mnMinX;
     static int mnMaxX;
     static int mnMinY;
     static int mnMaxY;
-    static bool mbInitialComputations;
+    static bool mbInitGrid;
     std::vector<std::size_t> mGrid[FRAME_GRID_COLS][FRAME_GRID_ROWS];
     bool IsInImage(const float &x, const float &y) const
     {

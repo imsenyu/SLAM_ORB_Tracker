@@ -16,9 +16,9 @@
 <dOpticalFlowThreshold>1.</dOpticalFlowThreshold>
 <dScaleLevel>8</dScaleLevel>
 <dScaleFactor>1.2000000000000000e+00</dScaleFactor>
-<sProjectName>tmp</sProjectName>
-<sPathOutput>/tmp/</sPathOutput>
-<fKFConditionMatchRatio>8.9999997615814209e-01</fKFConditionMatchRatio>
+<sProjectName>kitti04</sProjectName>
+<sPathOutput>/Volumes/HFS/Users/senyu/Workspace/temp/</sPathOutput>
+<fKFConditionMatchRatio>9.5999997615814209e-01</fKFConditionMatchRatio>
 <iKFConditionMinMatchNum>100</iKFConditionMinMatchNum>
 <iKFConditionMaxMatchNum>500</iKFConditionMaxMatchNum>
 <iKFConditionLaunchForce>10</iKFConditionLaunchForce>

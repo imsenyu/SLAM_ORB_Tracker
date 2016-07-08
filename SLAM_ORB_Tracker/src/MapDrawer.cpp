@@ -70,6 +70,10 @@ void MapDrawer::show() {
     {
         boost::mutex::scoped_lock lock(mMutexPathCanvasWithDir);
         cv::imshow("Map", mPathCanvasWithDir);
+
+        if ( mpCurFrame && mpCurFrame->mId % 50 == 0 ) {
+            cv::imwrite(cv::format("%s/%s_%s_%04d.jpg", Config::sPathOutput.c_str(), Config::sProjectName.c_str(), Config::tLaunchTime.c_str(), mpCurFrame->mId ), mPathCanvasWithDir);
+        }
     }
 //    if ( mpVizWin != NULL )  {
 //        boost::mutex::scoped_lock lockUI(mMutexGUI);
@@ -100,7 +104,16 @@ void MapDrawer::take() {
     mCurPose.mDir3 = R;
     mCurPose.mDir = Utils::convertToPoint3d(R * Const::mat31_001);
 
-    fsout << cv::format("%d\t%f\t%f\t%f",mpCurFrame->mId,mCurPose.mPos.x,mCurPose.mPos.y,mCurPose.mPos.z) << std::endl;
+    //fsout << cv::format("%d\t%f\t%f\t%f",mpCurFrame->mId,mCurPose.mPos.x,mCurPose.mPos.y,mCurPose.mPos.z) << std::endl;
+    for(int i=0;i<3;i++) {
+        for(int j=0;j<3;j++) {
+            fsout << R.at<float>(i,j) << " ";
+        }
+
+        fsout << ( t.at<float>(i)  );
+        fsout << (i==2 ? "\n" : " ");
+    }
+
     fsout.flush();
 }
 

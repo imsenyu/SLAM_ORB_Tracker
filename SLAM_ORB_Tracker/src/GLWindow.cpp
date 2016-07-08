@@ -115,6 +115,8 @@ void drawPointOnce( cv::Mat mPos, float mfDrawScale ) {
 void GLWindow::drawAllElement() {
 
 
+    // TODO: pointer may be destoryed when othen thread is working.
+    //       consider to lock pos matrix or orther plan
     std::set<shared_ptr<FrameState>>& spF = mpMapDrawer->cacheRefGetAllSetFrame();
 
     glColor3f( 0.5,0.5,1.0); // Let it be blue
@@ -138,7 +140,7 @@ void GLWindow::drawAllElement() {
     glEnd();
 
     std::vector<shared_ptr<MapPoint>>& vpLMP = mpTracker->cacheRefGetAllVectorLocalMapPoint();
-    std::set<shared_ptr<MapPoint>>&  spMP = mpMap->cacheRefGetAllSetMapPoint();
+    std::set<shared_ptr<MapPoint>>&  spMP = mpMap->refGetAllSetMapPoint();
     glPushMatrix();
 
     glPointSize(1.5f);
@@ -345,7 +347,7 @@ void GLWindow::onMouse(int button, int state, int x, int y)
 
 void GLWindow::moveCamera() {
     boost::mutex::scoped_lock lock(mMutexUpdateCameraPos);
-    float speed = 0.1f;
+    float speed = 0.7f;
     float dx = (mfCameraPosNX - mfCameraX);
     float dy = (mfCameraPosNY - mfCameraY);
     float dz = (mfCameraPosNZ - mfCameraZ);

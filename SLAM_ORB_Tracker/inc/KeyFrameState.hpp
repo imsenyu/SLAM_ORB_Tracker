@@ -5,7 +5,9 @@
 //  Created by Sen Yu on 3/20/16.
 //  Copyright © 2016 Sen Yu. All rights reserved.
 //
-
+/**
+* Some code in this file is part of ORB-SLAM.
+*/
 #ifndef KeyFrameState_hpp
 #define KeyFrameState_hpp
 
@@ -32,9 +34,9 @@ class KeyFrameState: public std::enable_shared_from_this<KeyFrameState> {
 private:
 
     Vocabulary* mpVocabulary;
-    std::vector<shared_ptr<KeyFrameState>> mvpOrderedConnectedKeyFrames;
-    std::map<shared_ptr<KeyFrameState>,int> mConnectedKeyFrameWeights;
-    std::vector<int> mvOrderedWeights;
+    std::vector<shared_ptr<KeyFrameState>> mvpNeighbourKeyFrames;
+    std::map<shared_ptr<KeyFrameState>,int> mKeyFrameWeightsMap;
+    std::vector<int> mvWeights;
 
 
 public:
@@ -82,7 +84,7 @@ public:
     void ReplaceMapPointMatch(const size_t &idx, shared_ptr<MapPoint> pMP);
     std::vector<shared_ptr<KeyFrameState>> GetVectorCovisibleKeyFrames()
     {
-        return mvpOrderedConnectedKeyFrames;
+        return mvpNeighbourKeyFrames;
     }
     cv::Mat getMatT2w();
     cv::Mat getMatR2w();

@@ -50,6 +50,8 @@ public:
     std::vector<shared_ptr<KeyFrameState>> getAllVectorKeyFrame();
 
 
+    std::set<shared_ptr<MapPoint>>& refGetAllSetMapPoint();
+
     // cache reference
     std::set<shared_ptr<MapPoint>>& cacheRefGetAllSetMapPoint();
     std::vector<shared_ptr<MapPoint>>& cacheRefGetAllVectorMapPoint();

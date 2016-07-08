@@ -14,9 +14,9 @@ bool std::less<std::shared_ptr<FrameState>>::operator () (const std::shared_ptr<
     return x->mId < y->mId;
 }
 
-bool FrameState::mbInitialComputations=true;
-float FrameState::mfGridElementWidthInv;
-float FrameState::mfGridElementHeightInv;
+bool FrameState::mbInitGrid =true;
+float FrameState::mfGridWidthDivideOne;
+float FrameState::mfGridHeightDivideOne;
 int FrameState::mnMinX;
 int FrameState::mnMaxX;
 int FrameState::mnMinY;
@@ -73,16 +73,16 @@ bool FrameState::loadImage(int _id) {
 
     mLoaded = true;
 
-    if ( mbInitialComputations ) {
+    if (mbInitGrid) {
         mnMinX = 0;
         mnMaxX = mImage.cols;
         mnMinY = 0;
         mnMaxY = mImage.rows;
 
 
-        mfGridElementWidthInv = static_cast<float>(FRAME_GRID_COLS) / static_cast<float>(mnMaxX - mnMinX);
-        mfGridElementHeightInv = static_cast<float>(FRAME_GRID_ROWS) / static_cast<float>(mnMaxY - mnMinY);
-        mbInitialComputations = false;
+        mfGridWidthDivideOne = static_cast<float>(FRAME_GRID_COLS) / static_cast<float>(mnMaxX - mnMinX);
+        mfGridHeightDivideOne = static_cast<float>(FRAME_GRID_ROWS) / static_cast<float>(mnMaxY - mnMinY);
+        mbInitGrid = false;
     }
     return mLoaded;
 }
@@ -108,8 +108,8 @@ int FrameState::extract() {
         cv::KeyPoint &kp = mvKeyPoint[i];
 
         int posX, posY;
-        posX = round((kp.pt.x-mnMinX)*mfGridElementWidthInv);
-        posY = round((kp.pt.y-mnMinY)*mfGridElementHeightInv);
+        posX = round((kp.pt.x-mnMinX)* mfGridWidthDivideOne);
+        posY = round((kp.pt.y-mnMinY)* mfGridHeightDivideOne);
 
         //Keypoint's coordinates are undistorted, which could cause to go out of the image
         if(posX<0 || posX>=FRAME_GRID_COLS || posY<0 || posY>=FRAME_GRID_ROWS)
@@ -141,8 +141,8 @@ int FrameState::extractInit() {
         cv::KeyPoint &kp = mvKeyPoint[i];
 
         int posX, posY;
-        posX = round((kp.pt.x-mnMinX)*mfGridElementWidthInv);
-        posY = round((kp.pt.y-mnMinY)*mfGridElementHeightInv);
+        posX = round((kp.pt.x-mnMinX)* mfGridWidthDivideOne);
+        posY = round((kp.pt.y-mnMinY)* mfGridHeightDivideOne);
 
         //Keypoint's coordinates are undistorted, which could cause to go out of the image
         if(posX<0 || posX>=FRAME_GRID_COLS || posY<0 || posY>=FRAME_GRID_ROWS)
@@ -172,8 +172,8 @@ int FrameState::extractNormal() {
         cv::KeyPoint &kp = mvKeyPoint[i];
 
         int posX, posY;
-        posX = round((kp.pt.x-mnMinX)*mfGridElementWidthInv);
-        posY = round((kp.pt.y-mnMinY)*mfGridElementHeightInv);
+        posX = round((kp.pt.x-mnMinX)* mfGridWidthDivideOne);
+        posY = round((kp.pt.y-mnMinY)* mfGridHeightDivideOne);
 
         //Keypoint's coordinates are undistorted, which could cause to go out of the image
         if(posX<0 || posX>=FRAME_GRID_COLS || posY<0 || posY>=FRAME_GRID_ROWS)
@@ -194,22 +194,22 @@ std::vector<size_t> FrameState::getFeaturesInArea(const float &x, const float &y
     vIndices.reserve(mvKeyPoint.size());
 
 
-    int nMinCellX = floor((x-mnMinX-r)*mfGridElementWidthInv);
+    int nMinCellX = floor((x-mnMinX-r)* mfGridWidthDivideOne);
     nMinCellX = std::max(0,nMinCellX);
     if(nMinCellX>=FRAME_GRID_COLS)
         return vIndices;
 
-    int nMaxCellX = ceil((x-mnMinX+r)*mfGridElementWidthInv);
+    int nMaxCellX = ceil((x-mnMinX+r)* mfGridWidthDivideOne);
     nMaxCellX = std::min(FRAME_GRID_COLS-1,nMaxCellX);
     if(nMaxCellX<0)
         return vIndices;
 
-    int nMinCellY = floor((y-mnMinY-r)*mfGridElementHeightInv);
+    int nMinCellY = floor((y-mnMinY-r)* mfGridHeightDivideOne);
     nMinCellY = max(0,nMinCellY);
     if(nMinCellY>=FRAME_GRID_ROWS)
         return vIndices;
 
-    int nMaxCellY = ceil((y-mnMinY+r)*mfGridElementHeightInv);
+    int nMaxCellY = ceil((y-mnMinY+r)* mfGridHeightDivideOne);
     nMaxCellY = min(FRAME_GRID_ROWS-1,nMaxCellY);
     if(nMaxCellY<0)
         return vIndices;

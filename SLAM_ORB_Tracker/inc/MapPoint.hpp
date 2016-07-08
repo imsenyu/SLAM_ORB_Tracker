@@ -2,7 +2,9 @@
 // Created by Sen Yu on 3/25/16.
 // Copyright (c) 2016 Sen Yu. All rights reserved.
 //
-
+/**
+* Some code in this file is part of ORB-SLAM.
+*/
 #ifndef SLAM_ORB_TRACKER_MAPPOINT_HPP
 #define SLAM_ORB_TRACKER_MAPPOINT_HPP
 
